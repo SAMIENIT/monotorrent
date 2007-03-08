@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MonoTorrent.BEncoding;
 
 namespace MonoTorrent.GUI.Settings
 {
@@ -12,7 +13,7 @@ namespace MonoTorrent.GUI.Settings
 
         private decimal splitMark;
         #endregion
-        public MonoTorrent.Common.IBEncodedValue Encode()
+        public IBEncodedValue Encode()
         {
             
             throw new Exception("The method or operation is not implemented.");

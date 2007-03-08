@@ -34,6 +34,7 @@ using System.Text;
 using MonoTorrent.Common;
 using System.IO;
 using System.Windows.Forms;
+using MonoTorrent.BEncoding;
 
 namespace MonoTorrent.GUI.Settings
 {
@@ -105,6 +106,16 @@ namespace MonoTorrent.GUI.Settings
                 using (BinaryWriter writer = new BinaryWriter(new FileStream(path, FileMode.Create)))
                     writer.Write(this.settings.Encode());
         }
+        #endregion
+
+        #region ISettingsStorage Members
+
+
+        public string Location
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
         #endregion
     }
 }
