@@ -28,11 +28,31 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.BEncoding, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\MonoTorrent.BEncoding.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Client, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\MonoTorrent.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Common, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\MonoTorrent.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Upnp, Version=0.5.0.0, Culture=neutral, PublicKeyToken=3dd7fb49887d64a2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\Upnp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindow.cs">
@@ -76,22 +96,10 @@
     <None Include="Resources\tools2.JPG" />
     <None Include="Resources\tools.jpg" />
     <None Include="Resources\Sign_stop.GIF" />
-    <None Include="Resources\Sign_stop.bmp" />
     <None Include="Resources\Sign_pause.gif" />
     <None Include="Resources\Sign_greaterThan.GIF" />
     <None Include="Resources\Sign_subtraction.GIF" />
     <None Include="Resources\Sign_addition.gif" />
-    <None Include="Resources\Sign_addition.JPG" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MonoTorrent.Client\MonoTorrent.Client.csproj">
-      <Project>{BA61F399-BE56-445D-9C61-3A617F4BABEA}</Project>
-      <Name>MonoTorrent.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MonoTorrent.Common\MonoTorrent.Common.csproj">
-      <Project>{B49212EE-36F4-42DA-BA8C-6589DCA535D9}</Project>
-      <Name>MonoTorrent.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

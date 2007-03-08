@@ -30,6 +30,9 @@ namespace MonoTorrent.GUI
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.menuBar = new System.Windows.Forms.MenuStrip();
+            this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +63,7 @@ namespace MonoTorrent.GUI
             this.generalPanel = new System.Windows.Forms.GroupBox();
             this.trackerPanel = new System.Windows.Forms.GroupBox();
             this.tabPeers = new System.Windows.Forms.TabPage();
-            this.tabFiles = new System.Windows.Forms.TabPage();
+            this.tabDetails = new System.Windows.Forms.TabPage();
             this.tabPieces = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panelMainControls = new System.Windows.Forms.Panel();
@@ -71,9 +74,6 @@ namespace MonoTorrent.GUI
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBar.SuspendLayout();
             this.detailsView.SuspendLayout();
             this.tabGeneral.SuspendLayout();
@@ -97,6 +97,24 @@ namespace MonoTorrent.GUI
             this.menuBar.Size = new System.Drawing.Size(722, 24);
             this.menuBar.TabIndex = 0;
             this.menuBar.Text = "menuStrip1";
+            // 
+            // menuFile
+            // 
+            this.menuFile.Name = "menuFile";
+            this.menuFile.Size = new System.Drawing.Size(35, 24);
+            this.menuFile.Text = "File";
+            // 
+            // menuEdit
+            // 
+            this.menuEdit.Name = "menuEdit";
+            this.menuEdit.Size = new System.Drawing.Size(37, 24);
+            this.menuEdit.Text = "Edit";
+            // 
+            // menuAbout
+            // 
+            this.menuAbout.Name = "menuAbout";
+            this.menuAbout.Size = new System.Drawing.Size(48, 24);
+            this.menuAbout.Text = "About";
             // 
             // fileToolStripMenuItem
             // 
@@ -270,8 +288,8 @@ namespace MonoTorrent.GUI
             // detailsView
             // 
             this.detailsView.Controls.Add(this.tabGeneral);
+            this.detailsView.Controls.Add(this.tabDetails);
             this.detailsView.Controls.Add(this.tabPeers);
-            this.detailsView.Controls.Add(this.tabFiles);
             this.detailsView.Controls.Add(this.tabPieces);
             this.detailsView.Location = new System.Drawing.Point(0, 0);
             this.detailsView.Margin = new System.Windows.Forms.Padding(0);
@@ -325,16 +343,16 @@ namespace MonoTorrent.GUI
             this.tabPeers.Text = "Peers";
             this.tabPeers.UseVisualStyleBackColor = true;
             // 
-            // tabFiles
+            // tabDetails
             // 
-            this.tabFiles.AutoScroll = true;
-            this.tabFiles.Location = new System.Drawing.Point(4, 22);
-            this.tabFiles.Name = "tabFiles";
-            this.tabFiles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFiles.Size = new System.Drawing.Size(714, 317);
-            this.tabFiles.TabIndex = 1;
-            this.tabFiles.Text = "Files";
-            this.tabFiles.UseVisualStyleBackColor = true;
+            this.tabDetails.AutoScroll = true;
+            this.tabDetails.Location = new System.Drawing.Point(4, 22);
+            this.tabDetails.Name = "tabDetails";
+            this.tabDetails.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDetails.Size = new System.Drawing.Size(714, 317);
+            this.tabDetails.TabIndex = 1;
+            this.tabDetails.Text = "Details";
+            this.tabDetails.UseVisualStyleBackColor = true;
             // 
             // tabPieces
             // 
@@ -442,24 +460,6 @@ namespace MonoTorrent.GUI
             this.button1.TabIndex = 0;
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // menuFile
-            // 
-            this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(35, 24);
-            this.menuFile.Text = "File";
-            // 
-            // menuEdit
-            // 
-            this.menuEdit.Name = "menuEdit";
-            this.menuEdit.Size = new System.Drawing.Size(37, 24);
-            this.menuEdit.Text = "Edit";
-            // 
-            // menuAbout
-            // 
-            this.menuAbout.Name = "menuAbout";
-            this.menuAbout.Size = new System.Drawing.Size(48, 24);
-            this.menuAbout.Text = "About";
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -494,7 +494,7 @@ namespace MonoTorrent.GUI
         private System.Windows.Forms.ListView torrentsView;
         private System.Windows.Forms.TabControl detailsView;
         private System.Windows.Forms.TabPage tabGeneral;
-        private System.Windows.Forms.TabPage tabFiles;
+        private System.Windows.Forms.TabPage tabDetails;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createTorrentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addTorrentToolStripMenuItem;
