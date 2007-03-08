@@ -29,6 +29,9 @@ namespace MonoTorrent.GUI.Settings
         void Store(string key, object val);
 
 
+        string Location { get; }
+
+
         object Retrieve(string key);
 
 
