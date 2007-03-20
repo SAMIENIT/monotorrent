@@ -110,12 +110,11 @@ namespace MonoTorrent.GUI.Settings
 
         #region ISettingsStorage Members
 
-
         public string Location
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return path; }
         }
-
+        
         #endregion
     }
 }
