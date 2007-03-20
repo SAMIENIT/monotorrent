@@ -60,6 +60,62 @@ namespace MonoTorrent.GUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap go_down {
+            get {
+                object obj = ResourceManager.GetObject("go_down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap go_up {
+            get {
+                object obj = ResourceManager.GetObject("go_up", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap list_add {
+            get {
+                object obj = ResourceManager.GetObject("list_add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap list_remove {
+            get {
+                object obj = ResourceManager.GetObject("list_remove", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap media_playback_pause {
+            get {
+                object obj = ResourceManager.GetObject("media_playback_pause", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap media_playback_start {
+            get {
+                object obj = ResourceManager.GetObject("media_playback_start", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap media_playback_stop {
+            get {
+                object obj = ResourceManager.GetObject("media_playback_stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap preferences_system {
+            get {
+                object obj = ResourceManager.GetObject("preferences_system", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Sign_addition {
             get {
                 object obj = ResourceManager.GetObject("Sign_addition", resourceCulture);

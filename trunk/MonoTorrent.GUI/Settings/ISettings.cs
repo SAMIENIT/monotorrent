@@ -8,8 +8,8 @@ namespace MonoTorrent.GUI.Settings
 {
     public interface ISettings
     {
-        IBEncodedValue Encode();
+        void Encode();
 
-        void Decode(string value);
+        void Decode();
     }
 }

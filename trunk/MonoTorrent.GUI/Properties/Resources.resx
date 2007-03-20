@@ -139,4 +139,28 @@
   <data name="tools2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tools2.JPG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="go_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\go-down.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="go_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\go-up.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="list_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\list-add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="list_remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\list-remove.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="media_playback_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\media-playback-pause.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="media_playback_start" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\media-playback-start.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="media_playback_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\media-playback-stop.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="preferences_system" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\preferences-system.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
