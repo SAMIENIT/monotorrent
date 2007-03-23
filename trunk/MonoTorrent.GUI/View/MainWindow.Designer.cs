@@ -96,7 +96,7 @@ namespace MonoTorrent.GUI.View
             this.menuBar.Location = new System.Drawing.Point(0, 0);
             this.menuBar.Name = "menuBar";
             this.menuBar.Padding = new System.Windows.Forms.Padding(0);
-            this.menuBar.Size = new System.Drawing.Size(722, 24);
+            this.menuBar.Size = new System.Drawing.Size(692, 24);
             this.menuBar.TabIndex = 0;
             this.menuBar.Text = "menuStrip1";
             // 
@@ -211,9 +211,9 @@ namespace MonoTorrent.GUI.View
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 451);
+            this.statusBar.Location = new System.Drawing.Point(0, 444);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(722, 22);
+            this.statusBar.Size = new System.Drawing.Size(692, 22);
             this.statusBar.TabIndex = 0;
             this.statusBar.Text = "statusStrip";
             // 
@@ -237,7 +237,7 @@ namespace MonoTorrent.GUI.View
             this.torrentsView.Location = new System.Drawing.Point(0, 0);
             this.torrentsView.Margin = new System.Windows.Forms.Padding(5);
             this.torrentsView.Name = "torrentsView";
-            this.torrentsView.Size = new System.Drawing.Size(722, 190);
+            this.torrentsView.Size = new System.Drawing.Size(692, 190);
             this.torrentsView.TabIndex = 0;
             this.torrentsView.UseCompatibleStateImageBehavior = false;
             this.torrentsView.View = System.Windows.Forms.View.Details;
@@ -300,7 +300,7 @@ namespace MonoTorrent.GUI.View
             this.detailsView.Name = "detailsView";
             this.detailsView.Padding = new System.Drawing.Point(0, 0);
             this.detailsView.SelectedIndex = 0;
-            this.detailsView.Size = new System.Drawing.Size(722, 197);
+            this.detailsView.Size = new System.Drawing.Size(692, 190);
             this.detailsView.TabIndex = 1;
             // 
             // tabGeneral
@@ -310,7 +310,7 @@ namespace MonoTorrent.GUI.View
             this.tabGeneral.Controls.Add(this.trackerPanel);
             this.tabGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabGeneral.Name = "tabGeneral";
-            this.tabGeneral.Size = new System.Drawing.Size(714, 171);
+            this.tabGeneral.Size = new System.Drawing.Size(684, 164);
             this.tabGeneral.TabIndex = 0;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
@@ -321,7 +321,7 @@ namespace MonoTorrent.GUI.View
             this.generalPanel.Margin = new System.Windows.Forms.Padding(10);
             this.generalPanel.MinimumSize = new System.Drawing.Size(450, 0);
             this.generalPanel.Name = "generalPanel";
-            this.generalPanel.Size = new System.Drawing.Size(674, 134);
+            this.generalPanel.Size = new System.Drawing.Size(642, 134);
             this.generalPanel.TabIndex = 0;
             this.generalPanel.TabStop = false;
             this.generalPanel.Text = "General";
@@ -332,7 +332,7 @@ namespace MonoTorrent.GUI.View
             this.trackerPanel.Margin = new System.Windows.Forms.Padding(10);
             this.trackerPanel.MinimumSize = new System.Drawing.Size(450, 0);
             this.trackerPanel.Name = "trackerPanel";
-            this.trackerPanel.Size = new System.Drawing.Size(674, 134);
+            this.trackerPanel.Size = new System.Drawing.Size(642, 134);
             this.trackerPanel.TabIndex = 0;
             this.trackerPanel.TabStop = false;
             this.trackerPanel.Text = "Tracker";
@@ -343,7 +343,7 @@ namespace MonoTorrent.GUI.View
             this.tabDetails.Location = new System.Drawing.Point(4, 22);
             this.tabDetails.Name = "tabDetails";
             this.tabDetails.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDetails.Size = new System.Drawing.Size(714, 171);
+            this.tabDetails.Size = new System.Drawing.Size(684, 164);
             this.tabDetails.TabIndex = 1;
             this.tabDetails.Text = "Details";
             this.tabDetails.UseVisualStyleBackColor = true;
@@ -353,7 +353,7 @@ namespace MonoTorrent.GUI.View
             this.tabPeers.AutoScroll = true;
             this.tabPeers.Location = new System.Drawing.Point(4, 22);
             this.tabPeers.Name = "tabPeers";
-            this.tabPeers.Size = new System.Drawing.Size(714, 171);
+            this.tabPeers.Size = new System.Drawing.Size(684, 164);
             this.tabPeers.TabIndex = 2;
             this.tabPeers.Text = "Peers";
             this.tabPeers.UseVisualStyleBackColor = true;
@@ -363,7 +363,7 @@ namespace MonoTorrent.GUI.View
             this.tabPieces.AutoScroll = true;
             this.tabPieces.Location = new System.Drawing.Point(4, 22);
             this.tabPieces.Name = "tabPieces";
-            this.tabPieces.Size = new System.Drawing.Size(714, 171);
+            this.tabPieces.Size = new System.Drawing.Size(684, 164);
             this.tabPieces.TabIndex = 3;
             this.tabPieces.Text = "Pieces";
             this.tabPieces.UseVisualStyleBackColor = true;
@@ -387,7 +387,7 @@ namespace MonoTorrent.GUI.View
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.detailsView);
-            this.splitContainer1.Size = new System.Drawing.Size(722, 391);
+            this.splitContainer1.Size = new System.Drawing.Size(692, 384);
             this.splitContainer1.SplitterDistance = 190;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -407,7 +407,7 @@ namespace MonoTorrent.GUI.View
             this.MaintoolStrip.Location = new System.Drawing.Point(0, 24);
             this.MaintoolStrip.Name = "MaintoolStrip";
             this.MaintoolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.MaintoolStrip.Size = new System.Drawing.Size(722, 36);
+            this.MaintoolStrip.Size = new System.Drawing.Size(692, 36);
             this.MaintoolStrip.Stretch = true;
             this.MaintoolStrip.TabIndex = 2;
             this.MaintoolStrip.Text = "toolStrip1";
@@ -504,13 +504,14 @@ namespace MonoTorrent.GUI.View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(722, 473);
+            this.ClientSize = new System.Drawing.Size(692, 466);
             this.Controls.Add(this.MaintoolStrip);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.menuBar);
             this.MainMenuStrip = this.menuBar;
             this.Name = "MainWindow";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "MonoTorrent";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Load += new System.EventHandler(this.MainWindow_Load);

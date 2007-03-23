@@ -8,34 +8,17 @@ namespace MonoTorrent.GUI.Settings
 {
     class GuiViewSettings : ISettings
     {
-        private GuiViewSettings()
+        public GuiViewSettings()
         {
-            storage = new BEncodedSettingsStorage(Path.Combine(Environment.CurrentDirectory, CONFIG_FILE));
-        }
-
-        private static GuiViewSettings instance;
-
-        public static GuiViewSettings Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new GuiViewSettings();
-                }
-                return instance;
-            }
         }
 
         #region Member Variables
-
-        private int width;
-        private int height;
-        private int splitterDistance;
-
-        private readonly string CONFIG_FILE = "config.xml";
-        private ISettingsStorage storage;
-
+        //default value
+        private int width = 700;
+        private int height = 500;
+        private int splitterDistance = 190;
+        private int vscrollValue = 0;
+        private int hscrollValue = 0;
         #endregion
 
         #region Properties
@@ -58,21 +41,59 @@ namespace MonoTorrent.GUI.Settings
             set { splitterDistance = value; }
         }
 
+        public int VScrollValue
+        {
+            get { return vscrollValue; }
+            set { vscrollValue = value; }
+        }
+
+        public int HScrollValue
+        {
+            get { return hscrollValue; }
+            set { hscrollValue = value; }
+        }
+
         #endregion
 
-        public void Encode()
+        #region Interface Members
+
+        public IBEncodedValue Encode()
         {
-            storage.Store("FormWidth", width);
-            storage.Store("FormHeight", height);
-            storage.Store("SplitterDistance", splitterDistance);
-            storage.Flush();
+            BEncodedDictionary result = new BEncodedDictionary();
+            result.Add(new BEncodedString("Width"), new BEncodedNumber(FormWidth));
+            result.Add(new BEncodedString("height"), new BEncodedNumber(FormHeight));
+            result.Add(new BEncodedString("splitterDistance"), new BEncodedNumber(SplitterDistance));
+            result.Add(new BEncodedString("VScrollValue"), new BEncodedNumber(VScrollValue));
+            result.Add(new BEncodedString("HScrollValue"), new BEncodedNumber(HScrollValue));
+            return result;
         }
 
-        public void Decode()
+        public void Decode(IBEncodedValue value)
         {
-            width = (int) storage.Retrieve("FormWidth");
-            height = (int) storage.Retrieve("FormHeight");
-            splitterDistance = (int)storage.Retrieve("SplitterDistance");
+            BEncodedDictionary val = value as BEncodedDictionary;
+            if (val != null)
+            {
+                //if do not find key do not throw exception just continue with default value ;)
+                IBEncodedValue result;
+
+                if (val.TryGetValue(new BEncodedString("Width"), out result))
+                    width = Convert.ToInt32(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("height"), out result))
+                    height = Convert.ToInt32(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("splitterDistance"), out result))
+                    splitterDistance = Convert.ToInt32(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("VScrollValue"), out result))
+                    VScrollValue = Convert.ToInt32(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("HScrollValue"), out result))
+                    HScrollValue = Convert.ToInt32(result.ToString());
+            }
         }
+
+        #endregion
+
     }
 }

@@ -7,41 +7,38 @@ using System.Windows.Forms;
 using MonoTorrent.Client;
 using MonoTorrent.Common;
 using MonoTorrent.GUI.Settings;
+using MonoTorrent.GUI.Controller;
 
 namespace MonoTorrent.GUI.View
 {
     public partial class MainWindow : Form
     {
-        private List<TorrentManager> managers;
-        private ClientEngine engine;
-
+        private MainController mainController;
         public MainWindow()
         {
             InitializeComponent();
         }
 
-
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            GuiViewSettings settings = GuiViewSettings.Instance;
-            settings.Decode();
-            this.Width = settings.FormWidth;
-            this.Height = settings.FormHeight;
-            splitContainer1.SplitterDistance = settings.SplitterDistance;
-            //TEST CODE
-            this.torrentsView.Items.Add(new ListViewItem("testesttest"));
-            this.managers = new List<TorrentManager>();
-            this.engine = new ClientEngine(EngineSettings.DefaultSettings(), TorrentSettings.DefaultSettings());
+            SettingsBase settings = new SettingsBase();
+            GuiViewSettings guisettings = settings.LoadSettings<GuiViewSettings>("Graphical Settings");
+            this.Width = guisettings.FormWidth;
+            this.Height = guisettings.FormHeight;
+            splitContainer1.SplitterDistance = guisettings.SplitterDistance;
+            mainController = new MainController(torrentsView, settings);
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            GuiViewSettings settings = GuiViewSettings.Instance;
-            settings.FormWidth = this.Width;
-            settings.FormHeight = this.Height;
-            settings.SplitterDistance = splitContainer1.SplitterDistance;
-
-            settings.Encode();
+            SettingsBase settings = new SettingsBase();
+            GuiViewSettings guisettings = new GuiViewSettings();
+            guisettings.FormWidth = this.Width;
+            guisettings.FormHeight = this.Height;
+            guisettings.SplitterDistance = splitContainer1.SplitterDistance;
+            guisettings.VScrollValue = tabGeneral.VerticalScroll.Value;
+            guisettings.HScrollValue = tabGeneral.HorizontalScroll.Value;
+            settings.SaveSettings<GuiViewSettings>("Graphical Settings", guisettings);
         }
 
         #region Drag Drop
@@ -59,7 +56,7 @@ namespace MonoTorrent.GUI.View
                 {
                     try
                     {
-                        this.managers.Add(this.engine.LoadTorrent(s));
+                        mainController.Add(s);
                     }
                     catch (TorrentException ex)
                     {
@@ -89,32 +86,32 @@ namespace MonoTorrent.GUI.View
 
         private void AddToolStripButton_Click(object sender, EventArgs e)
         {
-
+            mainController.Add();
         }
 
         private void StartToolStripButton_Click(object sender, EventArgs e)
         {
-
+            mainController.Start();
         }
 
         private void PauseToolStripButton_Click(object sender, EventArgs e)
         {
-
+            mainController.Pause();
         }
 
         private void StopToolStripButton_Click(object sender, EventArgs e)
         {
-
+            mainController.Stop();
         }
 
         private void DelToolStripButton_Click(object sender, EventArgs e)
         {
-
+            mainController.Del();
         }
 
         private void OptionToolStripButton_Click(object sender, EventArgs e)
         {
-
+            mainController.Option();
         }
 
         #endregion
