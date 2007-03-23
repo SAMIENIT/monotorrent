@@ -45,8 +45,7 @@ namespace MonoTorrent.GUI.Settings
         private BEncodedDictionary settings;
         private object flushLocker = new object();
         #endregion
-
-
+        
         #region Constructors
         public BEncodedSettingsStorage(string path)
         {
@@ -58,7 +57,7 @@ namespace MonoTorrent.GUI.Settings
                 {
                     lock (this.flushLocker)
                         using (BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open)))
-                            this.settings = (BEncodedDictionary)BEncode.Decode(reader);
+                            this.settings = BEncode.Decode(reader) as BEncodedDictionary;
                 }
                 catch (Exception)
                 {
@@ -66,8 +65,7 @@ namespace MonoTorrent.GUI.Settings
             }
         }
         #endregion
-
-
+        
         #region Interface Members
         public void Store(string key, object val)
         {
@@ -80,7 +78,7 @@ namespace MonoTorrent.GUI.Settings
                 else if (long.TryParse(val.ToString(), out result))
                     value = (BEncodedNumber)result;
                 else
-                    throw new ArgumentException("Value must be a BEcodedType for BEncodedSettingsStorage", "val");
+                    throw new ArgumentException("Value must be a BEncodedType for BEncodedSettingsStorage", "val");
 
             }
 
