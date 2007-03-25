@@ -26,6 +26,8 @@ namespace MonoTorrent.GUI.View
             this.Width = guisettings.FormWidth;
             this.Height = guisettings.FormHeight;
             splitContainer1.SplitterDistance = guisettings.SplitterDistance;
+            tabGeneral.VerticalScroll.Value = guisettings.VScrollValue;
+            tabGeneral.HorizontalScroll.Value = guisettings.HScrollValue;
             mainController = new MainController(torrentsView, settings);
         }
 

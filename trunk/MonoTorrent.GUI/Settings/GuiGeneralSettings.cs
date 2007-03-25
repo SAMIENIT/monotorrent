@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using MonoTorrent.BEncoding;
 using MonoTorrent.Client;
+using System.IO;
 
 namespace MonoTorrent.GUI.Settings
 {
-    class GuiGeneralSettings : ISettings
+    public class GuiGeneralSettings : ISettings
     {
 
         #region Private Fields
@@ -20,10 +21,10 @@ namespace MonoTorrent.GUI.Settings
         private int globalMaxHalfOpenConnections = EngineSettings.DefaultSettings().GlobalMaxHalfOpenConnections;
         private int globalMaxDownloadSpeed = EngineSettings.DefaultSettings().GlobalMaxDownloadSpeed;
         private int globalMaxUploadSpeed = EngineSettings.DefaultSettings().GlobalMaxUploadSpeed;
-        private string savePath = "Torrents";
-        private string torrentsPath = "Downloads";
+        private string savePath = Path.Combine(Environment.CurrentDirectory, "Downloads");
+        private string torrentsPath = Path.Combine(Environment.CurrentDirectory, "Torrents");
         private bool useuPnP =  EngineSettings.DefaultSettings().UsePnP;
-
+        
         #endregion Private Fields
         
         #region Properties
