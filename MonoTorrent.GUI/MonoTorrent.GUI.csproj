@@ -86,7 +86,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings\BEncodedSettingsStorage.cs" />
-    <Compile Include="Settings\GuiEngineSettings.cs" />
+    <Compile Include="Settings\GuiGeneralSettings.cs" />
     <Compile Include="Settings\GuiTorrentSettings.cs" />
     <Compile Include="Settings\GuiViewSettings.cs" />
     <Compile Include="Settings\ISettings.cs" />

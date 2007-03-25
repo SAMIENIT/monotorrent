@@ -5,6 +5,7 @@ using MonoTorrent.Client;
 using System.Windows.Forms;
 using MonoTorrent.GUI.View;
 using MonoTorrent.GUI.Settings;
+using System.IO;
 namespace MonoTorrent.GUI.Controller
 {
     class MainController
@@ -13,17 +14,35 @@ namespace MonoTorrent.GUI.Controller
         private OptionWindow optionWindow;
         private ListView torrentsView;
         private IDictionary<ListViewItem, TorrentManager> itemToTorrent;
-
         public MainController(ListView torrentsView, SettingsBase settings)
         {
             this.torrentsView = torrentsView;
-            clientEngine = new ClientEngine( EngineSettings.DefaultSettings(), TorrentSettings.DefaultSettings());
             itemToTorrent = new Dictionary<ListViewItem, TorrentManager>();
-            //TODO settings for engine and torrent in setting system
+
+            //get general settings in file
+            GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("Engine Settings");
+            clientEngine = new ClientEngine( genSettings.GetEngineSettings(), 
+                TorrentSettings.DefaultSettings());
+
+            // Create Torrents path
+            if (!Directory.Exists(Path.GetDirectoryName(genSettings.TorrentsPath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(genSettings.TorrentsPath));
+
+            //load all torrents in torrents folder
+            foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
+            {
+                GuiTorrentSettings torrentSettings = settings.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
+                Add(file, torrentSettings.GetTorrentSettings());
+            }
         }
+
 
         #region Helper
 
+        /// <summary>
+        /// get all row selected in list view
+        /// </summary>
+        /// <returns></returns>
         public IList<TorrentManager> GetSelectedTorrents()
         {
             IList<TorrentManager> result = new List<TorrentManager>();
@@ -32,22 +51,11 @@ namespace MonoTorrent.GUI.Controller
             return result;
         }
 
-        #endregion
 
-        #region Event Methode
-
-        private void OnTorrentChange(object sender, EventArgs args)
-        {
-            TorrentManager torrent = (TorrentManager)sender;
-            Update(torrent);
-        }
-
-        private void OnTorrentStateChange(object sender, EventArgs args)
-        {
-            TorrentManager torrent = (TorrentManager)sender;
-            UpdateState(torrent);
-        }
-
+        /// <summary>
+        /// update torrent in gui
+        /// </summary>
+        /// <param name="torrent"></param>
         public void Update(TorrentManager torrent)
         {
             ListViewItem item = GetItemFromTorrent(torrent);
@@ -56,6 +64,10 @@ namespace MonoTorrent.GUI.Controller
             UpdateState(torrent);
         }
 
+        /// <summary>
+        /// update torretn state in view
+        /// </summary>
+        /// <param name="torrent"></param>
         public void UpdateState(TorrentManager torrent)
         {
             ListViewItem item = GetItemFromTorrent(torrent);
@@ -71,6 +83,11 @@ namespace MonoTorrent.GUI.Controller
 
         }
 
+        /// <summary>
+        /// get row in listview from torrent
+        /// </summary>
+        /// <param name="torrent"></param>
+        /// <returns></returns>
         private ListViewItem GetItemFromTorrent(TorrentManager torrent)
         {
             foreach (ListViewItem item in itemToTorrent.Keys)
@@ -82,6 +99,33 @@ namespace MonoTorrent.GUI.Controller
             }
             return null;
         }
+
+        #endregion
+
+        #region Event Methode
+
+        /// <summary>
+        /// event torrent change
+        /// </summary>
+        /// <param name="sender">TorrentManager</param>
+        /// <param name="args">nothing</param>
+        private void OnTorrentChange(object sender, EventArgs args)
+        {
+            TorrentManager torrent = (TorrentManager)sender;
+            Update(torrent);
+        }
+
+        /// <summary>
+        /// event torrent state change
+        /// </summary>
+        /// <param name="sender">TorrentManager</param>
+        /// <param name="args"></param>
+        private void OnTorrentStateChange(object sender, EventArgs args)
+        {
+            TorrentManager torrent = (TorrentManager)sender;
+            UpdateState(torrent);
+        }
+
         #endregion
 
         #region Controller Action
@@ -109,9 +153,15 @@ namespace MonoTorrent.GUI.Controller
 
         public void Add(string fileName)
         {
+            Add(fileName, clientEngine.DefaultTorrentSettings);
+        }
+
+        public void Add(string fileName, TorrentSettings settings)
+        {
+            //TODO Copy torrent in torrents directory
             ListViewItem item = new ListViewItem(fileName);
             torrentsView.Items.Add(item);
-            TorrentManager torrent = clientEngine.LoadTorrent(fileName);
+            TorrentManager torrent = clientEngine.LoadTorrent(fileName,clientEngine.Settings.SavePath,settings);
             itemToTorrent.Add(item, torrent);
             torrent.PieceHashed += OnTorrentChange;
             torrent.PeersFound += OnTorrentChange;

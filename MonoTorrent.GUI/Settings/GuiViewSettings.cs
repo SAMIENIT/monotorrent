@@ -76,6 +76,8 @@ namespace MonoTorrent.GUI.Settings
                 //if do not find key do not throw exception just continue with default value ;)
                 IBEncodedValue result;
 
+                //For number maybe best is to do ((int)((BEncodedNumber)result).Number) but keep using convert and ToString()
+
                 if (val.TryGetValue(new BEncodedString("Width"), out result))
                     width = Convert.ToInt32(result.ToString());
 
