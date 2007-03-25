@@ -8,25 +8,27 @@ using MonoTorrent.GUI.Settings;
 using System.IO;
 namespace MonoTorrent.GUI.Controller
 {
-    class MainController
+    public class MainController
     {
         private ClientEngine clientEngine;
         private OptionWindow optionWindow;
         private ListView torrentsView;
         private IDictionary<ListViewItem, TorrentManager> itemToTorrent;
+        private SettingsBase settingsBase;
+
         public MainController(ListView torrentsView, SettingsBase settings)
         {
             this.torrentsView = torrentsView;
             itemToTorrent = new Dictionary<ListViewItem, TorrentManager>();
 
             //get general settings in file
-            GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("Engine Settings");
+            GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("General Settings");
             clientEngine = new ClientEngine( genSettings.GetEngineSettings(), 
                 TorrentSettings.DefaultSettings());
 
             // Create Torrents path
-            if (!Directory.Exists(Path.GetDirectoryName(genSettings.TorrentsPath)))
-                Directory.CreateDirectory(Path.GetDirectoryName(genSettings.TorrentsPath));
+            if (!Directory.Exists(genSettings.TorrentsPath))
+                Directory.CreateDirectory(genSettings.TorrentsPath);
 
             //load all torrents in torrents folder
             foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
@@ -34,6 +36,7 @@ namespace MonoTorrent.GUI.Controller
                 GuiTorrentSettings torrentSettings = settings.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
                 Add(file, torrentSettings.GetTorrentSettings());
             }
+            settingsBase = settings;
         }
 
 
@@ -158,10 +161,12 @@ namespace MonoTorrent.GUI.Controller
 
         public void Add(string fileName, TorrentSettings settings)
         {
-            //TODO Copy torrent in torrents directory
-            ListViewItem item = new ListViewItem(fileName);
+            //FIXME must be generalsettings.downloadPath
+            string newPath = Path.Combine(clientEngine.Settings.SavePath, Path.GetFileName(fileName));
+            File.Copy(fileName, newPath);
+            ListViewItem item = new ListViewItem(newPath);
             torrentsView.Items.Add(item);
-            TorrentManager torrent = clientEngine.LoadTorrent(fileName,clientEngine.Settings.SavePath,settings);
+            TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
             itemToTorrent.Add(item, torrent);
             torrent.PieceHashed += OnTorrentChange;
             torrent.PeersFound += OnTorrentChange;
@@ -173,9 +178,12 @@ namespace MonoTorrent.GUI.Controller
             try
             {
                 if (MessageBox.Show("Are you sure ?", "Delete Torrent", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                { 
+                {
                     foreach (TorrentManager torrent in GetSelectedTorrents())
+                    {
+                        GetItemFromTorrent(torrent).Remove();
                         clientEngine.Remove(torrent);
+                    }
                 }
 
             }
@@ -228,7 +236,7 @@ namespace MonoTorrent.GUI.Controller
         {
             if (optionWindow == null)
             {
-                optionWindow = new OptionWindow();
+                optionWindow = new OptionWindow(this, settingsBase);
                 optionWindow.Show();
             }
         }
@@ -244,5 +252,15 @@ namespace MonoTorrent.GUI.Controller
         }
 
         #endregion
+
+        /// <summary>
+        /// update general settings
+        /// </summary>
+        /// <param name="settings"></param>
+        public void UpdateSettings(GuiGeneralSettings settings)
+        {
+            settingsBase.SaveSettings<GuiGeneralSettings>("General Settings", settings);
+            clientEngine.Settings = settings.GetEngineSettings();
+        }
     }
 }
