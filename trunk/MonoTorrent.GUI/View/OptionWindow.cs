@@ -22,6 +22,7 @@ namespace MonoTorrent.GUI.View
 
         public OptionWindow(MainController mainController, SettingsBase settings)
         {
+            InitializeComponent();
             this.controller = mainController;
             GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("General Settings");
             MaxConnectionsTextBox.Text = genSettings.GlobalMaxConnections.ToString();
@@ -71,6 +72,7 @@ namespace MonoTorrent.GUI.View
             settings.TorrentsPath = TorrentPathTextBox.Text;
             settings.UsePnP = UseUPnPCheckBox.Checked;
             controller.UpdateSettings(settings);
+            this.Close();
         }
 
         private void SavePathButton_Click(object sender, EventArgs e)
