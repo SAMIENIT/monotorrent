@@ -54,6 +54,7 @@ namespace MonoTorrent.GUI.Controller
             return result;
         }
 
+        private delegate void UpdateHandler(TorrentManager torrent);
 
         /// <summary>
         /// update torrent in gui
@@ -83,7 +84,6 @@ namespace MonoTorrent.GUI.Controller
             item.SubItems[8].Text = torrent.Monitor.DataBytesDownloaded.ToString();
             item.SubItems[9].Text = torrent.Monitor.DataBytesUploaded.ToString();
             item.SubItems[10].Text = torrent.AvailablePeers.ToString();//FIXME ratio here
-
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace MonoTorrent.GUI.Controller
         private void OnTorrentChange(object sender, EventArgs args)
         {
             TorrentManager torrent = (TorrentManager)sender;
-            Update(torrent);
+            torrentsView.Invoke(new UpdateHandler(Update), torrent);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace MonoTorrent.GUI.Controller
         private void OnTorrentStateChange(object sender, EventArgs args)
         {
             TorrentManager torrent = (TorrentManager)sender;
-            UpdateState(torrent);
+            torrentsView.Invoke(new UpdateHandler(UpdateState), torrent);
         }
 
         #endregion
@@ -161,10 +161,12 @@ namespace MonoTorrent.GUI.Controller
 
         public void Add(string fileName, TorrentSettings settings)
         {
-            //FIXME must be generalsettings.downloadPath
-            string newPath = Path.Combine(clientEngine.Settings.SavePath, Path.GetFileName(fileName));
+            GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
+            string newPath = Path.Combine(genSettings.TorrentsPath, Path.GetFileName(fileName));
             File.Copy(fileName, newPath);
             ListViewItem item = new ListViewItem(newPath);
+            for (int i = 0; i < 10; i++)
+                item.SubItems.Add("");
             torrentsView.Items.Add(item);
             TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
             itemToTorrent.Add(item, torrent);
