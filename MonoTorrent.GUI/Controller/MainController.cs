@@ -13,6 +13,7 @@ namespace MonoTorrent.GUI.Controller
     {
         private ClientEngine clientEngine;
         private OptionWindow optionWindow;
+        private AboutWindow aboutWindow;
         private ListView torrentsView;
         private IDictionary<ListViewItem, TorrentManager> itemToTorrent;
         private SettingsBase settingsBase;
@@ -137,10 +138,16 @@ namespace MonoTorrent.GUI.Controller
 
         public void Create()
         {
-            string storagePath = Environment.CurrentDirectory;
-            TorrentCreator creator = new TorrentCreator();
-
-            creator.Create(storagePath);
+            CreateWindow window = new CreateWindow();
+            if (window.ShowDialog() == DialogResult.OK)
+            {
+                TorrentCreator creator = new TorrentCreator();
+                creator.Comment = "";
+                creator.CreatedBy = "";
+                creator.Path = "from path";
+                creator.AddAnnounce("tracker URL");
+                creator.Create("save to");
+            }
         }
 
         public void Add()
@@ -180,7 +187,7 @@ namespace MonoTorrent.GUI.Controller
                 }
                 File.Copy(fileName, newPath);
             }
-            ListViewItem item = new ListViewItem(newPath);
+            ListViewItem item = new ListViewItem(Path.GetFileName(newPath));
             for (int i = 0; i < 10; i++)
                 item.SubItems.Add("");
             torrentsView.Items.Add(item);
@@ -252,21 +259,35 @@ namespace MonoTorrent.GUI.Controller
 
         public void Option()
         {
-            if (optionWindow == null)
+            if (optionWindow == null || optionWindow.IsDisposed)
             {
                 optionWindow = new OptionWindow(this, settingsBase);
-                optionWindow.Show();
             }
+            optionWindow.BringToFront();
+            optionWindow.ShowDialog();
+
         }
 
         public void Up()
         {
             //TODO move up in prior
+            MessageBox.Show("Not Implemented!");
         }
 
         public void Down()
         {
             //TODO move down in prior
+            MessageBox.Show("Not Implemented!");
+        }
+
+        public void About()
+        {
+            if (aboutWindow == null || aboutWindow.IsDisposed)
+            {
+                aboutWindow = new AboutWindow();
+            }
+            aboutWindow.ShowDialog();
+            aboutWindow.BringToFront();
         }
 
         #endregion
@@ -280,6 +301,7 @@ namespace MonoTorrent.GUI.Controller
             settingsBase.SaveSettings<GuiGeneralSettings>("General Settings", settings);
             clientEngine.Settings = settings.GetEngineSettings();
         }
-
+        
+        
     }
 }

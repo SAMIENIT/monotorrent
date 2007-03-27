@@ -121,10 +121,17 @@ namespace MonoTorrent.GUI.View
             mainController.Create();
         }
 
+        private void DownStripButton_Click(object sender, EventArgs e)
+        {
+            mainController.Down();
+        }
+
+        private void UpStripButton_Click(object sender, EventArgs e)
+        {
+            mainController.Up();
+        }
+
         #endregion
-
-
-
 
         #region Menu items
 
@@ -155,47 +162,74 @@ namespace MonoTorrent.GUI.View
 
         private void showToolbarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           // showToolbarToolStripMenuItem
+            if (showToolbarToolStripMenuItem.Checked == true)
+            {
+                MaintoolStrip.Hide();
+                showToolbarToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                MaintoolStrip.Show();
+                showToolbarToolStripMenuItem.Checked = true;
+            }
         }
 
         private void showDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (showDetailToolStripMenuItem.Checked == true)
+            {
+                splitContainer1.Panel2.Hide();
+                showDetailToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                splitContainer1.Panel2.Show();
+                showDetailToolStripMenuItem.Checked = true;
+            }
         }
 
         private void showStatusbarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (showStatusbarToolStripMenuItem.Checked == true)
+            {
+                statusBar.Hide();
+                showStatusbarToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                statusBar.Show();
+                showStatusbarToolStripMenuItem.Checked = true;
+            }
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            mainController.Start();
         }
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            mainController.Stop();
         }
 
         private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            mainController.Pause();
         }
 
         private void upToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            mainController.Up();
         }
 
         private void downToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            mainController.Down();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            mainController.About();
         }
 
         #endregion
