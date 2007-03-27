@@ -72,6 +72,7 @@ namespace MonoTorrent.GUI.View
             settings.TorrentsPath = TorrentPathTextBox.Text;
             settings.UsePnP = UseUPnPCheckBox.Checked;
             controller.UpdateSettings(settings);
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

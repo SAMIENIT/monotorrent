@@ -1,12 +1,11 @@
-
-1) The GUI remembers settings when it's closed down. For example, the positions of the scroll bars, the height/width of the actual window and the position of the "splitter" in the middle of the screen should all be remembered.
-DONE!!
-
-
-2) Ideally we'd allow some parts of the GUI to be hidden if you want. For example you might not want to see the bottom panel, so you "hide" it. That should also be remembered as a setting.
-
-3) It needs to work on Mono so it runs on all OS's. At the moment i don't tihnk it's mono compatible (but that might've changed with mono 1.2.3). Anything that's missing should be reported as a bug.
-
-4) I'd love a "mini" window which just shows a percentage bar for each torrent so you can stick it up in the top corner of your screen to easily monitor how fast/slow your torrents are going.
-
-5) We will need to talk about each of the windows that will be in the GUI (or make quick mockups of them for demonstration) so we can each see how it will look and talk about it. We want this to be a nice GUI :)
+- clean up a lot of code
+- cut in some class
+- manage priority
+- detail/statistique
+- torrent setting
+- Hide/Show each coponent
+- test all
+- bug fix all 
+- remember hide/show graphical component
+- Mono comptabilite (report miss as bug and code if needed)
+- Mini windows to see percent bar for each torrent
