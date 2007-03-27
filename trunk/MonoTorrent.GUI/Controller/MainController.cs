@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using MonoTorrent.GUI.View;
 using MonoTorrent.GUI.Settings;
 using System.IO;
+using MonoTorrent.Common;
 namespace MonoTorrent.GUI.Controller
 {
     public class MainController
@@ -19,6 +20,7 @@ namespace MonoTorrent.GUI.Controller
         public MainController(ListView torrentsView, SettingsBase settings)
         {
             this.torrentsView = torrentsView;
+            this.settingsBase = settings;
             itemToTorrent = new Dictionary<ListViewItem, TorrentManager>();
 
             //get general settings in file
@@ -36,7 +38,7 @@ namespace MonoTorrent.GUI.Controller
                 GuiTorrentSettings torrentSettings = settings.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
                 Add(file, torrentSettings.GetTorrentSettings());
             }
-            settingsBase = settings;
+
         }
 
 
@@ -133,7 +135,13 @@ namespace MonoTorrent.GUI.Controller
 
         #region Controller Action
 
-        //TODO NEW TORRENT (TorrentCreator)
+        public void Create()
+        {
+            string storagePath = Environment.CurrentDirectory;
+            TorrentCreator creator = new TorrentCreator();
+
+            creator.Create(storagePath);
+        }
 
         public void Add()
         {
@@ -163,7 +171,15 @@ namespace MonoTorrent.GUI.Controller
         {
             GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
             string newPath = Path.Combine(genSettings.TorrentsPath, Path.GetFileName(fileName));
-            File.Copy(fileName, newPath);
+            if (newPath != fileName)
+            {
+                if (File.Exists(newPath))
+                {
+                    MessageBox.Show("This torrent already exist in torrent folder.");
+                    return;
+                }
+                File.Copy(fileName, newPath);
+            }
             ListViewItem item = new ListViewItem(newPath);
             for (int i = 0; i < 10; i++)
                 item.SubItems.Add("");
@@ -264,5 +280,6 @@ namespace MonoTorrent.GUI.Controller
             settingsBase.SaveSettings<GuiGeneralSettings>("General Settings", settings);
             clientEngine.Settings = settings.GetEngineSettings();
         }
+
     }
 }

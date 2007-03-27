@@ -30,20 +30,25 @@ namespace MonoTorrent.GUI.View
         {
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.addATorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createATorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteATorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.showToolbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showStatusBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDetailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showStatusbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.upToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.torrentsView = new System.Windows.Forms.ListView();
             this.colName = new System.Windows.Forms.ColumnHeader();
@@ -68,6 +73,7 @@ namespace MonoTorrent.GUI.View
             this.MaintoolStrip = new System.Windows.Forms.ToolStrip();
             this.AddToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.DelToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.CreateToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.StartToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.PauseToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -102,112 +108,160 @@ namespace MonoTorrent.GUI.View
             // 
             // menuFile
             // 
+            this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addATorrentToolStripMenuItem,
+            this.createATorrentToolStripMenuItem,
+            this.deleteATorrentToolStripMenuItem,
+            this.quitToolStripMenuItem});
             this.menuFile.Name = "menuFile";
             this.menuFile.Size = new System.Drawing.Size(35, 24);
             this.menuFile.Text = "File";
             // 
+            // addATorrentToolStripMenuItem
+            // 
+            this.addATorrentToolStripMenuItem.Name = "addATorrentToolStripMenuItem";
+            this.addATorrentToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.addATorrentToolStripMenuItem.Text = "Add a torrent";
+            this.addATorrentToolStripMenuItem.Click += new System.EventHandler(this.addATorrentToolStripMenuItem_Click);
+            // 
+            // createATorrentToolStripMenuItem
+            // 
+            this.createATorrentToolStripMenuItem.Name = "createATorrentToolStripMenuItem";
+            this.createATorrentToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.createATorrentToolStripMenuItem.Text = "Create a torrent";
+            this.createATorrentToolStripMenuItem.Click += new System.EventHandler(this.createATorrentToolStripMenuItem_Click);
+            // 
+            // deleteATorrentToolStripMenuItem
+            // 
+            this.deleteATorrentToolStripMenuItem.Name = "deleteATorrentToolStripMenuItem";
+            this.deleteATorrentToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.deleteATorrentToolStripMenuItem.Text = "Delete a torrent";
+            this.deleteATorrentToolStripMenuItem.Click += new System.EventHandler(this.deleteATorrentToolStripMenuItem_Click);
+            // 
+            // quitToolStripMenuItem
+            // 
+            this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.quitToolStripMenuItem.Text = "Quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+            // 
             // menuEdit
             // 
-            this.menuEdit.Name = "menuEdit";
-            this.menuEdit.Size = new System.Drawing.Size(37, 24);
-            this.menuEdit.Text = "Edit";
-            // 
-            // menuAbout
-            // 
-            this.menuAbout.Name = "menuAbout";
-            this.menuAbout.Size = new System.Drawing.Size(48, 24);
-            this.menuAbout.Text = "About";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createTorrentToolStripMenuItem,
-            this.addTorrentToolStripMenuItem,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 24);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // createTorrentToolStripMenuItem
-            // 
-            this.createTorrentToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.createTorrentToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.White;
-            this.createTorrentToolStripMenuItem.Name = "createTorrentToolStripMenuItem";
-            this.createTorrentToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.createTorrentToolStripMenuItem.Text = "Create Torrent";
-            this.createTorrentToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // addTorrentToolStripMenuItem
-            // 
-            this.addTorrentToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.addTorrentToolStripMenuItem.Name = "addTorrentToolStripMenuItem";
-            this.addTorrentToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.addTorrentToolStripMenuItem.Text = "Add Torrent";
-            this.addTorrentToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.preferencesToolStripMenuItem});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 24);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // preferencesToolStripMenuItem
-            // 
-            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.preferencesToolStripMenuItem.Text = "Preferences";
-            // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showDetailsToolStripMenuItem,
+            this.menuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionToolStripMenuItem,
+            this.toolStripSeparator3,
             this.showToolbarToolStripMenuItem,
-            this.showStatusBarToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 24);
-            this.viewToolStripMenuItem.Text = "View";
+            this.showDetailToolStripMenuItem,
+            this.showStatusbarToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.startToolStripMenuItem,
+            this.stopToolStripMenuItem,
+            this.pauseToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.upToolStripMenuItem,
+            this.downToolStripMenuItem});
+            this.menuEdit.Name = "menuEdit";
+            this.menuEdit.Size = new System.Drawing.Size(51, 24);
+            this.menuEdit.Text = "Option";
             // 
-            // showDetailsToolStripMenuItem
+            // optionToolStripMenuItem
             // 
-            this.showDetailsToolStripMenuItem.Name = "showDetailsToolStripMenuItem";
-            this.showDetailsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.showDetailsToolStripMenuItem.Text = "Show Details";
+            this.optionToolStripMenuItem.Name = "optionToolStripMenuItem";
+            this.optionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.optionToolStripMenuItem.Text = "Options";
+            this.optionToolStripMenuItem.Click += new System.EventHandler(this.optionToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(158, 6);
             // 
             // showToolbarToolStripMenuItem
             // 
+            this.showToolbarToolStripMenuItem.Checked = true;
+            this.showToolbarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showToolbarToolStripMenuItem.Name = "showToolbarToolStripMenuItem";
             this.showToolbarToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.showToolbarToolStripMenuItem.Text = "Show Toolbar";
+            this.showToolbarToolStripMenuItem.Click += new System.EventHandler(this.showToolbarToolStripMenuItem_Click);
             // 
-            // showStatusBarToolStripMenuItem
+            // showDetailToolStripMenuItem
             // 
-            this.showStatusBarToolStripMenuItem.Name = "showStatusBarToolStripMenuItem";
-            this.showStatusBarToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.showStatusBarToolStripMenuItem.Text = "Show StatusBar";
+            this.showDetailToolStripMenuItem.Checked = true;
+            this.showDetailToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showDetailToolStripMenuItem.Name = "showDetailToolStripMenuItem";
+            this.showDetailToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.showDetailToolStripMenuItem.Text = "Show Detail";
+            this.showDetailToolStripMenuItem.Click += new System.EventHandler(this.showDetailToolStripMenuItem_Click);
             // 
-            // helpToolStripMenuItem
+            // showStatusbarToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.websiteToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(48, 24);
-            this.helpToolStripMenuItem.Text = "About";
+            this.showStatusbarToolStripMenuItem.Checked = true;
+            this.showStatusbarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showStatusbarToolStripMenuItem.Name = "showStatusbarToolStripMenuItem";
+            this.showStatusbarToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.showStatusbarToolStripMenuItem.Text = "Show Statusbar";
+            this.showStatusbarToolStripMenuItem.Click += new System.EventHandler(this.showStatusbarToolStripMenuItem_Click);
             // 
-            // websiteToolStripMenuItem
+            // toolStripSeparator4
             // 
-            this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.websiteToolStripMenuItem.Text = "Website";
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(158, 6);
+            // 
+            // startToolStripMenuItem
+            // 
+            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.startToolStripMenuItem.Text = "Start";
+            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
+            // 
+            // stopToolStripMenuItem
+            // 
+            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.stopToolStripMenuItem.Text = "Stop";
+            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
+            // 
+            // pauseToolStripMenuItem
+            // 
+            this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.pauseToolStripMenuItem.Text = "Pause";
+            this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(158, 6);
+            // 
+            // upToolStripMenuItem
+            // 
+            this.upToolStripMenuItem.Name = "upToolStripMenuItem";
+            this.upToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.upToolStripMenuItem.Text = "Up";
+            this.upToolStripMenuItem.Click += new System.EventHandler(this.upToolStripMenuItem_Click);
+            // 
+            // downToolStripMenuItem
+            // 
+            this.downToolStripMenuItem.Name = "downToolStripMenuItem";
+            this.downToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.downToolStripMenuItem.Text = "Down";
+            this.downToolStripMenuItem.Click += new System.EventHandler(this.downToolStripMenuItem_Click);
+            // 
+            // menuAbout
+            // 
+            this.menuAbout.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.menuAbout.Name = "menuAbout";
+            this.menuAbout.Size = new System.Drawing.Size(40, 24);
+            this.menuAbout.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // statusBar
             // 
@@ -317,7 +371,7 @@ namespace MonoTorrent.GUI.View
             // 
             // generalPanel
             // 
-            this.generalPanel.Location = new System.Drawing.Point(15, 164);
+            this.generalPanel.Location = new System.Drawing.Point(15, 158);
             this.generalPanel.Margin = new System.Windows.Forms.Padding(10);
             this.generalPanel.MinimumSize = new System.Drawing.Size(450, 0);
             this.generalPanel.Name = "generalPanel";
@@ -396,6 +450,7 @@ namespace MonoTorrent.GUI.View
             this.MaintoolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddToolStripButton,
             this.DelToolStripButton,
+            this.CreateToolStripButton,
             this.toolStripSeparator1,
             this.StartToolStripButton,
             this.PauseToolStripButton,
@@ -431,6 +486,16 @@ namespace MonoTorrent.GUI.View
             this.DelToolStripButton.Text = "Del";
             this.DelToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.DelToolStripButton.Click += new System.EventHandler(this.DelToolStripButton_Click);
+            // 
+            // CreateToolStripButton
+            // 
+            this.CreateToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.document_new;
+            this.CreateToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CreateToolStripButton.Name = "CreateToolStripButton";
+            this.CreateToolStripButton.Size = new System.Drawing.Size(44, 33);
+            this.CreateToolStripButton.Text = "Create";
+            this.CreateToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.CreateToolStripButton.Click += new System.EventHandler(this.CreateToolStripButton_Click);
             // 
             // toolStripSeparator1
             // 
@@ -537,18 +602,6 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.TabControl detailsView;
         private System.Windows.Forms.TabPage tabGeneral;
         private System.Windows.Forms.TabPage tabDetails;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createTorrentToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addTorrentToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showDetailsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showToolbarToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showStatusBarToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader colName;
         private System.Windows.Forms.ColumnHeader colSize;
         private System.Windows.Forms.ColumnHeader colProgress;
@@ -579,6 +632,24 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton DownStripButton;
         private System.Windows.Forms.ToolStripButton UpStripButton;
+        private System.Windows.Forms.ToolStripMenuItem addATorrentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createATorrentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem showToolbarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showDetailToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showStatusbarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem upToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteATorrentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton CreateToolStripButton;
     }
 }
 

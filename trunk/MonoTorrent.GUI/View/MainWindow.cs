@@ -116,7 +116,91 @@ namespace MonoTorrent.GUI.View
             mainController.Option();
         }
 
+        private void CreateToolStripButton_Click(object sender, EventArgs e)
+        {
+            mainController.Create();
+        }
+
         #endregion
+
+
+
+
+        #region Menu items
+
+        private void addATorrentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainController.Add();
+        }
+
+        private void createATorrentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainController.Create();
+        }
+
+        private void deleteATorrentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainController.Del();
+        }
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void optionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainController.Option();
+        }
+
+        private void showToolbarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           // showToolbarToolStripMenuItem
+        }
+
+        private void showDetailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void showStatusbarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void upToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void downToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+
 
     }
 }

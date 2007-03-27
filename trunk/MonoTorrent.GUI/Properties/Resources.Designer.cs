@@ -60,6 +60,13 @@ namespace MonoTorrent.GUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap document_new {
+            get {
+                object obj = ResourceManager.GetObject("document_new", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap go_down {
             get {
                 object obj = ResourceManager.GetObject("go_down", resourceCulture);
@@ -112,6 +119,13 @@ namespace MonoTorrent.GUI.Properties {
         internal static System.Drawing.Bitmap preferences_system {
             get {
                 object obj = ResourceManager.GetObject("preferences_system", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap toplogo {
+            get {
+                object obj = ResourceManager.GetObject("toplogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
