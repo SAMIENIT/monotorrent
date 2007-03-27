@@ -63,6 +63,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\AboutWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -92,6 +96,18 @@
     <Compile Include="Settings\ISettings.cs" />
     <Compile Include="Settings\ISettingsStorage.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
+    <Compile Include="View\AboutWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AboutWindow.Designer.cs">
+      <DependentUpon>AboutWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CreateWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CreateWindow.Designer.cs">
+      <DependentUpon>CreateWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon1.ico" />
+    <None Include="Resources\document-new.png" />
     <Content Include="Resources\go-down.png" />
     <Content Include="Resources\go-up.png" />
     <Content Include="Resources\list-add.png" />
@@ -115,6 +132,7 @@
     <Content Include="Resources\media-playback-start.png" />
     <Content Include="Resources\media-playback-stop.png" />
     <Content Include="Resources\preferences-system.png" />
+    <None Include="Resources\toplogo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
