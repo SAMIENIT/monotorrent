@@ -165,11 +165,14 @@ namespace MonoTorrent.GUI.View
             if (showToolbarToolStripMenuItem.Checked == true)
             {
                 MaintoolStrip.Hide();
+                splitContainer1.Dock = DockStyle.Fill;
                 showToolbarToolStripMenuItem.Checked = false;
             }
             else
             {
                 MaintoolStrip.Show();
+                splitContainer1.Dock = DockStyle.None;
+                splitContainer1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
                 showToolbarToolStripMenuItem.Checked = true;
             }
         }
@@ -178,12 +181,15 @@ namespace MonoTorrent.GUI.View
         {
             if (showDetailToolStripMenuItem.Checked == true)
             {
+                //TODO : FIXME : find a way to hide the entire panel
                 splitContainer1.Panel2.Hide();
+                splitContainer1.SplitterDistance = 100000;
                 showDetailToolStripMenuItem.Checked = false;
             }
             else
             {
                 splitContainer1.Panel2.Show();
+                splitContainer1.SplitterDistance = 100;
                 showDetailToolStripMenuItem.Checked = true;
             }
         }
