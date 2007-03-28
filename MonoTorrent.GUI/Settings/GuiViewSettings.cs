@@ -19,6 +19,9 @@ namespace MonoTorrent.GUI.Settings
         private int splitterDistance = 190;
         private int vscrollValue = 0;
         private int hscrollValue = 0;
+        private bool showToolbar = true;
+        private bool showDetail = true;
+        private bool showStatusbar = true;
         #endregion
 
         #region Properties
@@ -53,6 +56,24 @@ namespace MonoTorrent.GUI.Settings
             set { hscrollValue = value; }
         }
 
+        public bool ShowToolbar
+        {
+            get { return showToolbar; }
+            set { showToolbar = value; }
+        }
+
+        public bool ShowDetail
+        {
+            get { return showDetail; }
+            set { showDetail = value; }
+        }
+
+        public bool ShowStatusbar
+        {
+            get { return showStatusbar; }
+            set { showStatusbar = value; }
+        }
+
         #endregion
 
         #region Interface Members
@@ -65,6 +86,9 @@ namespace MonoTorrent.GUI.Settings
             result.Add(new BEncodedString("splitterDistance"), new BEncodedNumber(SplitterDistance));
             result.Add(new BEncodedString("VScrollValue"), new BEncodedNumber(VScrollValue));
             result.Add(new BEncodedString("HScrollValue"), new BEncodedNumber(HScrollValue));
+            result.Add(new BEncodedString("ShowToolbar"), new BEncodedString(ShowToolbar.ToString()));
+            result.Add(new BEncodedString("ShowDetail"), new BEncodedString(ShowDetail.ToString()));
+            result.Add(new BEncodedString("ShowStatusbar"), new BEncodedString(ShowStatusbar.ToString()));
             return result;
         }
 
@@ -92,6 +116,15 @@ namespace MonoTorrent.GUI.Settings
 
                 if (val.TryGetValue(new BEncodedString("HScrollValue"), out result))
                     HScrollValue = Convert.ToInt32(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("ShowToolbar"), out result))
+                    ShowToolbar = Convert.ToBoolean(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("ShowDetail"), out result))
+                    ShowDetail = Convert.ToBoolean(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("ShowStatusbar"), out result))
+                    ShowStatusbar = Convert.ToBoolean(result.ToString());
             }
         }
 

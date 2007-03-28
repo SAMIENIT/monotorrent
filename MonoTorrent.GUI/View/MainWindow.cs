@@ -21,6 +21,7 @@ namespace MonoTorrent.GUI.View
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            //recover all gui settings
             SettingsBase settings = new SettingsBase();
             GuiViewSettings guisettings = settings.LoadSettings<GuiViewSettings>("Graphical Settings");
             this.Width = guisettings.FormWidth;
@@ -28,11 +29,18 @@ namespace MonoTorrent.GUI.View
             splitContainer1.SplitterDistance = guisettings.SplitterDistance;
             tabGeneral.VerticalScroll.Value = guisettings.VScrollValue;
             tabGeneral.HorizontalScroll.Value = guisettings.HScrollValue;
+            // show/Hide component of GUI
+            ShowStatusBar(guisettings.ShowStatusbar);
+            ShowToolBar(guisettings.ShowToolbar);
+            ShowDetail(guisettings.ShowDetail);
+            
+            //load maincontroller
             mainController = new MainController(torrentsView, settings);
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+            //Save all gui settings
             SettingsBase settings = new SettingsBase();
             GuiViewSettings guisettings = new GuiViewSettings();
             guisettings.FormWidth = this.Width;
@@ -40,6 +48,9 @@ namespace MonoTorrent.GUI.View
             guisettings.SplitterDistance = splitContainer1.SplitterDistance;
             guisettings.VScrollValue = tabGeneral.VerticalScroll.Value;
             guisettings.HScrollValue = tabGeneral.HorizontalScroll.Value;
+            guisettings.ShowDetail = showDetailToolStripMenuItem.Checked;
+            guisettings.ShowStatusbar = showStatusbarToolStripMenuItem.Checked;
+            guisettings.ShowToolbar = showToolbarToolStripMenuItem.Checked;
             settings.SaveSettings<GuiViewSettings>("Graphical Settings", guisettings);
         }
 
@@ -162,50 +173,17 @@ namespace MonoTorrent.GUI.View
 
         private void showToolbarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (showToolbarToolStripMenuItem.Checked == true)
-            {
-                MaintoolStrip.Hide();
-                splitContainer1.Dock = DockStyle.Fill;
-                showToolbarToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                MaintoolStrip.Show();
-                splitContainer1.Dock = DockStyle.None;
-                splitContainer1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-                showToolbarToolStripMenuItem.Checked = true;
-            }
+            ShowToolBar(!showToolbarToolStripMenuItem.Checked);
         }
 
         private void showDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (showDetailToolStripMenuItem.Checked == true)
-            {
-                //TODO : FIXME : find a way to hide the entire panel
-                splitContainer1.Panel2.Hide();
-                splitContainer1.SplitterDistance = 100000;
-                showDetailToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                splitContainer1.Panel2.Show();
-                splitContainer1.SplitterDistance = 100;
-                showDetailToolStripMenuItem.Checked = true;
-            }
+            ShowDetail(!showDetailToolStripMenuItem.Checked);
         }
 
         private void showStatusbarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (showStatusbarToolStripMenuItem.Checked == true)
-            {
-                statusBar.Hide();
-                showStatusbarToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                statusBar.Show();
-                showStatusbarToolStripMenuItem.Checked = true;
-            }
+            ShowStatusBar(!showStatusbarToolStripMenuItem.Checked);
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
@@ -240,7 +218,68 @@ namespace MonoTorrent.GUI.View
 
         #endregion
 
+        /// <summary>
+        /// Show or hide toolbar
+        /// </summary>
+        /// <param name="check">if true show else Hide</param>
+        private void ShowToolBar(bool check)
+        {
+            if (check)
+            {
+                //to avoid bug in order of menu
+                this.Controls.Add(splitContainer1);
+                this.Controls.Add(MaintoolStrip);
+                this.Controls.Add(menuBar);
+                showToolbarToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                this.Controls.Remove(MaintoolStrip);
+                //to have splitcontainer which take empty place
+                splitContainer1.Dock = DockStyle.Fill;
+                showToolbarToolStripMenuItem.Checked = false;
+            }
 
+        }
+
+        /// <summary>
+        /// Show Hide Detail
+        /// </summary>
+        /// <param name="check">if true show else Hide</param>
+        private void ShowDetail(bool check)
+        {
+            if (check)
+            {
+                splitContainer1.Panel2Collapsed = false;
+                showDetailToolStripMenuItem.Checked = true;
+
+            }
+            else
+            {
+                splitContainer1.Panel2Collapsed = true;
+                showDetailToolStripMenuItem.Checked = false;
+            }
+
+        }
+
+        /// <summary>
+        /// Show Hide status bar
+        /// </summary>
+        /// <param name="check">if true show else Hide</param>
+        private void ShowStatusBar(bool check)
+        {
+            if (check)
+            {
+                this.Controls.Add(statusBar);
+                showStatusbarToolStripMenuItem.Checked = true;
+                
+            }
+            else
+            {
+                this.Controls.Remove(statusBar);
+                showStatusbarToolStripMenuItem.Checked = false;
+            }
+        }
 
     }
 }

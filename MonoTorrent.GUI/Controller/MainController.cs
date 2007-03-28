@@ -138,15 +138,17 @@ namespace MonoTorrent.GUI.Controller
 
         public void Create()
         {
-            CreateWindow window = new CreateWindow();
+            CreateWindow window = new CreateWindow(this);
             if (window.ShowDialog() == DialogResult.OK)
             {
                 TorrentCreator creator = new TorrentCreator();
-                creator.Comment = "";
-                creator.CreatedBy = "";
-                creator.Path = "from path";
-                creator.AddAnnounce("tracker URL");
-                creator.Create("save to");
+                creator.Comment = window.Comment;
+                creator.CreatedBy = window.CreateBy;
+                creator.Path = window.FromPath;
+                if (!String.IsNullOrEmpty(window.TrackerURL))
+                    creator.AddAnnounce(window.TrackerURL);
+                string newPath = Path.Combine(window.SaveTo, Path.GetFileName(window.FromPath));
+                creator.Create(newPath);
             }
         }
 

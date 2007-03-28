@@ -5,23 +5,62 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using MonoTorrent.GUI.Controller;
+using System.IO;
 
 namespace MonoTorrent.GUI.View
 {
     public partial class CreateWindow : Form
     {
-        public CreateWindow()
+        private MainController mainController;
+
+        public CreateWindow(MainController controller)
         {
             InitializeComponent();
+            mainController = controller;
         }
+
+        #region Properties
+
+        private string fromPath;
+        public string FromPath
+        {
+            get { return fromPath; }
+        }
+
+        private string saveTo;
+        public string SaveTo
+        {
+            get { return saveTo; }
+        }
+
+        private string comment;
+        public string Comment
+        {
+            get { return comment; }
+        }
+
+        private string createBy;
+        public string CreateBy
+        {
+            get { return createBy; }
+        }
+
+        private string trackerURL;
+        public string TrackerURL
+        {
+            get { return trackerURL; }
+        }
+
+        #endregion
 
         private void FromPathBrowseButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "From Path";
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "From Path";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                FromPathTextBox.Text = dialog.SelectedPath;
+                FromPathTextBox.Text = dialog.FileName;
             }
         }
 
@@ -37,7 +76,25 @@ namespace MonoTorrent.GUI.View
 
         private void Okbutton_Click(object sender, EventArgs e)
         {
-            // TODO
+            if (!File.Exists(FromPathTextBox.Text))
+            {
+                MessageBox.Show("Bad from path!");
+                return;
+            }
+
+            if (!Directory.Exists(SaveToTextBox.Text))
+            {
+                MessageBox.Show("Bad save to!");
+                return;
+            }
+
+            fromPath = FromPathTextBox.Text;
+            saveTo = SaveToTextBox.Text;
+            comment = CommentTextBox.Text;
+            createBy = CreateByTextBox.Text;
+            trackerURL = TrackerURLTextBox.Text;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         private void QuitButton_Click(object sender, EventArgs e)
