@@ -1,11 +1,9 @@
-- clean up a lot of code
-- cut in some class
-- manage priority
-- detail/statistique
-- torrent setting
-- Hide/Show each coponent
-- test all
-- bug fix all 
-- remember hide/show graphical component
+- detail/statistique ( not needed for basic)
+- torrent setting (for moment torrent setting is never changed so default)
 - Mono comptabilite (report miss as bug and code if needed)
 - Mini windows to see percent bar for each torrent
+- manage priority
+- clean up a lot of code
+- cut in some class
+- test all
+- bug fix all 
