@@ -225,7 +225,11 @@ namespace MonoTorrent.GUI.Controller
             try
             {
                 foreach (TorrentManager torrent in GetSelectedTorrents())
-                    clientEngine.Start(torrent);
+                {
+                    if ( torrent.State == TorrentState.Paused 
+                        || torrent.State == TorrentState.Stopped)
+                        clientEngine.Start(torrent);
+                }
             }
             catch (Exception e)
             {
@@ -238,7 +242,10 @@ namespace MonoTorrent.GUI.Controller
             try
             {
                 foreach (TorrentManager torrent in GetSelectedTorrents())
-                    clientEngine.Stop(torrent);
+                {
+                    if (torrent.State != TorrentState.Stopped)
+                        clientEngine.Stop(torrent);
+                }
             }
             catch (Exception e)
             {
@@ -251,7 +258,11 @@ namespace MonoTorrent.GUI.Controller
             try
             {
                 foreach (TorrentManager torrent in GetSelectedTorrents())
+                {
+                    if (torrent.State != TorrentState.Paused
+                        && torrent.State != TorrentState.Stopped)
                     clientEngine.Pause(torrent);
+                }
             }
             catch (Exception e)
             {
