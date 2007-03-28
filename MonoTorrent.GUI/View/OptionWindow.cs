@@ -25,18 +25,17 @@ namespace MonoTorrent.GUI.View
             InitializeComponent();
             this.controller = mainController;
             GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("General Settings");
-            MaxConnectionsTextBox.Text = genSettings.GlobalMaxConnections.ToString();
-            MaxConnectionsTextBox.Text = genSettings.GlobalMaxConnections.ToString();
-            MaxDownloadSpeedTextBox.Text = genSettings.GlobalMaxDownloadSpeed.ToString();
-            HalfOpenConnectionsTextBox.Text = genSettings.GlobalMaxHalfOpenConnections.ToString();
-            MaxUploadSpeedTextBox.Text = genSettings.GlobalMaxUploadSpeed.ToString();
-            ListenPortTextBox.Text = genSettings.ListenPort.ToString();
+            MaxConnectionsNumericUpDown.Value = genSettings.GlobalMaxConnections;
+            MaxDownloadSpeedNumericUpDown.Value = genSettings.GlobalMaxDownloadSpeed;
+            HalfOpenConnectionsNumericUpDown.Value = genSettings.GlobalMaxHalfOpenConnections;
+            MaxUploadSpeedNumericUpDown.Value = genSettings.GlobalMaxUploadSpeed;
+            ListenPortNumericUpDown.Value = genSettings.ListenPort;
             SavePathTextBox.Text = genSettings.SavePath;
             TorrentPathTextBox.Text = genSettings.TorrentsPath;
             UseUPnPCheckBox.Checked = genSettings.UsePnP;
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
+        private void QuitButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -53,21 +52,13 @@ namespace MonoTorrent.GUI.View
                 MessageBox.Show("Bad torrents Path");
                 return;
             }
-            if (!IsNumber(HalfOpenConnectionsTextBox.Text)
-                || !IsNumber(MaxDownloadSpeedTextBox.Text)
-                || !IsNumber(MaxConnectionsTextBox.Text)
-                || !IsNumber(ListenPortTextBox.Text)
-                || !IsNumber(MaxUploadSpeedTextBox.Text))
-            {
-                MessageBox.Show("Must be a number between 0 and "+Int32.MaxValue);
-                return;
-            }
+            //TODO check updowns
             GuiGeneralSettings settings = new GuiGeneralSettings();
-            settings.GlobalMaxConnections = Convert.ToInt32(MaxConnectionsTextBox.Text);
-            settings.GlobalMaxDownloadSpeed = Convert.ToInt32(MaxDownloadSpeedTextBox.Text);
-            settings.GlobalMaxHalfOpenConnections = Convert.ToInt32(HalfOpenConnectionsTextBox.Text);
-            settings.GlobalMaxUploadSpeed = Convert.ToInt32(MaxUploadSpeedTextBox.Text);
-            settings.ListenPort = Convert.ToInt32(ListenPortTextBox.Text);
+            settings.GlobalMaxConnections = Convert.ToInt32(MaxConnectionsNumericUpDown.Value);
+            settings.GlobalMaxDownloadSpeed = Convert.ToInt32(MaxDownloadSpeedNumericUpDown.Value);
+            settings.GlobalMaxHalfOpenConnections = Convert.ToInt32(HalfOpenConnectionsNumericUpDown.Value);
+            settings.GlobalMaxUploadSpeed = Convert.ToInt32(MaxUploadSpeedNumericUpDown.Value);
+            settings.ListenPort = Convert.ToInt32(ListenPortNumericUpDown.Value);
             settings.SavePath = SavePathTextBox.Text;
             settings.TorrentsPath = TorrentPathTextBox.Text;
             settings.UsePnP = UseUPnPCheckBox.Checked;

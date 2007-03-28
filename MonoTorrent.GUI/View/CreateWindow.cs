@@ -40,7 +40,7 @@ namespace MonoTorrent.GUI.View
             // TODO
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
+        private void QuitButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
