@@ -4,6 +4,7 @@ using System.Text;
 using MonoTorrent.BEncoding;
 using MonoTorrent.Client;
 using System.IO;
+using MonoTorrent.Common;
 
 namespace MonoTorrent.GUI.Settings
 {
@@ -145,8 +146,8 @@ namespace MonoTorrent.GUI.Settings
 
         public EngineSettings GetEngineSettings()
         {
-            return new EngineSettings(SavePath, UsePnP, GlobalMaxConnections, GlobalMaxHalfOpenConnections,
-                                   ListenPort, GlobalMaxDownloadSpeed, GlobalMaxUploadSpeed);
+            return new EngineSettings(SavePath, ListenPort, UsePnP, GlobalMaxConnections, GlobalMaxHalfOpenConnections,
+                                   GlobalMaxDownloadSpeed, GlobalMaxUploadSpeed,EncryptionType.None,true);
         }
     }
 }
