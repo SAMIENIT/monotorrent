@@ -1,9 +1,9 @@
-- detail/statistique ( not needed for basic)
-- torrent setting (for moment torrent setting is never changed so default)
-- Mono comptabilite (report miss as bug and code if needed)
-- Mini windows to see percent bar for each torrent
-- manage priority
-- clean up a lot of code
-- cut in some class
-- test all
-- bug fix all 
+- event to follow evolution of stat
+- detail/statistique 					(not needed for basic)
+- torrent setting 					(for moment torrent setting is never changed so default)
+- Mono comptabilite 					(scrollproperties missing so patch sent to mono dev)
+- Mini windows to see percent bar for each torrent	(not needed for basic)
+- manage priority					(not find in lib)
+- clean up a lot of code				TODO
+- cut in some class					TODO
+- test all						TODO ( some test ever done)

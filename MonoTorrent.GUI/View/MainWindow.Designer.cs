@@ -329,7 +329,7 @@ namespace MonoTorrent.GUI.View
             this.torrentsView.Name = "torrentsView";
             this.torrentsView.Size = new System.Drawing.Size(692, 190);
             this.torrentsView.TabIndex = 0;
-            this.torrentsView.UseCompatibleStateImageBehavior = false;
+            //this.torrentsView.UseCompatibleStateImageBehavior = false;
             this.torrentsView.View = System.Windows.Forms.View.Details;
             this.torrentsView.DragEnter += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragEnter);
             this.torrentsView.DragDrop += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragDrop);
@@ -662,7 +662,7 @@ namespace MonoTorrent.GUI.View
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(684, 164);
             this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            //this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
             // ColumnHeader1
@@ -717,7 +717,7 @@ namespace MonoTorrent.GUI.View
             this.listView2.Name = "listView2";
             this.listView2.Size = new System.Drawing.Size(684, 164);
             this.listView2.TabIndex = 0;
-            this.listView2.UseCompatibleStateImageBehavior = false;
+            //this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader8
