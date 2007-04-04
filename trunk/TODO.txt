@@ -1,7 +1,7 @@
-- event to follow evolution of stat
 - detail/statistique 					(not needed for basic)
+- torrent stats format					TODO
 - torrent setting 					(for moment torrent setting is never changed so default)
-- Mono comptabilite 					(scrollproperties missing so patch sent to mono dev)
+- reload ever downloaded file at start			TODO
 - Mini windows to see percent bar for each torrent	(not needed for basic)
 - manage priority					(not find in lib)
 - clean up a lot of code				TODO
