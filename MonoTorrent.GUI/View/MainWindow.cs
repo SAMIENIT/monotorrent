@@ -40,6 +40,9 @@ namespace MonoTorrent.GUI.View
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+			//close client
+			mainController.Exit();
+
             //Save all gui settings
             SettingsBase settings = new SettingsBase();
             GuiViewSettings guisettings = new GuiViewSettings();

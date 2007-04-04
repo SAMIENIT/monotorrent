@@ -40,10 +40,34 @@ namespace MonoTorrent.GUI.Controller
                 Add(file, torrentSettings.GetTorrentSettings());
             }
 
+			//subscribe to event for update
+			clientEngine.StatsUpdate += OnUpdateStats;
         }
 
+		/// <summary>
+		/// close all before exit
+		/// </summary>
+ 		public void Exit()
+		{
+			//TODO : Exit => dispose
+			foreach (TorrentManager torrent in clientEngine.Torrents)
+			{
+				torrent.PieceHashed -= OnTorrentChange;
+				torrent.PeersFound -= OnTorrentChange;
+				torrent.TorrentStateChanged -= OnTorrentStateChange;
+			}
+			clientEngine.Stop();
+			clientEngine.StatsUpdate -= OnUpdateStats;
+		}
 
         #region Helper
+
+
+		public void UpdateAllStats()
+		{
+			foreach (TorrentManager torrent in clientEngine.Torrents)
+				UpdateState(torrent);
+		}
 
         /// <summary>
         /// get all row selected in list view
@@ -58,6 +82,7 @@ namespace MonoTorrent.GUI.Controller
         }
 
         private delegate void UpdateHandler(TorrentManager torrent);
+		private delegate void UpdateStatsHandler();
 
         /// <summary>
         /// update torrent in gui
@@ -72,7 +97,7 @@ namespace MonoTorrent.GUI.Controller
         }
 
         /// <summary>
-        /// update torretn state in view
+        /// update torrent state in view
         /// </summary>
         /// <param name="torrent"></param>
         public void UpdateState(TorrentManager torrent)
@@ -82,8 +107,8 @@ namespace MonoTorrent.GUI.Controller
             item.SubItems[3].Text = torrent.State.ToString();
             item.SubItems[4].Text = torrent.Seeds().ToString();
             item.SubItems[5].Text = torrent.Leechs().ToString();
-            item.SubItems[6].Text = torrent.DownloadSpeed().ToString();
-            item.SubItems[7].Text = torrent.UploadSpeed().ToString();
+            item.SubItems[6].Text = String.Format("{0:N}",torrent.DownloadSpeed());
+            item.SubItems[7].Text = String.Format("{0:N}",torrent.UploadSpeed());
             item.SubItems[8].Text = torrent.Monitor.DataBytesDownloaded.ToString();
             item.SubItems[9].Text = torrent.Monitor.DataBytesUploaded.ToString();
             item.SubItems[10].Text = torrent.AvailablePeers.ToString();//FIXME ratio here
@@ -131,6 +156,16 @@ namespace MonoTorrent.GUI.Controller
             TorrentManager torrent = (TorrentManager)sender;
             torrentsView.Invoke(new UpdateHandler(UpdateState), torrent);
         }
+
+		/// <summary>
+		/// event update stats change
+		/// </summary>
+		/// <param name="sender">clientengine</param>
+		/// <param name="args"></param>
+		private void OnUpdateStats(object sender, EventArgs args)
+		{
+			torrentsView.Invoke(new UpdateStatsHandler(UpdateAllStats));
+		}
 
         #endregion
 
