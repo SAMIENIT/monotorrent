@@ -50,19 +50,33 @@ namespace MonoTorrent.GUI.Controller
  		public void Exit()
 		{
 			//TODO : Exit => dispose
+			clientEngine.Stop();
 			foreach (TorrentManager torrent in clientEngine.Torrents)
 			{
 				torrent.PieceHashed -= OnTorrentChange;
 				torrent.PeersFound -= OnTorrentChange;
 				torrent.TorrentStateChanged -= OnTorrentStateChange;
 			}
-			clientEngine.Stop();
+
 			clientEngine.StatsUpdate -= OnUpdateStats;
 		}
 
         #region Helper
 
-
+		public string FormatSizeValue(long value)
+		{
+			if (value < 1000)
+				return String.Format("{0:G3} o",value);
+			if (value < 1000000)
+				return String.Format("{0:G3} Ko", value/1000);
+			if (value < 1000000000)
+				return String.Format("{0:G3} Mo", value/1000000);
+			return String.Format("{0:G3} Go", value/1000000000);
+		}
+		public string FormatSizeValue(double value)
+		{
+			return FormatSizeValue(Convert.ToInt64(value));
+		}
 		public void UpdateAllStats()
 		{
 			foreach (TorrentManager torrent in clientEngine.Torrents)
@@ -107,10 +121,10 @@ namespace MonoTorrent.GUI.Controller
             item.SubItems[3].Text = torrent.State.ToString();
             item.SubItems[4].Text = torrent.Seeds().ToString();
             item.SubItems[5].Text = torrent.Leechs().ToString();
-            item.SubItems[6].Text = String.Format("{0:N}",torrent.DownloadSpeed());
-            item.SubItems[7].Text = String.Format("{0:N}",torrent.UploadSpeed());
-            item.SubItems[8].Text = torrent.Monitor.DataBytesDownloaded.ToString();
-            item.SubItems[9].Text = torrent.Monitor.DataBytesUploaded.ToString();
+            item.SubItems[6].Text = FormatSizeValue(torrent.DownloadSpeed()) + "/s";
+			item.SubItems[7].Text = FormatSizeValue(torrent.UploadSpeed()) + "/s";
+            item.SubItems[8].Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded);
+            item.SubItems[9].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
             item.SubItems[10].Text = torrent.AvailablePeers.ToString();//FIXME ratio here
         }
 
@@ -154,7 +168,8 @@ namespace MonoTorrent.GUI.Controller
         private void OnTorrentStateChange(object sender, EventArgs args)
         {
             TorrentManager torrent = (TorrentManager)sender;
-            torrentsView.Invoke(new UpdateHandler(UpdateState), torrent);
+			if (!torrentsView.IsDisposed)
+				torrentsView.Invoke(new UpdateHandler(UpdateState), torrent);
         }
 
 		/// <summary>
@@ -164,7 +179,8 @@ namespace MonoTorrent.GUI.Controller
 		/// <param name="args"></param>
 		private void OnUpdateStats(object sender, EventArgs args)
 		{
-			torrentsView.Invoke(new UpdateStatsHandler(UpdateAllStats));
+			if (!torrentsView.IsDisposed)
+				torrentsView.Invoke(new UpdateStatsHandler(UpdateAllStats));
 		}
 
         #endregion
