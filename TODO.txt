@@ -7,3 +7,4 @@
 - clean up a lot of code				TODO
 - cut in some class					TODO
 - test all						TODO ( some test ever done)
+- make a context menu to clear all downloaded torrent, start,stop,...
