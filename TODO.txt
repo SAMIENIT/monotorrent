@@ -1,10 +1,18 @@
-- detail/statistique 					(not needed for basic)
-- torrent stats format					TODO
-- torrent setting 					(for moment torrent setting is never changed so default)
-- reload ever downloaded file at start			TODO
-- Mini windows to see percent bar for each torrent	(not needed for basic)
-- manage priority					(not find in lib)
-- clean up a lot of code				TODO
-- cut in some class					TODO
-- test all						TODO ( some test ever done)
-- make a context menu to clear all downloaded torrent, start,stop,...
+- tabdetails			TODO
+- tabgeneral			TODO
+- tabpeers			started
+- tabpieces			TODO
+- Mini windows 			TODO
+- manage priority		TODO
+- clean up a lot of code	started ( continue to make properties in main form + do helper class)
+- context menu 			TODO
+- statusbar			TODO
+
+- torrent setting 		DONE
+- Menu				DONE
+- main view			DONE
+- toolbar			DONE
+
+BUGS:
+
+- wainhandle waitone bug when quit

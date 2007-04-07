@@ -87,5 +87,12 @@ namespace MonoTorrent.GUI.Settings
         { 
             return new TorrentSettings(UploadSlots, MaxConnections, MaxDownloadSpeed, MaxUploadSpeed);
         }
+		public void SetTorrentSettings(TorrentSettings setting)
+		{
+			this.uploadSlots = setting.UploadSlots;
+			this.MaxConnections = setting.MaxConnections;
+			this.MaxDownloadSpeed = setting.MaxDownloadSpeed;
+			this.MaxUploadSpeed = setting.MaxUploadSpeed;
+		}
     }
 }
