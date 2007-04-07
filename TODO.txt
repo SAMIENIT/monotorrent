@@ -1,18 +1,17 @@
-- tabdetails			TODO
-- tabgeneral			TODO
-- tabpeers			started
-- tabpieces			TODO
-- Mini windows 			TODO
-- manage priority		TODO
-- clean up a lot of code	started ( continue to make properties in main form + do helper class)
-- context menu 			TODO
-- statusbar			TODO
+- tabdetails			10%
+- tabgeneral			10%
+- tabpeers			80%
+- tabpieces			10%
+- Mini windows 			0%
+- manage priority		0%
+- context menu 			0%
+- statusbar			0%
 
 - torrent setting 		DONE
 - Menu				DONE
 - main view			DONE
 - toolbar			DONE
 
-BUGS:
+BUGS
 
-- wainhandle waitone bug when quit
+Empty for moment

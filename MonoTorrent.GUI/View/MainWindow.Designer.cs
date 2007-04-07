@@ -87,13 +87,17 @@ namespace MonoTorrent.GUI.View
 			this.label10 = new System.Windows.Forms.Label();
 			this.tabPeers = new System.Windows.Forms.TabPage();
 			this.PeerListView = new System.Windows.Forms.ListView();
-			this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
+			this.PeerId = new System.Windows.Forms.ColumnHeader();
+			this.ClientApp = new System.Windows.Forms.ColumnHeader();
+			this.Address = new System.Windows.Forms.ColumnHeader();
+			this.LocationPeer = new System.Windows.Forms.ColumnHeader();
+			this.Download = new System.Windows.Forms.ColumnHeader();
+			this.Upload = new System.Windows.Forms.ColumnHeader();
+			this.DownloadSpeed = new System.Windows.Forms.ColumnHeader();
+			this.UploadSpeed = new System.Windows.Forms.ColumnHeader();
+			this.IsSeeder = new System.Windows.Forms.ColumnHeader();
+			this.Encryption = new System.Windows.Forms.ColumnHeader();
+			this.IsChoking = new System.Windows.Forms.ColumnHeader();
 			this.tabPieces = new System.Windows.Forms.TabPage();
 			this.listView2 = new System.Windows.Forms.ListView();
 			this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
@@ -113,10 +117,10 @@ namespace MonoTorrent.GUI.View
 			this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.DownStripButton = new System.Windows.Forms.ToolStripButton();
 			this.UpStripButton = new System.Windows.Forms.ToolStripButton();
-			this.columnHeader12 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader13 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader14 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader15 = new System.Windows.Forms.ColumnHeader();
+			this.IsInterested = new System.Windows.Forms.ColumnHeader();
+			this.IsRequestingPiecesCount = new System.Windows.Forms.ColumnHeader();
+			this.PiecesSent = new System.Windows.Forms.ColumnHeader();
+			this.SupportsFastPeer = new System.Windows.Forms.ColumnHeader();
 			this.menuBar.SuspendLayout();
 			this.detailsView.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -337,6 +341,7 @@ namespace MonoTorrent.GUI.View
 			this.torrentsView.View = System.Windows.Forms.View.Details;
 			this.torrentsView.DragEnter += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragEnter);
 			this.torrentsView.DragDrop += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragDrop);
+			this.torrentsView.SelectedIndexChanged += new System.EventHandler(this.torrentsView_SelectedIndexChanged);
 			// 
 			// colName
 			// 
@@ -654,17 +659,21 @@ namespace MonoTorrent.GUI.View
 			// PeerListView
 			// 
 			this.PeerListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4,
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader12,
-            this.columnHeader13,
-            this.columnHeader14,
-            this.columnHeader15});
+            this.PeerId,
+            this.ClientApp,
+            this.Address,
+            this.LocationPeer,
+            this.Download,
+            this.Upload,
+            this.DownloadSpeed,
+            this.UploadSpeed,
+            this.IsSeeder,
+            this.Encryption,
+            this.IsChoking,
+            this.IsInterested,
+            this.IsRequestingPiecesCount,
+            this.PiecesSent,
+            this.SupportsFastPeer});
 			this.PeerListView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PeerListView.Location = new System.Drawing.Point(0, 0);
 			this.PeerListView.Name = "PeerListView";
@@ -673,36 +682,53 @@ namespace MonoTorrent.GUI.View
 			this.PeerListView.UseCompatibleStateImageBehavior = false;
 			this.PeerListView.View = System.Windows.Forms.View.Details;
 			// 
-			// ColumnHeader1
+			// PeerId
 			// 
-			this.ColumnHeader1.Text = "IP";
+			this.PeerId.Text = "PeerId";
 			// 
-			// columnHeader2
+			// ClientApp
 			// 
-			this.columnHeader2.Text = "Client Software";
-			this.columnHeader2.Width = 89;
+			this.ClientApp.Text = "Client Software";
+			this.ClientApp.Width = 89;
 			// 
-			// columnHeader3
+			// Address
 			// 
-			this.columnHeader3.Text = "Status";
+			this.Address.Text = "IP";
 			// 
-			// columnHeader4
+			// LocationPeer
 			// 
-			this.columnHeader4.Text = "%";
+			this.LocationPeer.Text = "Location";
 			// 
-			// columnHeader5
+			// Download
 			// 
-			this.columnHeader5.Text = "Download";
-			this.columnHeader5.Width = 64;
+			this.Download.Text = "Download";
+			this.Download.Width = 64;
 			// 
-			// columnHeader6
+			// Upload
 			// 
-			this.columnHeader6.Text = "Upload";
+			this.Upload.Text = "Upload";
 			// 
-			// columnHeader7
+			// DownloadSpeed
 			// 
-			this.columnHeader7.Text = "Download Speed";
-			this.columnHeader7.Width = 97;
+			this.DownloadSpeed.Text = "Download Speed";
+			this.DownloadSpeed.Width = 97;
+			// 
+			// UploadSpeed
+			// 
+			this.UploadSpeed.Text = "Upload Speed";
+			this.UploadSpeed.Width = 85;
+			// 
+			// IsSeeder
+			// 
+			this.IsSeeder.Text = "Seeder";
+			// 
+			// Encryption
+			// 
+			this.Encryption.Text = "Encryption type";
+			// 
+			// IsChoking
+			// 
+			this.IsChoking.Text = "Choking";
 			// 
 			// tabPieces
 			// 
@@ -891,10 +917,21 @@ namespace MonoTorrent.GUI.View
 			this.UpStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
 			this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
 			// 
-			// columnHeader12
+			// IsInterested
 			// 
-			this.columnHeader12.Text = "Upload Speed";
-			this.columnHeader12.Width = 85;
+			this.IsInterested.Text = "Interested";
+			// 
+			// IsRequestingPiecesCount
+			// 
+			this.IsRequestingPiecesCount.Text = "Requesting pieces count";
+			// 
+			// PiecesSent
+			// 
+			this.PiecesSent.Text = "Pieces sent";
+			// 
+			// SupportsFastPeer
+			// 
+			this.SupportsFastPeer.Text = "Support fast peer";
 			// 
 			// MainWindow
 			// 
@@ -1008,22 +1045,26 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ListView PeerListView;
-        private System.Windows.Forms.ColumnHeader ColumnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader PeerId;
+        private System.Windows.Forms.ColumnHeader ClientApp;
+        private System.Windows.Forms.ColumnHeader Address;
+		private System.Windows.Forms.ColumnHeader LocationPeer;
+        private System.Windows.Forms.ColumnHeader Download;
+        private System.Windows.Forms.ColumnHeader Upload;
+        private System.Windows.Forms.ColumnHeader DownloadSpeed;
         private System.Windows.Forms.ListView listView2;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
-		private System.Windows.Forms.ColumnHeader columnHeader12;
-		private System.Windows.Forms.ColumnHeader columnHeader13;
-		private System.Windows.Forms.ColumnHeader columnHeader14;
-		private System.Windows.Forms.ColumnHeader columnHeader15;
+		private System.Windows.Forms.ColumnHeader UploadSpeed;
+		private System.Windows.Forms.ColumnHeader IsSeeder;
+		private System.Windows.Forms.ColumnHeader Encryption;
+		private System.Windows.Forms.ColumnHeader IsChoking;
+		private System.Windows.Forms.ColumnHeader IsInterested;
+		private System.Windows.Forms.ColumnHeader IsRequestingPiecesCount;
+		private System.Windows.Forms.ColumnHeader PiecesSent;
+		private System.Windows.Forms.ColumnHeader SupportsFastPeer;
     }
 }
 

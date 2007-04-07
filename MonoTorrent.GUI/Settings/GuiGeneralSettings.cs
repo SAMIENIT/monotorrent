@@ -10,6 +10,21 @@ namespace MonoTorrent.GUI.Settings
 {
     public class GuiGeneralSettings : ISettings
     {
+		public GuiGeneralSettings()
+		{
+			if (string.IsNullOrEmpty(StartDirectory))
+				StartDirectory = Environment.CurrentDirectory;
+			listenPort = EngineSettings.DefaultSettings().ListenPort;
+			globalMaxConnections = EngineSettings.DefaultSettings().GlobalMaxConnections;
+			globalMaxHalfOpenConnections = EngineSettings.DefaultSettings().GlobalMaxHalfOpenConnections;
+			globalMaxDownloadSpeed = EngineSettings.DefaultSettings().GlobalMaxDownloadSpeed;
+			globalMaxUploadSpeed = EngineSettings.DefaultSettings().GlobalMaxUploadSpeed;
+			savePath = Path.Combine(StartDirectory, "Downloads");
+			torrentsPath = Path.Combine(StartDirectory, "Torrents");
+			useuPnP =  EngineSettings.DefaultSettings().UsePnP;
+		}
+		//get at start because after when we go in openfile dialog it change the folder
+		public static string StartDirectory;
 
         #region Private Fields
         
@@ -17,14 +32,14 @@ namespace MonoTorrent.GUI.Settings
 
         //private bool allowLegacyConnections = true;
         //private int minEncryptionLevel = EncryptionType.None;
-        private int listenPort = EngineSettings.DefaultSettings().ListenPort;
-        private int globalMaxConnections = EngineSettings.DefaultSettings().GlobalMaxConnections;
-        private int globalMaxHalfOpenConnections = EngineSettings.DefaultSettings().GlobalMaxHalfOpenConnections;
-        private int globalMaxDownloadSpeed = EngineSettings.DefaultSettings().GlobalMaxDownloadSpeed;
-        private int globalMaxUploadSpeed = EngineSettings.DefaultSettings().GlobalMaxUploadSpeed;
-        private string savePath = Path.Combine(Environment.CurrentDirectory, "Downloads");
-        private string torrentsPath = Path.Combine(Environment.CurrentDirectory, "Torrents");
-        private bool useuPnP =  EngineSettings.DefaultSettings().UsePnP;
+        private int listenPort;
+        private int globalMaxConnections;
+        private int globalMaxHalfOpenConnections;
+        private int globalMaxDownloadSpeed;
+        private int globalMaxUploadSpeed;
+        private string savePath;
+        private string torrentsPath;
+        private bool useuPnP;
         
         #endregion Private Fields
         
