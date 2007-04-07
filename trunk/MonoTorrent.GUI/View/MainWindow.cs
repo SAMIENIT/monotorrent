@@ -17,9 +17,39 @@ namespace MonoTorrent.GUI.View
         public MainWindow()
         {
             InitializeComponent();
-        }
+		}
+		#region properties
 
-        private void MainWindow_Load(object sender, EventArgs e)
+		public TabPage TabGeneral {
+			get { return tabGeneral; }
+		}
+
+		public TabPage TabDetails {
+			get { return this.tabDetails; }
+		}
+
+		public TabPage TabPeers {
+			get { return this.tabPeers; }
+		}
+
+		public TabPage TabPieces {
+			get { return this.tabPieces; }
+		}
+
+
+		public ListView TorrentsView
+		{
+			get { return this.torrentsView; }
+		}
+
+		public ListView PeersView
+		{
+			get { return this.PeerListView; }
+		}
+
+		#endregion
+
+		private void MainWindow_Load(object sender, EventArgs e)
         {
             //recover all gui settings
             SettingsBase settings = new SettingsBase();
@@ -35,7 +65,7 @@ namespace MonoTorrent.GUI.View
             ShowDetail(guisettings.ShowDetail);
             
             //load maincontroller
-            mainController = new MainController(torrentsView, settings);
+            mainController = new MainController(this, settings);
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
