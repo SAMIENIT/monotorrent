@@ -314,5 +314,10 @@ namespace MonoTorrent.GUI.View
             }
         }
 
+		private void torrentsView_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
+
     }
 }

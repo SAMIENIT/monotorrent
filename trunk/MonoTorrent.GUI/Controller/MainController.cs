@@ -7,6 +7,7 @@ using MonoTorrent.GUI.View;
 using MonoTorrent.GUI.Settings;
 using System.IO;
 using MonoTorrent.Common;
+using System.Threading;
 namespace MonoTorrent.GUI.Controller
 {
     public class MainController
@@ -18,14 +19,15 @@ namespace MonoTorrent.GUI.Controller
         private IDictionary<ListViewItem, TorrentManager> itemToTorrent;
         private SettingsBase settingsBase;
 		private IDictionary<ListViewItem, PeerConnectionID> itemToPeers;
-
+		private ReaderWriterLock peerlocker;
 		public MainController(MainWindow mainForm, SettingsBase settings)
         {
 			this.mainForm = mainForm;
             this.settingsBase = settings;
             itemToTorrent = new Dictionary<ListViewItem, TorrentManager>();
 			itemToPeers = new Dictionary<ListViewItem, PeerConnectionID>();
-
+			peerlocker = new ReaderWriterLock();
+			
             //get general settings in file
             GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("General Settings");
             clientEngine = new ClientEngine( genSettings.GetEngineSettings(), 
@@ -49,40 +51,6 @@ namespace MonoTorrent.GUI.Controller
 			ClientEngine.ConnectionManager.PeerDisconnected += OnPeerDisconnected;
         }
 
-		public void OnPeerConnected(object sender, PeerConnectionEventArgs args)
-		{
-			ListViewItem item = new ListViewItem(args.PeerID.Peer.PeerId);
-			for (int i = 0; i < 14; i++)
-				item.SubItems.Add("");
-
-			mainForm.PeersView.Items.Add(item);
-			lock(itemToPeers)
-				itemToPeers.Add(item,args.PeerID);
-			try
-			{
-				this.mainForm.PeersView.BeginUpdate();
-				UpdatePeers();
-			}
-			finally
-			{
-				this.mainForm.PeersView.EndUpdate();
-			}
-
-		}
-
-		public void OnPeerDisconnected(object sender, PeerConnectionEventArgs args)
-		{
-			lock (itemToPeers)
-				foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
-				{
-					if (entry.Value != args.PeerID)
-						continue;
-
-					itemToPeers.Remove(entry.Key);
-					return;
-				}
-		}
-
 		/// <summary>
 		/// close all before exit
 		/// </summary>
@@ -104,7 +72,107 @@ namespace MonoTorrent.GUI.Controller
 			clientEngine.StatsUpdate -= OnUpdateStats;
 		}
 
-        #region Helper
+		#region Peer
+
+		public void CreatePeer(PeerConnectionID peerID)
+		{
+			ListViewItem item = new ListViewItem(peerID.Peer.PeerId);
+
+			ListViewItem.ListViewSubItem subitem = item.SubItems[0];
+			subitem.Name = "PeerId";
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "ClientApp";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "Address";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "LocationPeer";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "Download";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "Upload";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "DownloadSpeed";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "UploadSpeed";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "IsSeeder";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "Encryption";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "IsChoking";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "IsInterested";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "IsRequestingPiecesCount";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "PiecesSent";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "SupportsFastPeer";
+			item.SubItems.Add(subitem);
+
+			mainForm.PeersView.Items.Add(item);
+			lock (itemToPeers)
+				itemToPeers.Add(item, peerID);
+
+			this.mainForm.PeersView.BeginUpdate();
+
+			peerlocker.AcquireReaderLock(1000);
+			item.SubItems["PeerId"].Text = peerID.Peer.PeerId;
+			item.SubItems["ClientApp"].Text = Enum.GetName(typeof(MonoTorrent.Common.Client), peerID.Peer.Connection.ClientApp.Client);
+			item.SubItems["Address"].Text = peerID.Peer.Connection.AddressBytes.ToString();
+			item.SubItems["LocationPeer"].Text = peerID.Peer.Location;
+			item.SubItems["IsSeeder"].Text = FormatBool(peerID.Peer.IsSeeder);
+			item.SubItems["Encryption"].Text = peerID.Peer.EncryptionSupported.ToString();
+			item.SubItems["IsChoking"].Text = FormatBool(peerID.Peer.Connection.IsChoking);
+			item.SubItems["IsInterested"].Text = FormatBool(peerID.Peer.Connection.IsInterested);
+			item.SubItems["SupportsFastPeer"].Text = FormatBool(peerID.Peer.Connection.SupportsFastPeer);
+			peerlocker.ReleaseReaderLock();
+
+			this.mainForm.PeersView.EndUpdate();
+		}
+
+		public void DeletePeer(PeerConnectionID id)
+		{
+			lock (itemToPeers)
+				foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
+				{
+					if (entry.Value != id)
+						continue;
+
+					itemToPeers.Remove(entry.Key);
+					mainForm.PeersView.Items.Remove(entry.Key);
+					return;
+				}
+		}
+
+		private delegate void PeerHandler(PeerConnectionID peerID);
 
 		public void UpdatePeers()
 		{
@@ -114,29 +182,19 @@ namespace MonoTorrent.GUI.Controller
 				lock (itemToPeers)
 					foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
 					{
-						lock (entry.Value)
+						peerlocker.AcquireReaderLock(1000);
+						if (entry.Value.Peer.Connection == null)
+							entry.Key.SubItems["ClientApp"].Text = "PEER DISPOSED";
+						else
 						{
-							if (entry.Value.Peer.Connection == null)
-								entry.Key.SubItems[1].Text = "PEER DISPOSED";
-							else
-							{
-								entry.Key.SubItems[0].Text = entry.Value.Peer.PeerId;
-								entry.Key.SubItems[1].Text = entry.Value.Peer.Location;
-								entry.Key.SubItems[2].Text = FormatBool(entry.Value.Peer.IsSeeder);
-								entry.Key.SubItems[3].Text = entry.Value.Peer.EncryptionSupported.ToString();
-								entry.Key.SubItems[4].Text = FormatBool(entry.Value.Peer.Connection.IsChoking);
-								entry.Key.SubItems[5].Text = FormatBool(entry.Value.Peer.Connection.IsInterested);
-								entry.Key.SubItems[6].Text = entry.Value.Peer.Connection.AddressBytes.ToString();
-								entry.Key.SubItems[7].Text = entry.Value.Peer.Connection.IsRequestingPiecesCount.ToString();
-								entry.Key.SubItems[8].Text = entry.Value.Peer.Connection.PiecesSent.ToString();
-								entry.Key.SubItems[9].Text = FormatBool(entry.Value.Peer.Connection.SupportsFastPeer);
-								entry.Key.SubItems[10].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesDownloaded);
-								entry.Key.SubItems[11].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesUploaded);
-								entry.Key.SubItems[12].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.DownloadSpeed);
-								entry.Key.SubItems[13].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.UploadSpeed);
-								entry.Key.SubItems[14].Text = entry.Value.Peer.Connection.ClientApp.Client.ToString();
-							}
+							entry.Key.SubItems["Download"].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesDownloaded);
+							entry.Key.SubItems["Upload"].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesUploaded);
+							entry.Key.SubItems["DownloadSpeed"].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.DownloadSpeed);
+							entry.Key.SubItems["UploadSpeed"].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.UploadSpeed);
+							entry.Key.SubItems["IsRequestingPiecesCount"].Text = entry.Value.Peer.Connection.IsRequestingPiecesCount.ToString();
+							entry.Key.SubItems["PiecesSent"].Text = entry.Value.Peer.Connection.PiecesSent.ToString();
 						}
+						peerlocker.ReleaseReaderLock();
 					}
 			}
 			finally
@@ -145,29 +203,10 @@ namespace MonoTorrent.GUI.Controller
 			}
 		}
 
-		public string FormatBool(bool flag)
-		{
-			return flag ? "Yes" : "No";
-		}
-		public string FormatSpeedValue(double value)
-		{
-			return FormatSizeValue(value) + "/s";
-		}
-		public string FormatSizeValue(long value)
-		{
-			if (value < 1000)
-				return String.Format("{0:0.00} o", value);
-			if (value < 1000000)
-				return String.Format("{0:0.00} Ko", value / 1000.0);
-			if (value < 1000000000)
-				return String.Format("{0:0.00} Mo", value/1000000.0);
-			return String.Format("{0:0.00} Go", value/1000000000.0);
-		}
+		#endregion
 
-		public string FormatSizeValue(double value)
-		{
-			return FormatSizeValue(Convert.ToInt64(value));
-		}
+		#region torrent
+
 		public void UpdateAllStats()
 		{
 			try
@@ -183,18 +222,6 @@ namespace MonoTorrent.GUI.Controller
 			UpdatePeers();
 		}
 
-        /// <summary>
-        /// get all row selected in list view
-        /// </summary>
-        /// <returns></returns>
-        public IList<TorrentManager> GetSelectedTorrents()
-        {
-            IList<TorrentManager> result = new List<TorrentManager>();
-			foreach (ListViewItem item in mainForm.TorrentsView.SelectedItems)
-                result.Add(itemToTorrent[item]);
-            return result;
-        }
-
         private delegate void UpdateHandler(TorrentManager torrent);
 		private delegate void UpdateStatsHandler();
 
@@ -205,8 +232,8 @@ namespace MonoTorrent.GUI.Controller
         public void Update(TorrentManager torrent)
         {
             ListViewItem item = GetItemFromTorrent(torrent);
-            item.SubItems[0].Text = torrent.Torrent.Name;
-            item.SubItems[1].Text = FormatSizeValue(torrent.Torrent.Size);
+			item.SubItems["colName"].Text = torrent.Torrent.Name;
+			item.SubItems["colSize"].Text = FormatSizeValue(torrent.Torrent.Size);
             UpdateState(torrent);
         }
 
@@ -217,15 +244,57 @@ namespace MonoTorrent.GUI.Controller
         public void UpdateState(TorrentManager torrent)
         {
             ListViewItem item = GetItemFromTorrent(torrent);
-			item.SubItems[2].Text = string.Format("{0:0.00} %", torrent.Progress);
-            item.SubItems[3].Text = torrent.State.ToString();
-            item.SubItems[4].Text = torrent.Seeds().ToString();
-            item.SubItems[5].Text = torrent.Leechs().ToString();
-			item.SubItems[6].Text = FormatSpeedValue(torrent.DownloadSpeed());
-			item.SubItems[7].Text = FormatSpeedValue(torrent.UploadSpeed());
-            item.SubItems[8].Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded);
-            item.SubItems[9].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
-            item.SubItems[10].Text = torrent.AvailablePeers.ToString();//FIXME ratio here
+			item.SubItems["colProgress"].Text = string.Format("{0:0.00} %", torrent.Progress);
+			item.SubItems["colStatus"].Text = torrent.State.ToString();
+			item.SubItems["colSeeds"].Text = torrent.Seeds().ToString();
+			item.SubItems["colLeeches"].Text = torrent.Leechs().ToString();
+			item.SubItems["colDownSpeed"].Text = FormatSpeedValue(torrent.DownloadSpeed());
+			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.UploadSpeed());
+			item.SubItems["colDownloaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded);
+			item.SubItems["colUploaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
+			item.SubItems["colRatio"].Text = torrent.AvailablePeers.ToString();//FIXME ratio here
+        }
+
+		#endregion
+
+		#region Helper
+
+		public string FormatBool(bool flag)
+		{
+			return flag ? "Yes" : "No";
+		}
+
+		public string FormatSpeedValue(double value)
+		{
+			return FormatSizeValue(value) + "/s";
+		}
+
+		public string FormatSizeValue(long value)
+		{
+			if (value < 1000)
+				return String.Format("{0:0.00} o", value);
+			if (value < 1000000)
+				return String.Format("{0:0.00} Ko", value / 1000.0);
+			if (value < 1000000000)
+				return String.Format("{0:0.00} Mo", value/1000000.0);
+			return String.Format("{0:0.00} Go", value/1000000000.0);
+		}
+
+		public string FormatSizeValue(double value)
+		{
+			return FormatSizeValue(Convert.ToInt64(value));
+		}
+
+        /// <summary>
+        /// get all row selected in list view
+        /// </summary>
+        /// <returns></returns>
+        public IList<TorrentManager> GetSelectedTorrents()
+        {
+            IList<TorrentManager> result = new List<TorrentManager>();
+			foreach (ListViewItem item in mainForm.TorrentsView.SelectedItems)
+                result.Add(itemToTorrent[item]);
+            return result;
         }
 
         /// <summary>
@@ -248,6 +317,18 @@ namespace MonoTorrent.GUI.Controller
         #endregion
 
         #region Event Methode
+		
+		public void OnPeerConnected(object sender, PeerConnectionEventArgs args)
+		{
+			if (!mainForm.IsDisposed)
+				mainForm.Invoke(new PeerHandler(CreatePeer), args.PeerID);
+		}
+
+		public void OnPeerDisconnected(object sender, PeerConnectionEventArgs args)
+		{
+			if (!mainForm.IsDisposed)
+				mainForm.Invoke(new PeerHandler(DeletePeer), args.PeerID);
+		}
 
         /// <summary>
         /// event torrent change
@@ -342,8 +423,50 @@ namespace MonoTorrent.GUI.Controller
                 File.Copy(fileName, newPath);
             }
             ListViewItem item = new ListViewItem(Path.GetFileName(newPath));
-            for (int i = 0; i < 10; i++)
-                item.SubItems.Add("");
+
+			ListViewItem.ListViewSubItem subitem = item.SubItems[0];
+			subitem.Name = "colName";
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colSize";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colProgress";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colStatus";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colSeeds";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colLeeches";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colDownSpeed";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colUpSpeed";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colDownloaded";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colUploaded";
+			item.SubItems.Add(subitem);
+
+			subitem = new ListViewItem.ListViewSubItem();
+			subitem.Name = "colRatio";
+			item.SubItems.Add(subitem);
+
 			mainForm.TorrentsView.Items.Add(item);
             TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
             itemToTorrent.Add(item, torrent);
