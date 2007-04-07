@@ -56,18 +56,31 @@ namespace MonoTorrent.GUI.Controller
 				item.SubItems.Add("");
 
 			mainForm.PeersView.Items.Add(item);
-			itemToPeers.Add(item,args.PeerID);
-			UpdatePeers();
+			lock(itemToPeers)
+				itemToPeers.Add(item,args.PeerID);
+			try
+			{
+				this.mainForm.PeersView.BeginUpdate();
+				UpdatePeers();
+			}
+			finally
+			{
+				this.mainForm.PeersView.EndUpdate();
+			}
 
 		}
 
 		public void OnPeerDisconnected(object sender, PeerConnectionEventArgs args)
 		{
-			foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
-			{
-				if (entry.Value == args.PeerID)
+			lock (itemToPeers)
+				foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
+				{
+					if (entry.Value != args.PeerID)
+						continue;
+
 					itemToPeers.Remove(entry.Key);
-			}
+					return;
+				}
 		}
 
 		/// <summary>
@@ -95,31 +108,40 @@ namespace MonoTorrent.GUI.Controller
 
 		public void UpdatePeers()
 		{
-			foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
+			try
 			{
-				lock (entry.Value)
-				{
-					if (entry.Value.Peer.Connection == null)
-						entry.Key.SubItems[1].Text = "PEER DISPOSED";
-					else
+				this.mainForm.PeersView.BeginUpdate();
+				lock (itemToPeers)
+					foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
 					{
-						entry.Key.SubItems[0].Text = entry.Value.Peer.PeerId;
-						entry.Key.SubItems[1].Text = entry.Value.Peer.Location;
-						entry.Key.SubItems[2].Text = FormatBool(entry.Value.Peer.IsSeeder);
-						entry.Key.SubItems[3].Text = entry.Value.Peer.EncryptionSupported.ToString();
-						entry.Key.SubItems[4].Text = FormatBool(entry.Value.Peer.Connection.IsChoking);
-						entry.Key.SubItems[5].Text = FormatBool(entry.Value.Peer.Connection.IsInterested);
-						entry.Key.SubItems[6].Text = entry.Value.Peer.Connection.AddressBytes.ToString();
-						entry.Key.SubItems[7].Text = entry.Value.Peer.Connection.IsRequestingPiecesCount.ToString();
-						entry.Key.SubItems[8].Text = entry.Value.Peer.Connection.PiecesSent.ToString();
-						entry.Key.SubItems[9].Text = FormatBool(entry.Value.Peer.Connection.SupportsFastPeer);
-						entry.Key.SubItems[10].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesDownloaded);
-						entry.Key.SubItems[11].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesUploaded);
-						entry.Key.SubItems[12].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.DownloadSpeed);
-						entry.Key.SubItems[13].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.UploadSpeed);
-						entry.Key.SubItems[14].Text = entry.Value.Peer.Connection.ClientApp.Client.ToString();
+						lock (entry.Value)
+						{
+							if (entry.Value.Peer.Connection == null)
+								entry.Key.SubItems[1].Text = "PEER DISPOSED";
+							else
+							{
+								entry.Key.SubItems[0].Text = entry.Value.Peer.PeerId;
+								entry.Key.SubItems[1].Text = entry.Value.Peer.Location;
+								entry.Key.SubItems[2].Text = FormatBool(entry.Value.Peer.IsSeeder);
+								entry.Key.SubItems[3].Text = entry.Value.Peer.EncryptionSupported.ToString();
+								entry.Key.SubItems[4].Text = FormatBool(entry.Value.Peer.Connection.IsChoking);
+								entry.Key.SubItems[5].Text = FormatBool(entry.Value.Peer.Connection.IsInterested);
+								entry.Key.SubItems[6].Text = entry.Value.Peer.Connection.AddressBytes.ToString();
+								entry.Key.SubItems[7].Text = entry.Value.Peer.Connection.IsRequestingPiecesCount.ToString();
+								entry.Key.SubItems[8].Text = entry.Value.Peer.Connection.PiecesSent.ToString();
+								entry.Key.SubItems[9].Text = FormatBool(entry.Value.Peer.Connection.SupportsFastPeer);
+								entry.Key.SubItems[10].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesDownloaded);
+								entry.Key.SubItems[11].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesUploaded);
+								entry.Key.SubItems[12].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.DownloadSpeed);
+								entry.Key.SubItems[13].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.UploadSpeed);
+								entry.Key.SubItems[14].Text = entry.Value.Peer.Connection.ClientApp.Client.ToString();
+							}
+						}
 					}
-				}
+			}
+			finally
+			{
+				this.mainForm.PeersView.EndUpdate();
 			}
 		}
 
@@ -134,21 +156,30 @@ namespace MonoTorrent.GUI.Controller
 		public string FormatSizeValue(long value)
 		{
 			if (value < 1000)
-				return String.Format("{0:G3} o",value);
+				return String.Format("{0:0.00} o", value);
 			if (value < 1000000)
-				return String.Format("{0:G3} Ko", value/1000);
+				return String.Format("{0:0.00} Ko", value / 1000.0);
 			if (value < 1000000000)
-				return String.Format("{0:G3} Mo", value/1000000);
-			return String.Format("{0:G3} Go", value/1000000000);
+				return String.Format("{0:0.00} Mo", value/1000000.0);
+			return String.Format("{0:0.00} Go", value/1000000000.0);
 		}
+
 		public string FormatSizeValue(double value)
 		{
 			return FormatSizeValue(Convert.ToInt64(value));
 		}
 		public void UpdateAllStats()
 		{
-			foreach (TorrentManager torrent in clientEngine.Torrents)
-				UpdateState(torrent);
+			try
+			{
+				this.mainForm.TorrentsView.BeginUpdate();
+				foreach (TorrentManager torrent in clientEngine.Torrents)
+					UpdateState(torrent);
+			}
+			finally
+			{
+				this.mainForm.TorrentsView.EndUpdate();
+			}
 			UpdatePeers();
 		}
 
@@ -175,7 +206,7 @@ namespace MonoTorrent.GUI.Controller
         {
             ListViewItem item = GetItemFromTorrent(torrent);
             item.SubItems[0].Text = torrent.Torrent.Name;
-            item.SubItems[1].Text = torrent.Torrent.Size.ToString();
+            item.SubItems[1].Text = FormatSizeValue(torrent.Torrent.Size);
             UpdateState(torrent);
         }
 
@@ -186,7 +217,7 @@ namespace MonoTorrent.GUI.Controller
         public void UpdateState(TorrentManager torrent)
         {
             ListViewItem item = GetItemFromTorrent(torrent);
-            item.SubItems[2].Text = torrent.Progress.ToString();
+			item.SubItems[2].Text = string.Format("{0:0.00} %", torrent.Progress);
             item.SubItems[3].Text = torrent.State.ToString();
             item.SubItems[4].Text = torrent.Seeds().ToString();
             item.SubItems[5].Text = torrent.Leechs().ToString();
