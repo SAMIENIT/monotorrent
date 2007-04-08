@@ -2,12 +2,13 @@
 - tabgeneral			10%
 - tabpeers			80%
 - tabpieces			10%
+
 - Mini windows 			0%
 - manage priority		0%
 - context menu 			0%
 - statusbar			0%
 - progress bar			0%
-- new torrent window		100%
+- new torrent window		90%  (bug in it)
 - about window			100%
 - option window			100%
 
