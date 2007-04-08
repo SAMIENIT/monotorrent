@@ -6,6 +6,10 @@
 - manage priority		0%
 - context menu 			0%
 - statusbar			0%
+- progress bar			0%
+- new torrent window		100%
+- about window			100%
+- option window			100%
 
 - torrent setting 		DONE
 - Menu				DONE
@@ -14,4 +18,4 @@
 
 BUGS
 
-Empty for moment
+new torrent bug
