@@ -1,22 +1,40 @@
-- tabdetails			10%
-- tabgeneral			10%
-- tabpeers			80%
-- tabpieces			10%
 
-- Mini windows 			0%
-- manage priority		0%
-- context menu 			0%
-- statusbar			0%
-- progress bar			0%
-- new torrent window		90%  (bug in it)
-- about window			100%
-- option window			100%
-
+- about window			DONE
+- option window			DONE
 - torrent setting 		DONE
 - Menu				DONE
 - main view			DONE
 - toolbar			DONE
 
-BUGS
+For 0.1 release :
+- tabdetails			10%
+- tabgeneral			10%
+- tabpeers			80%
+- tabpieces			10%
+- new torrent window		90%  (bug in it)
 
-new torrent bug
+For 0.2 release :
+- Mini windows 			0%
+- manage priority		0%
+- statusbar			0%
+- progress bar			0%
+- context menu 			0%
+
+For 0.3 release:
+dot not know for moment what will be in it ;)
+will depend on lib evolution
+some ideas :
+
+More details on option
+statistique
+mange of tracker
+i18n
+user friendly
+design (icone and image)
+manual
+RSS
+scheduler
+webui
+categorie
+stop pc when dl finished
+...
