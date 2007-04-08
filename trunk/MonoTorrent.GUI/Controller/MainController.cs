@@ -86,10 +86,6 @@ namespace MonoTorrent.GUI.Controller
 			item.SubItems.Add(subitem);
 
 			subitem = new ListViewItem.ListViewSubItem();
-			subitem.Name = "Address";
-			item.SubItems.Add(subitem);
-
-			subitem = new ListViewItem.ListViewSubItem();
 			subitem.Name = "LocationPeer";
 			item.SubItems.Add(subitem);
 
@@ -145,8 +141,7 @@ namespace MonoTorrent.GUI.Controller
 
 			peerlocker.AcquireReaderLock(1000);
 			item.SubItems["PeerId"].Text = peerID.Peer.PeerId;
-			item.SubItems["ClientApp"].Text = Enum.GetName(typeof(MonoTorrent.Common.Client), peerID.Peer.Connection.ClientApp.Client);
-			item.SubItems["Address"].Text = peerID.Peer.Connection.AddressBytes.ToString();
+			item.SubItems["ClientApp"].Text = peerID.Peer.Connection.ClientApp.Client.ToString();
 			item.SubItems["LocationPeer"].Text = peerID.Peer.Location;
 			item.SubItems["IsSeeder"].Text = FormatBool(peerID.Peer.IsSeeder);
 			item.SubItems["Encryption"].Text = peerID.Peer.EncryptionSupported.ToString();
@@ -252,7 +247,7 @@ namespace MonoTorrent.GUI.Controller
 			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.UploadSpeed());
 			item.SubItems["colDownloaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded);
 			item.SubItems["colUploaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
-			item.SubItems["colRatio"].Text = torrent.AvailablePeers.ToString();//FIXME ratio here
+			item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)torrent.Monitor.DataBytesUploaded / torrent.Monitor.DataBytesDownloaded);
         }
 
 		#endregion
