@@ -247,7 +247,9 @@ namespace MonoTorrent.GUI.Controller
 			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.UploadSpeed());
 			item.SubItems["colDownloaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded);
 			item.SubItems["colUploaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
-			item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)torrent.Monitor.DataBytesUploaded / torrent.Monitor.DataBytesDownloaded);
+			if (torrent.Monitor.DataBytesDownloaded != 0)
+				item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)torrent.Monitor.DataBytesUploaded / torrent.Monitor.DataBytesDownloaded);
+
         }
 
 		#endregion
