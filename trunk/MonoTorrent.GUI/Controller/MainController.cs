@@ -241,10 +241,10 @@ namespace MonoTorrent.GUI.Controller
             ListViewItem item = GetItemFromTorrent(torrent);
 			item.SubItems["colProgress"].Text = string.Format("{0:0.00} %", torrent.Progress);
 			item.SubItems["colStatus"].Text = torrent.State.ToString();
-			item.SubItems["colSeeds"].Text = torrent.Seeds().ToString();
-			item.SubItems["colLeeches"].Text = torrent.Leechs().ToString();
-			item.SubItems["colDownSpeed"].Text = FormatSpeedValue(torrent.DownloadSpeed());
-			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.UploadSpeed());
+			item.SubItems["colSeeds"].Text = torrent.Peers.Seeds().ToString();
+			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString();
+			item.SubItems["colDownSpeed"].Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
+			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.Monitor.UploadSpeed);
 			item.SubItems["colDownloaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded);
 			item.SubItems["colUploaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
 			if (torrent.Monitor.DataBytesDownloaded != 0)
@@ -376,7 +376,10 @@ namespace MonoTorrent.GUI.Controller
                 creator.CreatedBy = window.CreateBy;
                 creator.Path = window.FromPath;
                 if (!String.IsNullOrEmpty(window.TrackerURL))
-                    creator.AddAnnounce(window.TrackerURL);
+                {
+                    creator.Announces.Add(new List<string>());
+                    creator.Announces[0].Add(window.TrackerURL);
+                }
                 string newPath = Path.Combine(window.SaveTo, Path.GetFileName(window.FromPath));
                 creator.Create(newPath);
             }
