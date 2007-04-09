@@ -136,21 +136,6 @@ namespace MonoTorrent.GUI.Controller
 			mainForm.PeersView.Items.Add(item);
 			lock (itemToPeers)
 				itemToPeers.Add(item, peerID);
-
-			this.mainForm.PeersView.BeginUpdate();
-
-			peerlocker.AcquireReaderLock(1000);
-			item.SubItems["PeerId"].Text = peerID.Peer.PeerId;
-			item.SubItems["ClientApp"].Text = peerID.Peer.Connection.ClientApp.Client.ToString();
-			item.SubItems["LocationPeer"].Text = peerID.Peer.Location;
-			item.SubItems["IsSeeder"].Text = FormatBool(peerID.Peer.IsSeeder);
-			item.SubItems["Encryption"].Text = peerID.Peer.EncryptionSupported.ToString();
-			item.SubItems["IsChoking"].Text = FormatBool(peerID.Peer.Connection.IsChoking);
-			item.SubItems["IsInterested"].Text = FormatBool(peerID.Peer.Connection.IsInterested);
-			item.SubItems["SupportsFastPeer"].Text = FormatBool(peerID.Peer.Connection.SupportsFastPeer);
-			peerlocker.ReleaseReaderLock();
-
-			this.mainForm.PeersView.EndUpdate();
 		}
 
 		public void DeletePeer(PeerConnectionID id)
@@ -249,7 +234,6 @@ namespace MonoTorrent.GUI.Controller
 			item.SubItems["colUploaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
 			if (torrent.Monitor.DataBytesDownloaded != 0)
 				item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)torrent.Monitor.DataBytesUploaded / torrent.Monitor.DataBytesDownloaded);
-
         }
 
 		#endregion
@@ -334,9 +318,9 @@ namespace MonoTorrent.GUI.Controller
         /// <param name="args">nothing</param>
         private void OnTorrentChange(object sender, EventArgs args)
         {
-            TorrentManager torrent = (TorrentManager)sender;
-			if (!mainForm.IsDisposed)
-				mainForm.Invoke(new UpdateHandler(Update), torrent);
+            //TorrentManager torrent = (TorrentManager)sender;
+            //if (!mainForm.IsDisposed)
+            //    mainForm.Invoke(new UpdateHandler(Update), torrent);
         }
 
         /// <summary>
@@ -346,11 +330,12 @@ namespace MonoTorrent.GUI.Controller
         /// <param name="args"></param>
         private void OnTorrentStateChange(object sender, EventArgs args)
         {
-            TorrentManager torrent = (TorrentManager)sender;
-			if (!mainForm.IsDisposed)
-				mainForm.Invoke(new UpdateHandler(UpdateState), torrent);
+            //TorrentManager torrent = (TorrentManager)sender;
+			//if (!mainForm.IsDisposed)
+			//    mainForm.Invoke(new UpdateHandler(UpdateState), torrent);
         }
-
+		// FIXME: Is this the best way to do this?
+		private int counter = 0;
 		/// <summary>
 		/// event update stats change
 		/// </summary>
@@ -358,7 +343,8 @@ namespace MonoTorrent.GUI.Controller
 		/// <param name="args"></param>
 		private void OnUpdateStats(object sender, EventArgs args)
 		{
-			if (!mainForm.IsDisposed)
+			// Only update the screen every 8 ticks
+			if (!mainForm.IsDisposed && ((counter++ % 8) == 0))
 				mainForm.Invoke(new UpdateStatsHandler(UpdateAllStats));
 		}
 
