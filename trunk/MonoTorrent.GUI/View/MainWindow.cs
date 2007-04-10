@@ -18,34 +18,129 @@ namespace MonoTorrent.GUI.View
         {
             InitializeComponent();
 		}
+
 		#region properties
 
-		public TabPage TabGeneral {
-			get { return tabGeneral; }
+		#region gen tab
+
+		public Label GenTabURLLabel
+		{
+			get { return URLLabel; }
 		}
 
-		public TabPage TabDetails {
-			get { return this.tabDetails; }
+		public Label GenTabStatusLabel
+		{
+			get { return StatusLabel; }
 		}
 
-		public TabPage TabPeers {
-			get { return this.tabPeers; }
+		public Label GenTabUpdateLabel
+		{
+			get { return UpdateLabel; }
 		}
 
-		public TabPage TabPieces {
-			get { return this.tabPieces; }
+		public Label GenTabFolderLabel
+		{
+			get { return FolderLabel; }
 		}
 
+		public Label GenTabSizeLabel
+		{
+			get { return SizeLabel; }
+		}
 
+		public Label GenTabDateLabel
+		{
+			get { return DateLabel; }
+		}
+
+		public Label GenTabInfosLabel
+		{
+			get { return InfosLabel; }
+		}
+
+		public Label GenTabPiecesxSizeLabel
+		{
+			get { return PiecesxSizeLabel; }
+		}
+		
+		public Label GenTabHashLabel
+		{
+			get { return HashLabel; }
+		}
+
+		#endregion
+
+		/// <summary>
+		/// tab pieces list ( not used actually)
+		/// </summary>
+		public ListView PiecesListView
+		{
+			get { return this.piecesListView; }
+		}
+		
+		/// <summary>
+		/// main view
+		/// </summary>
 		public ListView TorrentsView
 		{
 			get { return this.torrentsView; }
 		}
 
+		/// <summary>
+		/// tab peers list
+		/// </summary>
 		public ListView PeersView
 		{
 			get { return this.PeerListView; }
 		}
+
+		#region Details
+
+		public Label DetailTabElapsedTime
+		{
+			get { return elapsedTimeLabel; }
+		}
+
+		public Label DetailTabDownload
+		{
+			get { return downloadLabel; }
+		}
+
+		public Label DetailTabUpload
+		{
+			get { return uploadLabel; }
+		}
+
+		public Label DetailTabPeers
+		{
+			get { return peersLabel; }
+		}
+
+		public Label DetailTabEstimatedTime
+		{
+			get { return estimatedTimeLabel; }
+		}
+
+		public Label DetailTabDownloadSpeed
+		{
+			get { return downloadSpeedLabel; }
+		}
+
+		public Label DetailTabUploadSpeed
+		{
+			get { return uploadSpeedLabel; }
+		}
+
+		public Label DetailTabClients
+		{
+			get { return clientsLabel; }
+		}
+
+		public Label DetailTabPieces
+		{
+			get { return piecesLabel; }
+		}
+		#endregion
 
 		#endregion
 
@@ -316,8 +411,9 @@ namespace MonoTorrent.GUI.View
 
 		private void torrentsView_SelectedIndexChanged(object sender, EventArgs e)
 		{
-
+			mainController.UpdateGeneralTab();
+			mainController.UpdatePiecesTab();
+			mainController.UpdateDetailTab();
 		}
-
     }
 }

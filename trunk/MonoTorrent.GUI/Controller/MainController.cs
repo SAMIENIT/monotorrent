@@ -20,6 +20,7 @@ namespace MonoTorrent.GUI.Controller
         private SettingsBase settingsBase;
 		private IDictionary<ListViewItem, PeerConnectionID> itemToPeers;
 		private ReaderWriterLock peerlocker;
+		
 		public MainController(MainWindow mainForm, SettingsBase settings)
         {
 			this.mainForm = mainForm;
@@ -230,10 +231,13 @@ namespace MonoTorrent.GUI.Controller
 			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString();
 			item.SubItems["colDownSpeed"].Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
 			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.Monitor.UploadSpeed);
+			//I put only download of file and not the download of protocole
 			item.SubItems["colDownloaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded);
-			item.SubItems["colUploaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded);
-			if (torrent.Monitor.DataBytesDownloaded != 0)
-				item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)torrent.Monitor.DataBytesUploaded / torrent.Monitor.DataBytesDownloaded);
+			// here i put all upload because we want to know whais bandwidth
+			item.SubItems["colUploaded"].Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded + torrent.Monitor.ProtocolBytesUploaded);
+			//ratio is for all upload vs all download
+			if (torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded != 0)
+				item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)(torrent.Monitor.DataBytesUploaded + torrent.Monitor.ProtocolBytesUploaded) / (torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded));
         }
 
 		#endregion
@@ -575,7 +579,62 @@ namespace MonoTorrent.GUI.Controller
             settingsBase.SaveSettings<GuiGeneralSettings>("General Settings", settings);
             clientEngine.Settings = settings.GetEngineSettings();
         }
-        
-        
-    }
+
+
+
+		public void UpdateGeneralTab()
+		{
+			IList<TorrentManager> torrents =  GetSelectedTorrents();
+			if (torrents.Count == 0)
+				return;
+			TorrentManager torrent = torrents[0];
+			
+			mainForm.GenTabDateLabel.Text = torrent.Torrent.CreationDate.ToShortDateString();
+			mainForm.GenTabFolderLabel.Text = torrent.SavePath;
+			string hash = "";
+			for (int i = 0; i < torrent.Torrent.InfoHash.Length; i++)
+				hash += torrent.Torrent.InfoHash[i].ToString("X");
+
+			mainForm.GenTabHashLabel.Text = hash;
+			mainForm.GenTabInfosLabel.Text = torrent.Torrent.Comment;
+			mainForm.GenTabPiecesxSizeLabel.Text = torrent.Torrent.Pieces.Count.ToString() + " X " + FormatSizeValue(torrent.Torrent.PieceLength);
+			mainForm.GenTabSizeLabel.Text = FormatSizeValue(torrent.Torrent.Size);
+			mainForm.GenTabStatusLabel.Text = torrent.State.ToString();
+			mainForm.GenTabUpdateLabel.Text = torrent.TrackerManager.LastUpdated.ToShortTimeString();
+			mainForm.GenTabURLLabel.Text = torrent.Torrent.Source;
+			//todo handle update of update event
+		}
+
+		public void UpdatePiecesTab()
+		{
+			//mainForm.PiecesListView
+		}
+
+		public void UpdateDetailTab()
+		{
+			IList<TorrentManager> torrents = GetSelectedTorrents();
+			if (torrents.Count == 0)
+				return;
+			TorrentManager torrent = torrents[0];
+
+			mainForm.DetailTabClients.Text = "";
+			mainForm.DetailTabDownload.Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded);
+			mainForm.DetailTabDownloadSpeed.Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
+			DateTime elapsedTime = new DateTime();
+			//TODO calcul the elapsedtime.
+
+			mainForm.DetailTabElapsedTime.Text = "";
+
+			DateTime estimedtime = new DateTime(0);
+			if (torrent.Monitor.DownloadSpeed > 0)
+				estimedtime = new DateTime(0, 0, 0, 0, 0, (int)((torrent.Torrent.Size - torrent.Monitor.DataBytesDownloaded) / torrent.Monitor.DownloadSpeed));
+
+			mainForm.DetailTabEstimatedTime.Text = estimedtime.ToShortTimeString();
+			mainForm.DetailTabPeers.Text = torrent.OpenConnections.ToString();
+			mainForm.DetailTabPieces.Text = torrent.Torrent.Pieces.Count.ToString();
+			mainForm.DetailTabUpload.Text = (torrent.Monitor.DataBytesUploaded + torrent.Monitor.ProtocolBytesUploaded).ToString();
+			mainForm.DetailTabUploadSpeed.Text = torrent.Monitor.UploadSpeed.ToString();
+			//todo handle update of update event
+		}
+	}
 }
