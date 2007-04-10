@@ -5,13 +5,14 @@
 - Menu				DONE
 - main view			DONE
 - toolbar			DONE
+- tabpeers			DONE
+- tabpieces			CANCEL ( not possible with current lib)
+- new torrent window		DONE
 
 For 0.1 release :
-- tabdetails			10%
-- tabgeneral			10%
-- tabpeers			80%
-- tabpieces			10%
-- new torrent window		90%  (bug in it)
+- tabdetails			70%
+- tabgeneral			70% todo update each tick
+
 
 For 0.2 release :
 - Mini windows 			0%

@@ -65,6 +65,12 @@ namespace MonoTorrent.GUI.View
 			this.detailsView = new System.Windows.Forms.TabControl();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.generalPanel = new System.Windows.Forms.GroupBox();
+			this.HashLabel = new System.Windows.Forms.Label();
+			this.PiecesxSizeLabel = new System.Windows.Forms.Label();
+			this.InfosLabel = new System.Windows.Forms.Label();
+			this.DateLabel = new System.Windows.Forms.Label();
+			this.SizeLabel = new System.Windows.Forms.Label();
+			this.FolderLabel = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
@@ -72,10 +78,22 @@ namespace MonoTorrent.GUI.View
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.trackerPanel = new System.Windows.Forms.GroupBox();
+			this.UpdateLabel = new System.Windows.Forms.Label();
+			this.StatusLabel = new System.Windows.Forms.Label();
+			this.URLLabel = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tabDetails = new System.Windows.Forms.TabPage();
+			this.piecesLabel = new System.Windows.Forms.Label();
+			this.clientsLabel = new System.Windows.Forms.Label();
+			this.uploadSpeedLabel = new System.Windows.Forms.Label();
+			this.downloadSpeedLabel = new System.Windows.Forms.Label();
+			this.estimatedTimeLabel = new System.Windows.Forms.Label();
+			this.peersLabel = new System.Windows.Forms.Label();
+			this.uploadLabel = new System.Windows.Forms.Label();
+			this.downloadLabel = new System.Windows.Forms.Label();
+			this.elapsedTimeLabel = new System.Windows.Forms.Label();
 			this.label18 = new System.Windows.Forms.Label();
 			this.label17 = new System.Windows.Forms.Label();
 			this.label16 = new System.Windows.Forms.Label();
@@ -98,8 +116,12 @@ namespace MonoTorrent.GUI.View
 			this.IsSeeder = new System.Windows.Forms.ColumnHeader();
 			this.Encryption = new System.Windows.Forms.ColumnHeader();
 			this.IsChoking = new System.Windows.Forms.ColumnHeader();
+			this.IsInterested = new System.Windows.Forms.ColumnHeader();
+			this.IsRequestingPiecesCount = new System.Windows.Forms.ColumnHeader();
+			this.PiecesSent = new System.Windows.Forms.ColumnHeader();
+			this.SupportsFastPeer = new System.Windows.Forms.ColumnHeader();
 			this.tabPieces = new System.Windows.Forms.TabPage();
-			this.listView2 = new System.Windows.Forms.ListView();
+			this.piecesListView = new System.Windows.Forms.ListView();
 			this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
@@ -117,10 +139,6 @@ namespace MonoTorrent.GUI.View
 			this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.DownStripButton = new System.Windows.Forms.ToolStripButton();
 			this.UpStripButton = new System.Windows.Forms.ToolStripButton();
-			this.IsInterested = new System.Windows.Forms.ColumnHeader();
-			this.IsRequestingPiecesCount = new System.Windows.Forms.ColumnHeader();
-			this.PiecesSent = new System.Windows.Forms.ColumnHeader();
-			this.SupportsFastPeer = new System.Windows.Forms.ColumnHeader();
 			this.menuBar.SuspendLayout();
 			this.detailsView.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -416,6 +434,12 @@ namespace MonoTorrent.GUI.View
 			// 
 			// generalPanel
 			// 
+			this.generalPanel.Controls.Add(this.HashLabel);
+			this.generalPanel.Controls.Add(this.PiecesxSizeLabel);
+			this.generalPanel.Controls.Add(this.InfosLabel);
+			this.generalPanel.Controls.Add(this.DateLabel);
+			this.generalPanel.Controls.Add(this.SizeLabel);
+			this.generalPanel.Controls.Add(this.FolderLabel);
 			this.generalPanel.Controls.Add(this.label9);
 			this.generalPanel.Controls.Add(this.label8);
 			this.generalPanel.Controls.Add(this.label7);
@@ -430,6 +454,66 @@ namespace MonoTorrent.GUI.View
 			this.generalPanel.TabIndex = 0;
 			this.generalPanel.TabStop = false;
 			this.generalPanel.Text = "General";
+			// 
+			// HashLabel
+			// 
+			this.HashLabel.AutoSize = true;
+			this.HashLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.HashLabel.Location = new System.Drawing.Point(329, 100);
+			this.HashLabel.Name = "HashLabel";
+			this.HashLabel.Size = new System.Drawing.Size(16, 13);
+			this.HashLabel.TabIndex = 11;
+			this.HashLabel.Text = "...";
+			// 
+			// PiecesxSizeLabel
+			// 
+			this.PiecesxSizeLabel.AutoSize = true;
+			this.PiecesxSizeLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.PiecesxSizeLabel.Location = new System.Drawing.Point(365, 50);
+			this.PiecesxSizeLabel.Name = "PiecesxSizeLabel";
+			this.PiecesxSizeLabel.Size = new System.Drawing.Size(16, 13);
+			this.PiecesxSizeLabel.TabIndex = 10;
+			this.PiecesxSizeLabel.Text = "...";
+			// 
+			// InfosLabel
+			// 
+			this.InfosLabel.AutoSize = true;
+			this.InfosLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.InfosLabel.Location = new System.Drawing.Point(48, 101);
+			this.InfosLabel.Name = "InfosLabel";
+			this.InfosLabel.Size = new System.Drawing.Size(16, 13);
+			this.InfosLabel.TabIndex = 9;
+			this.InfosLabel.Text = "...";
+			// 
+			// DateLabel
+			// 
+			this.DateLabel.AutoSize = true;
+			this.DateLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.DateLabel.Location = new System.Drawing.Point(48, 76);
+			this.DateLabel.Name = "DateLabel";
+			this.DateLabel.Size = new System.Drawing.Size(16, 13);
+			this.DateLabel.TabIndex = 8;
+			this.DateLabel.Text = "...";
+			// 
+			// SizeLabel
+			// 
+			this.SizeLabel.AutoSize = true;
+			this.SizeLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.SizeLabel.Location = new System.Drawing.Point(45, 50);
+			this.SizeLabel.Name = "SizeLabel";
+			this.SizeLabel.Size = new System.Drawing.Size(16, 13);
+			this.SizeLabel.TabIndex = 7;
+			this.SizeLabel.Text = "...";
+			// 
+			// FolderLabel
+			// 
+			this.FolderLabel.AutoSize = true;
+			this.FolderLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.FolderLabel.Location = new System.Drawing.Point(55, 25);
+			this.FolderLabel.Name = "FolderLabel";
+			this.FolderLabel.Size = new System.Drawing.Size(16, 13);
+			this.FolderLabel.TabIndex = 6;
+			this.FolderLabel.Text = "...";
 			// 
 			// label9
 			// 
@@ -493,6 +577,9 @@ namespace MonoTorrent.GUI.View
 			// 
 			// trackerPanel
 			// 
+			this.trackerPanel.Controls.Add(this.UpdateLabel);
+			this.trackerPanel.Controls.Add(this.StatusLabel);
+			this.trackerPanel.Controls.Add(this.URLLabel);
 			this.trackerPanel.Controls.Add(this.label3);
 			this.trackerPanel.Controls.Add(this.label2);
 			this.trackerPanel.Controls.Add(this.label1);
@@ -504,6 +591,36 @@ namespace MonoTorrent.GUI.View
 			this.trackerPanel.TabIndex = 0;
 			this.trackerPanel.TabStop = false;
 			this.trackerPanel.Text = "Tracker";
+			// 
+			// UpdateLabel
+			// 
+			this.UpdateLabel.AutoSize = true;
+			this.UpdateLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.UpdateLabel.Location = new System.Drawing.Point(61, 74);
+			this.UpdateLabel.Name = "UpdateLabel";
+			this.UpdateLabel.Size = new System.Drawing.Size(16, 13);
+			this.UpdateLabel.TabIndex = 5;
+			this.UpdateLabel.Text = "...";
+			// 
+			// StatusLabel
+			// 
+			this.StatusLabel.AutoSize = true;
+			this.StatusLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.StatusLabel.Location = new System.Drawing.Point(56, 46);
+			this.StatusLabel.Name = "StatusLabel";
+			this.StatusLabel.Size = new System.Drawing.Size(16, 13);
+			this.StatusLabel.TabIndex = 4;
+			this.StatusLabel.Text = "...";
+			// 
+			// URLLabel
+			// 
+			this.URLLabel.AutoSize = true;
+			this.URLLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.URLLabel.Location = new System.Drawing.Point(48, 20);
+			this.URLLabel.Name = "URLLabel";
+			this.URLLabel.Size = new System.Drawing.Size(16, 13);
+			this.URLLabel.TabIndex = 3;
+			this.URLLabel.Text = "...";
 			// 
 			// label3
 			// 
@@ -538,6 +655,15 @@ namespace MonoTorrent.GUI.View
 			// tabDetails
 			// 
 			this.tabDetails.AutoScroll = true;
+			this.tabDetails.Controls.Add(this.piecesLabel);
+			this.tabDetails.Controls.Add(this.clientsLabel);
+			this.tabDetails.Controls.Add(this.uploadSpeedLabel);
+			this.tabDetails.Controls.Add(this.downloadSpeedLabel);
+			this.tabDetails.Controls.Add(this.estimatedTimeLabel);
+			this.tabDetails.Controls.Add(this.peersLabel);
+			this.tabDetails.Controls.Add(this.uploadLabel);
+			this.tabDetails.Controls.Add(this.downloadLabel);
+			this.tabDetails.Controls.Add(this.elapsedTimeLabel);
 			this.tabDetails.Controls.Add(this.label18);
 			this.tabDetails.Controls.Add(this.label17);
 			this.tabDetails.Controls.Add(this.label16);
@@ -554,6 +680,96 @@ namespace MonoTorrent.GUI.View
 			this.tabDetails.TabIndex = 1;
 			this.tabDetails.Text = "Details";
 			this.tabDetails.UseVisualStyleBackColor = true;
+			// 
+			// piecesLabel
+			// 
+			this.piecesLabel.AutoSize = true;
+			this.piecesLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.piecesLabel.Location = new System.Drawing.Point(505, 123);
+			this.piecesLabel.Name = "piecesLabel";
+			this.piecesLabel.Size = new System.Drawing.Size(16, 13);
+			this.piecesLabel.TabIndex = 17;
+			this.piecesLabel.Text = "...";
+			// 
+			// clientsLabel
+			// 
+			this.clientsLabel.AutoSize = true;
+			this.clientsLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.clientsLabel.Location = new System.Drawing.Point(259, 123);
+			this.clientsLabel.Name = "clientsLabel";
+			this.clientsLabel.Size = new System.Drawing.Size(16, 13);
+			this.clientsLabel.TabIndex = 16;
+			this.clientsLabel.Text = "...";
+			// 
+			// uploadSpeedLabel
+			// 
+			this.uploadSpeedLabel.AutoSize = true;
+			this.uploadSpeedLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.uploadSpeedLabel.Location = new System.Drawing.Point(291, 91);
+			this.uploadSpeedLabel.Name = "uploadSpeedLabel";
+			this.uploadSpeedLabel.Size = new System.Drawing.Size(16, 13);
+			this.uploadSpeedLabel.TabIndex = 15;
+			this.uploadSpeedLabel.Text = "...";
+			// 
+			// downloadSpeedLabel
+			// 
+			this.downloadSpeedLabel.AutoSize = true;
+			this.downloadSpeedLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.downloadSpeedLabel.Location = new System.Drawing.Point(308, 58);
+			this.downloadSpeedLabel.Name = "downloadSpeedLabel";
+			this.downloadSpeedLabel.Size = new System.Drawing.Size(16, 13);
+			this.downloadSpeedLabel.TabIndex = 14;
+			this.downloadSpeedLabel.Text = "...";
+			// 
+			// estimatedTimeLabel
+			// 
+			this.estimatedTimeLabel.AutoSize = true;
+			this.estimatedTimeLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.estimatedTimeLabel.Location = new System.Drawing.Point(296, 30);
+			this.estimatedTimeLabel.Name = "estimatedTimeLabel";
+			this.estimatedTimeLabel.Size = new System.Drawing.Size(16, 13);
+			this.estimatedTimeLabel.TabIndex = 13;
+			this.estimatedTimeLabel.Text = "...";
+			// 
+			// peersLabel
+			// 
+			this.peersLabel.AutoSize = true;
+			this.peersLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.peersLabel.Location = new System.Drawing.Point(91, 123);
+			this.peersLabel.Name = "peersLabel";
+			this.peersLabel.Size = new System.Drawing.Size(16, 13);
+			this.peersLabel.TabIndex = 12;
+			this.peersLabel.Text = "...";
+			// 
+			// uploadLabel
+			// 
+			this.uploadLabel.AutoSize = true;
+			this.uploadLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.uploadLabel.Location = new System.Drawing.Point(95, 91);
+			this.uploadLabel.Name = "uploadLabel";
+			this.uploadLabel.Size = new System.Drawing.Size(16, 13);
+			this.uploadLabel.TabIndex = 11;
+			this.uploadLabel.Text = "...";
+			// 
+			// downloadLabel
+			// 
+			this.downloadLabel.AutoSize = true;
+			this.downloadLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.downloadLabel.Location = new System.Drawing.Point(109, 58);
+			this.downloadLabel.Name = "downloadLabel";
+			this.downloadLabel.Size = new System.Drawing.Size(16, 13);
+			this.downloadLabel.TabIndex = 10;
+			this.downloadLabel.Text = "...";
+			// 
+			// elapsedTimeLabel
+			// 
+			this.elapsedTimeLabel.AutoSize = true;
+			this.elapsedTimeLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.elapsedTimeLabel.Location = new System.Drawing.Point(122, 30);
+			this.elapsedTimeLabel.Name = "elapsedTimeLabel";
+			this.elapsedTimeLabel.Size = new System.Drawing.Size(16, 13);
+			this.elapsedTimeLabel.TabIndex = 9;
+			this.elapsedTimeLabel.Text = "...";
 			// 
 			// label18
 			// 
@@ -730,10 +946,26 @@ namespace MonoTorrent.GUI.View
 			// 
 			this.IsChoking.Text = "Choking";
 			// 
+			// IsInterested
+			// 
+			this.IsInterested.Text = "Interested";
+			// 
+			// IsRequestingPiecesCount
+			// 
+			this.IsRequestingPiecesCount.Text = "Requesting pieces count";
+			// 
+			// PiecesSent
+			// 
+			this.PiecesSent.Text = "Pieces sent";
+			// 
+			// SupportsFastPeer
+			// 
+			this.SupportsFastPeer.Text = "Support fast peer";
+			// 
 			// tabPieces
 			// 
 			this.tabPieces.AutoScroll = true;
-			this.tabPieces.Controls.Add(this.listView2);
+			this.tabPieces.Controls.Add(this.piecesListView);
 			this.tabPieces.Location = new System.Drawing.Point(4, 22);
 			this.tabPieces.Name = "tabPieces";
 			this.tabPieces.Size = new System.Drawing.Size(684, 164);
@@ -741,20 +973,20 @@ namespace MonoTorrent.GUI.View
 			this.tabPieces.Text = "Pieces";
 			this.tabPieces.UseVisualStyleBackColor = true;
 			// 
-			// listView2
+			// piecesListView
 			// 
-			this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+			this.piecesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader8,
             this.columnHeader9,
             this.columnHeader10,
             this.columnHeader11});
-			this.listView2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listView2.Location = new System.Drawing.Point(0, 0);
-			this.listView2.Name = "listView2";
-			this.listView2.Size = new System.Drawing.Size(684, 164);
-			this.listView2.TabIndex = 0;
-			this.listView2.UseCompatibleStateImageBehavior = false;
-			this.listView2.View = System.Windows.Forms.View.Details;
+			this.piecesListView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.piecesListView.Location = new System.Drawing.Point(0, 0);
+			this.piecesListView.Name = "piecesListView";
+			this.piecesListView.Size = new System.Drawing.Size(684, 164);
+			this.piecesListView.TabIndex = 0;
+			this.piecesListView.UseCompatibleStateImageBehavior = false;
+			this.piecesListView.View = System.Windows.Forms.View.Details;
 			// 
 			// columnHeader8
 			// 
@@ -917,22 +1149,6 @@ namespace MonoTorrent.GUI.View
 			this.UpStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
 			this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
 			// 
-			// IsInterested
-			// 
-			this.IsInterested.Text = "Interested";
-			// 
-			// IsRequestingPiecesCount
-			// 
-			this.IsRequestingPiecesCount.Text = "Requesting pieces count";
-			// 
-			// PiecesSent
-			// 
-			this.PiecesSent.Text = "Pieces sent";
-			// 
-			// SupportsFastPeer
-			// 
-			this.SupportsFastPeer.Text = "Support fast peer";
-			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1052,7 +1268,7 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ColumnHeader Download;
         private System.Windows.Forms.ColumnHeader Upload;
         private System.Windows.Forms.ColumnHeader DownloadSpeed;
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ListView piecesListView;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
@@ -1065,6 +1281,24 @@ namespace MonoTorrent.GUI.View
 		private System.Windows.Forms.ColumnHeader IsRequestingPiecesCount;
 		private System.Windows.Forms.ColumnHeader PiecesSent;
 		private System.Windows.Forms.ColumnHeader SupportsFastPeer;
+		private System.Windows.Forms.Label URLLabel;
+		private System.Windows.Forms.Label HashLabel;
+		private System.Windows.Forms.Label PiecesxSizeLabel;
+		private System.Windows.Forms.Label InfosLabel;
+		private System.Windows.Forms.Label DateLabel;
+		private System.Windows.Forms.Label SizeLabel;
+		private System.Windows.Forms.Label FolderLabel;
+		private System.Windows.Forms.Label UpdateLabel;
+		private System.Windows.Forms.Label StatusLabel;
+		private System.Windows.Forms.Label clientsLabel;
+		private System.Windows.Forms.Label uploadSpeedLabel;
+		private System.Windows.Forms.Label downloadSpeedLabel;
+		private System.Windows.Forms.Label estimatedTimeLabel;
+		private System.Windows.Forms.Label peersLabel;
+		private System.Windows.Forms.Label uploadLabel;
+		private System.Windows.Forms.Label downloadLabel;
+		private System.Windows.Forms.Label elapsedTimeLabel;
+		private System.Windows.Forms.Label piecesLabel;
     }
 }
 
