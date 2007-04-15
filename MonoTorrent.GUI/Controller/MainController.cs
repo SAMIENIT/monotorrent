@@ -190,6 +190,14 @@ namespace MonoTorrent.GUI.Controller
 
 		public void UpdateAllStats()
 		{
+
+            UpdateTorrentsView();
+            UpdatePiecesTab();
+			UpdatePeers();
+		}
+
+		private void UpdateTorrentsView()
+		{
 			try
 			{
 				this.mainForm.TorrentsView.BeginUpdate();
@@ -200,8 +208,8 @@ namespace MonoTorrent.GUI.Controller
 			{
 				this.mainForm.TorrentsView.EndUpdate();
 			}
-			UpdatePeers();
 		}
+
 
         private delegate void UpdateHandler(TorrentManager torrent);
 		private delegate void UpdateStatsHandler();
@@ -460,9 +468,48 @@ namespace MonoTorrent.GUI.Controller
 			mainForm.TorrentsView.Items.Add(item);
             TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
             itemToTorrent.Add(item, torrent);
-            torrent.PieceHashed += OnTorrentChange;
+            torrent.PieceHashed += new EventHandler<PieceHashedEventArgs>(torrent_PieceHashed);
             torrent.PeersFound += OnTorrentChange;
             torrent.TorrentStateChanged += OnTorrentStateChange;
+            torrent.FileManager.BlockWritten += new EventHandler<BlockEventArgs>(FileManager_BlockWritten);
+            torrent.PieceManager.BlockReceived += new EventHandler<BlockEventArgs>(PieceManager_BlockReceived);
+            torrent.PieceManager.BlockRequestCancelled += new EventHandler<BlockEventArgs>(PieceManager_BlockRequestCancelled);
+            torrent.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
+        }
+
+        void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
+        {
+            // When the piece has been hashed, we know it's finished
+            lock (currentRequests)
+               for(int i=0; i < currentRequests.Count; i++)
+                   if (currentRequests[i].Piece.Index == e.PieceIndex)
+                   {
+                       currentRequests.RemoveAt(i);
+                       return;
+                   }
+        }
+
+        List<BlockEventArgs> currentRequests = new List<BlockEventArgs>();
+        void PieceManager_BlockRequested(object sender, BlockEventArgs e)
+        {
+            lock (currentRequests)
+                currentRequests.Add(e);
+        }
+
+        void PieceManager_BlockRequestCancelled(object sender, BlockEventArgs e)
+        {
+            lock (currentRequests)
+                currentRequests.Remove(e);
+        }
+
+        void PieceManager_BlockReceived(object sender, BlockEventArgs e)
+        {
+            // Do nothing
+        }
+
+        void FileManager_BlockWritten(object sender, BlockEventArgs e)
+        {
+            // Do nothing
         }
 
         public void Del()
@@ -607,10 +654,43 @@ namespace MonoTorrent.GUI.Controller
 
 		public void UpdatePiecesTab()
 		{
-			//mainForm.PiecesListView
+            try
+            {
+                mainForm.PiecesListView.BeginUpdate();
+                mainForm.PiecesListView.Items.Clear();
+                for (int i = 0; i < this.currentRequests.Count; i++)
+                    mainForm.PiecesListView.Items.Add(CreatePiecesListItem(currentRequests[i]));
+            }
+            finally
+            {
+                mainForm.PiecesListView.EndUpdate();
+            }
 		}
 
-		public void UpdateDetailTab()
+        private ListViewItem CreatePiecesListItem(BlockEventArgs e)
+        {
+            ListViewItem item = new ListViewItem(e.Piece.Index.ToString());
+            item.SubItems.Add(FormatSizeValue(e.Block.RequestLength));
+            item.SubItems.Add(e.Piece.BlockCount.ToString());
+
+            StringBuilder sb = new StringBuilder(e.Piece.BlockCount);
+            for (int i = 0; i < e.Piece.BlockCount; i++)
+            {
+                if (e.Piece[i].Written)
+                    sb.Append('W');
+                else if (e.Piece[i].Received)
+                    sb.Append('R');
+                else if (e.Piece[i].Requested)
+                    sb.Append('r');
+                else
+                    sb.Append('n');
+            }
+            item.SubItems.Add(sb.ToString());
+
+            return item;
+        }
+
+        public void UpdateDetailTab()
 		{
 			IList<TorrentManager> torrents = GetSelectedTorrents();
 			if (torrents.Count == 0)
@@ -625,11 +705,11 @@ namespace MonoTorrent.GUI.Controller
 
 			mainForm.DetailTabElapsedTime.Text = "";
 
-			DateTime estimedtime = new DateTime(0);
+			double estimatedTime = 0;
 			if (torrent.Monitor.DownloadSpeed > 0)
-				estimedtime = new DateTime(0, 0, 0, 0, 0, (int)((torrent.Torrent.Size - torrent.Monitor.DataBytesDownloaded) / torrent.Monitor.DownloadSpeed));
+				estimatedTime = 3600.0 / ((torrent.Torrent.Size - torrent.Monitor.DataBytesDownloaded) / torrent.Monitor.DownloadSpeed);
 
-			mainForm.DetailTabEstimatedTime.Text = estimedtime.ToShortTimeString();
+			mainForm.DetailTabEstimatedTime.Text = new TimeSpan(0,0, (int)estimatedTime).ToString();
 			mainForm.DetailTabPeers.Text = torrent.OpenConnections.ToString();
 			mainForm.DetailTabPieces.Text = torrent.Torrent.Pieces.Count.ToString();
 			mainForm.DetailTabUpload.Text = (torrent.Monitor.DataBytesUploaded + torrent.Monitor.ProtocolBytesUploaded).ToString();
