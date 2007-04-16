@@ -1,0 +1,49 @@
+# List of detail and Todo
+
+= Module Done or cancel =
+
+  * about window		DONE
+  * option window		DONE
+  * torrent setting 		DONE
+  * Menu			DONE
+  * main view			DONE
+  * toolbar			DONE
+  * tabpeers			DONE
+  * tabpieces			CANCEL ( not possible with current lib)
+  * new torrent window		DONE
+
+= For 0.1 release : =
+
+  * tabdetails			70%
+  * tabgeneral			70% todo update each tick
+
+
+= For 0.2 release : =
+
+  * Mini windows 		0%
+  * manage priority		0%
+  * statusbar			0%
+  * progress bar		0%
+  * context menu 		0%
+
+= For 0.3 release: =
+
+Dot not know for moment what will be in it ;)
+It will depend on lib evolution
+
+some ideas :
+
+  * More details on option
+  * statistique
+  * mange of tracker
+  * i18n
+  * user friendly
+  * design (icone and image)
+  * manual
+  * RSS
+  * scheduler
+  * webui
+  * categorie
+  * stop pc when dl finished
+  * ...
+
