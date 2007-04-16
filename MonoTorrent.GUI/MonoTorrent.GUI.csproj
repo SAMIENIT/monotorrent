@@ -103,6 +103,9 @@
     <Compile Include="Settings\ISettings.cs" />
     <Compile Include="Settings\ISettingsStorage.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
+    <Compile Include="SpecialListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="View\AboutWindow.cs">
       <SubType>Form</SubType>
     </Compile>
