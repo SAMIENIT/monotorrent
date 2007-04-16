@@ -477,6 +477,7 @@ namespace MonoTorrent.GUI.Controller
             torrent.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
         }
 
+        private delegate void BlockDelegate(BlockEventArgs e);
         void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
         {
             // When the piece has been hashed, we know it's finished
@@ -484,6 +485,7 @@ namespace MonoTorrent.GUI.Controller
                for(int i=0; i < currentRequests.Count; i++)
                    if (currentRequests[i].Piece.Index == e.PieceIndex)
                    {
+                       mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Remove), currentRequests[i]);
                        currentRequests.RemoveAt(i);
                        return;
                    }
@@ -493,13 +495,15 @@ namespace MonoTorrent.GUI.Controller
         void PieceManager_BlockRequested(object sender, BlockEventArgs e)
         {
             lock (currentRequests)
+            {
                 currentRequests.Add(e);
+                mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Add), e);
+            }
         }
 
         void PieceManager_BlockRequestCancelled(object sender, BlockEventArgs e)
         {
-            lock (currentRequests)
-                currentRequests.Remove(e);
+            // Do nothing (for the moment). I should do a fix for this
         }
 
         void PieceManager_BlockReceived(object sender, BlockEventArgs e)
@@ -652,43 +656,11 @@ namespace MonoTorrent.GUI.Controller
 			//todo handle update of update event
 		}
 
-		public void UpdatePiecesTab()
-		{
-            try
-            {
-                mainForm.PiecesListView.BeginUpdate();
-                mainForm.PiecesListView.Items.Clear();
-                for (int i = 0; i < this.currentRequests.Count; i++)
-                    mainForm.PiecesListView.Items.Add(CreatePiecesListItem(currentRequests[i]));
-            }
-            finally
-            {
-                mainForm.PiecesListView.EndUpdate();
-            }
-		}
-
-        private ListViewItem CreatePiecesListItem(BlockEventArgs e)
+        public void UpdatePiecesTab()
         {
-            ListViewItem item = new ListViewItem(e.Piece.Index.ToString());
-            item.SubItems.Add(FormatSizeValue(e.Block.RequestLength));
-            item.SubItems.Add(e.Piece.BlockCount.ToString());
-
-            StringBuilder sb = new StringBuilder(e.Piece.BlockCount);
-            for (int i = 0; i < e.Piece.BlockCount; i++)
-            {
-                if (e.Piece[i].Written)
-                    sb.Append('W');
-                else if (e.Piece[i].Received)
-                    sb.Append('R');
-                else if (e.Piece[i].Requested)
-                    sb.Append('r');
-                else
-                    sb.Append('n');
-            }
-            item.SubItems.Add(sb.ToString());
-
-            return item;
+            mainForm.PiecesListView.Invalidate();
         }
+
 
         public void UpdateDetailTab()
 		{

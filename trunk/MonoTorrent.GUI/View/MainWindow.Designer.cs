@@ -121,7 +121,7 @@ namespace MonoTorrent.GUI.View
 			this.PiecesSent = new System.Windows.Forms.ColumnHeader();
 			this.SupportsFastPeer = new System.Windows.Forms.ColumnHeader();
 			this.tabPieces = new System.Windows.Forms.TabPage();
-			this.piecesListView = new System.Windows.Forms.ListView();
+            this.piecesListView = new ImageListView();
 			this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
@@ -1268,7 +1268,7 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ColumnHeader Download;
         private System.Windows.Forms.ColumnHeader Upload;
         private System.Windows.Forms.ColumnHeader DownloadSpeed;
-        private System.Windows.Forms.ListView piecesListView;
+        private ImageListView piecesListView;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
