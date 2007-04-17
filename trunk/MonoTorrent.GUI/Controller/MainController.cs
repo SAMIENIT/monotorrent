@@ -360,6 +360,46 @@ namespace MonoTorrent.GUI.Controller
 				mainForm.Invoke(new UpdateStatsHandler(UpdateAllStats));
 		}
 
+
+        private delegate void BlockDelegate(BlockEventArgs e);
+        void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
+        {
+            // When the piece has been hashed, we know it's finished
+            lock (currentRequests)
+                for (int i = 0; i < currentRequests.Count; i++)
+                    if (currentRequests[i].Piece.Index == e.PieceIndex)
+                    {
+                        mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Remove), currentRequests[i]);
+                        currentRequests.RemoveAt(i);
+                        return;
+                    }
+        }
+
+        List<BlockEventArgs> currentRequests = new List<BlockEventArgs>();
+        void PieceManager_BlockRequested(object sender, BlockEventArgs e)
+        {
+            lock (currentRequests)
+            {
+                currentRequests.Add(e);
+                mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Add), e);
+            }
+        }
+
+        void PieceManager_BlockRequestCancelled(object sender, BlockEventArgs e)
+        {
+            // Do nothing (for the moment). I should do a fix for this
+        }
+
+        void PieceManager_BlockReceived(object sender, BlockEventArgs e)
+        {
+            // Do nothing
+        }
+
+        void FileManager_BlockWritten(object sender, BlockEventArgs e)
+        {
+            // Do nothing
+        }
+
         #endregion
 
         #region Controller Action
@@ -475,45 +515,6 @@ namespace MonoTorrent.GUI.Controller
             torrent.PieceManager.BlockReceived += new EventHandler<BlockEventArgs>(PieceManager_BlockReceived);
             torrent.PieceManager.BlockRequestCancelled += new EventHandler<BlockEventArgs>(PieceManager_BlockRequestCancelled);
             torrent.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
-        }
-
-        private delegate void BlockDelegate(BlockEventArgs e);
-        void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
-        {
-            // When the piece has been hashed, we know it's finished
-            lock (currentRequests)
-               for(int i=0; i < currentRequests.Count; i++)
-                   if (currentRequests[i].Piece.Index == e.PieceIndex)
-                   {
-                       mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Remove), currentRequests[i]);
-                       currentRequests.RemoveAt(i);
-                       return;
-                   }
-        }
-
-        List<BlockEventArgs> currentRequests = new List<BlockEventArgs>();
-        void PieceManager_BlockRequested(object sender, BlockEventArgs e)
-        {
-            lock (currentRequests)
-            {
-                currentRequests.Add(e);
-                mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Add), e);
-            }
-        }
-
-        void PieceManager_BlockRequestCancelled(object sender, BlockEventArgs e)
-        {
-            // Do nothing (for the moment). I should do a fix for this
-        }
-
-        void PieceManager_BlockReceived(object sender, BlockEventArgs e)
-        {
-            // Do nothing
-        }
-
-        void FileManager_BlockWritten(object sender, BlockEventArgs e)
-        {
-            // Do nothing
         }
 
         public void Del()
