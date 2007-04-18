@@ -110,6 +110,8 @@
     <Compile Include="Settings\ISettings.cs" />
     <Compile Include="Settings\ISettingsStorage.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
+    <Compile Include="StandardProgressBar.cs">
+    </Compile>
     <Compile Include="View\AboutWindow.cs">
       <SubType>Form</SubType>
     </Compile>

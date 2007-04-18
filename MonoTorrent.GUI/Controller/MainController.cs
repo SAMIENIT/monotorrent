@@ -358,6 +358,9 @@ namespace MonoTorrent.GUI.Controller
 			// Only update the screen every 8 ticks
 			if (!mainForm.IsDisposed && ((counter++ % 8) == 0))
 				mainForm.Invoke(new UpdateStatsHandler(UpdateAllStats));
+
+            if (counter % 80 == 0)
+                MonoTorrent.GUI.Helper.MemoryUtility.OptimizeMemoryUsage();
 		}
 
 
@@ -519,12 +522,15 @@ namespace MonoTorrent.GUI.Controller
 			subitem.Name = "colUploaded";
 			item.SubItems.Add(subitem);
 
-			subitem = new ListViewItem.ListViewSubItem();
-			subitem.Name = "colRatio";
-			item.SubItems.Add(subitem);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "colRatio";
+            item.SubItems.Add(subitem);
 
 			mainForm.TorrentsView.Items.Add(item);
             TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
+            ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new StandardProgressBar(torrent));
+            sitem.Name = "colProgress";
+            item.SubItems.Add(sitem);
             itemToTorrent.Add(item, torrent);
             torrent.PieceHashed += new EventHandler<PieceHashedEventArgs>(torrent_PieceHashed);
             torrent.PeersFound += OnTorrentChange;

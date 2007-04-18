@@ -50,6 +50,9 @@ namespace MonoTorrent.GUI
         void SpecialListView_MouseMove(object sender, MouseEventArgs e)
         {
             ListViewItem item = this.GetItemAt(e.X, e.Y);
+            if(item!=null)
+            this.Invalidate(item.Bounds);
+            return;
             if (item != null && item.Tag == null)
             {
                 item.Tag = "fixed";
