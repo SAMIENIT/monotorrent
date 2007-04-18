@@ -365,14 +365,19 @@ namespace MonoTorrent.GUI.Controller
         void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
         {
             // When the piece has been hashed, we know it's finished
-            lock (currentRequests)
-                for (int i = 0; i < currentRequests.Count; i++)
-                    if (currentRequests[i].Piece.Index == e.PieceIndex)
-                    {
-                        mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Remove), currentRequests[i]);
-                        currentRequests.RemoveAt(i);
-                        return;
-                    }
+            mainForm.Invoke(new SingleItem<int>(RemoveFromPieceView), e.PieceIndex);
+        }
+
+        private void RemoveFromPieceView(int pieceIndex)
+        {
+            for (int i = 0; i < this.currentRequests.Count; i++)
+            {
+                if (this.currentRequests[i].Piece.Index != pieceIndex)
+                    continue;
+
+                this.currentRequests.RemoveAt(i);
+                this.mainForm.PiecesListView.Items.RemoveAt(i);
+            }
         }
 
         List<BlockEventArgs> currentRequests = new List<BlockEventArgs>();
@@ -381,9 +386,22 @@ namespace MonoTorrent.GUI.Controller
             lock (currentRequests)
             {
                 currentRequests.Add(e);
-                mainForm.Invoke(new BlockDelegate(mainForm.PiecesListView.Add), e);
+
+                ListViewItem item = new ListViewItem(e.Piece.Index.ToString());
+                item.SubItems.Add((e.Block.RequestLength.ToString()));
+                item.SubItems.Add(e.Piece.BlockCount.ToString());
+                item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(e)));
+                mainForm.Invoke(new SingleItem<ListViewItem>(AddPieceItem), item);
             }
         }
+
+        delegate void SingleItem<T>(T item);
+
+        private void AddPieceItem(ListViewItem item)
+        {
+            this.mainForm.PiecesListView.Items.Add(item);
+        }
+
 
         void PieceManager_BlockRequestCancelled(object sender, BlockEventArgs e)
         {

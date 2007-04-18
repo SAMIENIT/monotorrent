@@ -55,8 +55,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlockProgressBar.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Helper\MemoryUtility.cs" />
+    <Compile Include="IDrawable.cs" />
     <Compile Include="ImageListView.cs">
       <SubType>Component</SubType>
     </Compile>
