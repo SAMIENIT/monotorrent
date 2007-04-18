@@ -9,52 +9,42 @@ namespace MonoTorrent.GUI
 {
     public class ImageListView : ListView
     {
-        private List<BlockEventArgs> Pieces = new List<BlockEventArgs>();
-
-        public void Add(BlockEventArgs e)
+        public class ImageListViewSubItem : ListViewItem.ListViewSubItem
         {
-            for (int i = 0; i < this.Pieces.Count; i++)
-
-                if (this.Pieces[i].Piece.Index == e.Piece.Index)
-                    return;
-
-            this.Pieces.Add(e);
-            this.Items.Add(CreatePiecesListItem(e));
-        }
-
-        public void Remove(BlockEventArgs e)
-        {
-            for (int i = 0; i < this.Pieces.Count; i++)
+            public IDrawable Drawable
             {
-                if (this.Pieces[i].Piece.Index != e.Piece.Index)
-                    continue;
-
-                this.Items.RemoveAt(i);
-                this.Pieces.RemoveAt(i);
-                return;
+                get { return this.drawable; }
             }
-        }
+            private IDrawable drawable;
 
-        private ListViewItem CreatePiecesListItem(BlockEventArgs e)
-        {
-            ListViewItem item = new ListViewItem(e.Piece.Index.ToString());
-            item.SubItems.Add((e.Block.RequestLength.ToString()));
-            item.SubItems.Add(e.Piece.BlockCount.ToString());
+            public ImageListViewSubItem(IDrawable drawable)
+                : base()
+            {
+                this.drawable = drawable;
+            }
 
-            ListViewItem.ListViewSubItem blockProgress = new ListViewItem.ListViewSubItem();
-            blockProgress.Name = "BlockProgress";   // Hardcoded string. Used to replace this item by a rendering of the block progress bar
-            item.SubItems.Add(blockProgress);
-            return item;
+            public ImageListViewSubItem(ListViewItem owner, string text, IDrawable drawable)
+                : base(owner, text)
+            {
+                this.drawable = drawable;
+            }
+
+            public ImageListViewSubItem(ListViewItem owner, string text, Color forColor, Color backColor, Font font, IDrawable drawable)
+                : base(owner, text, forColor, backColor, font)
+            {
+                this.drawable = drawable;
+            }
         }
 
         public ImageListView()
         {
+            this.DoubleBuffered = true;
             this.FullRowSelect = true;
             this.OwnerDraw = true;
             this.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(SpecialListView_DrawColumnHeader);
             this.DrawSubItem += new DrawListViewSubItemEventHandler(SpecialListView_DrawSubItem);
             this.DrawItem += new DrawListViewItemEventHandler(SpecialListView_DrawItem);
-            this.MouseMove +=new MouseEventHandler(SpecialListView_MouseMove);
+            this.MouseMove += new MouseEventHandler(SpecialListView_MouseMove);
         }
 
         void SpecialListView_MouseMove(object sender, MouseEventArgs e)
@@ -80,11 +70,10 @@ namespace MonoTorrent.GUI
             e.DrawText();
         }
 
-
-
         void SpecialListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            if (e.SubItem.Name != "BlockProgress")
+            ImageListViewSubItem item = e.SubItem as ImageListViewSubItem;
+            if (item == null)
             {
                 e.DrawBackground();
                 e.DrawFocusRectangle(e.Bounds);
@@ -92,34 +81,8 @@ namespace MonoTorrent.GUI
                 return;
             }
 
-            BlockEventArgs args = Pieces[e.ItemIndex];
-            using (Graphics g = e.Graphics)
-            {
-                Rectangle rect = e.Bounds;
-                float width = (float)rect.Width / args.Piece.BlockCount;
-                for (int i = 0; i < args.Piece.BlockCount; i++)
-                {
-                    RectangleF newDrawArea = new RectangleF(rect.X + (width * i), rect.Y, width, rect.Height);
-                    if (args.Piece[i].Written)
-                        g.FillRectangle(writtenBrush, newDrawArea);
-
-                    else if (args.Piece[i].Received)
-                        g.FillRectangle(receivedBrush, newDrawArea);
-
-                    else if (args.Piece[i].Requested)
-                        g.FillRectangle(requestedBrush, newDrawArea);
-
-                    else
-                        g.FillRectangle(notRequestedBrush, newDrawArea);
-                }
-            }
+            using (e.Graphics)
+                item.Drawable.Draw(e.Graphics, e.Bounds);
         }
-
-
-        SolidBrush requestedBrush = new SolidBrush(Color.Red);          // Requested
-        SolidBrush receivedBrush = new SolidBrush(Color.Blue);          // In Memory
-        SolidBrush writtenBrush = new SolidBrush(Color.Green);          // Written
-        SolidBrush notRequestedBrush = new SolidBrush(Color.Yellow);     // Not requested
-
     }
 }
