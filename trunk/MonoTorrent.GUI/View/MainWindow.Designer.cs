@@ -109,19 +109,12 @@ namespace MonoTorrent.GUI.View
             this.PiecesSent = new System.Windows.Forms.ColumnHeader();
             this.SupportsFastPeer = new System.Windows.Forms.ColumnHeader();
             this.tabPieces = new System.Windows.Forms.TabPage();
+            this.piecesListView = new MonoTorrent.GUI.View.Control.ImageListView();
+            this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader11 = new System.Windows.Forms.ColumnHeader();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.MaintoolStrip = new System.Windows.Forms.ToolStrip();
-            this.AddToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.DelToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.CreateToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.StartToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.PauseToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.StopToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.DownStripButton = new System.Windows.Forms.ToolStripButton();
-            this.UpStripButton = new System.Windows.Forms.ToolStripButton();
             this.torrentsView = new MonoTorrent.GUI.View.Control.ImageListView();
             this.colName = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
@@ -134,11 +127,18 @@ namespace MonoTorrent.GUI.View
             this.colDownloaded = new System.Windows.Forms.ColumnHeader();
             this.colUploaded = new System.Windows.Forms.ColumnHeader();
             this.colRatio = new System.Windows.Forms.ColumnHeader();
-            this.piecesListView = new MonoTorrent.GUI.View.Control.ImageListView();
-            this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader11 = new System.Windows.Forms.ColumnHeader();
+            this.MaintoolStrip = new System.Windows.Forms.ToolStrip();
+            this.AddToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.DelToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.CreateToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.StartToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.PauseToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.StopToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.DownStripButton = new System.Windows.Forms.ToolStripButton();
+            this.UpStripButton = new System.Windows.Forms.ToolStripButton();
             this.menuBar.SuspendLayout();
             this.detailsView.SuspendLayout();
             this.tabGeneral.SuspendLayout();
@@ -901,6 +901,40 @@ namespace MonoTorrent.GUI.View
             this.tabPieces.Text = "Pieces";
             this.tabPieces.UseVisualStyleBackColor = true;
             // 
+            // piecesListView
+            // 
+            this.piecesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader8,
+            this.columnHeader9,
+            this.columnHeader10,
+            this.columnHeader11});
+            this.piecesListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.piecesListView.FullRowSelect = true;
+            this.piecesListView.Location = new System.Drawing.Point(0, 0);
+            this.piecesListView.Name = "piecesListView";
+            this.piecesListView.OwnerDraw = true;
+            this.piecesListView.Size = new System.Drawing.Size(684, 164);
+            this.piecesListView.TabIndex = 0;
+            this.piecesListView.UseCompatibleStateImageBehavior = false;
+            this.piecesListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "#";
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "Size";
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "Blocs #";
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Text = "Progress";
+            this.columnHeader11.Width = 319;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -923,6 +957,84 @@ namespace MonoTorrent.GUI.View
             this.splitContainer1.Size = new System.Drawing.Size(692, 384);
             this.splitContainer1.SplitterDistance = 190;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // torrentsView
+            // 
+            this.torrentsView.AllowColumnReorder = true;
+            this.torrentsView.AllowDrop = true;
+            this.torrentsView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colName,
+            this.colSize,
+            this.colProgressBar,
+            this.colStatus,
+            this.colSeeds,
+            this.colLeeches,
+            this.colDownSpeed,
+            this.colUpSpeed,
+            this.colDownloaded,
+            this.colUploaded,
+            this.colRatio});
+            this.torrentsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.torrentsView.FullRowSelect = true;
+            this.torrentsView.Location = new System.Drawing.Point(0, 0);
+            this.torrentsView.Margin = new System.Windows.Forms.Padding(5);
+            this.torrentsView.Name = "torrentsView";
+            this.torrentsView.OwnerDraw = true;
+            this.torrentsView.Size = new System.Drawing.Size(692, 190);
+            this.torrentsView.TabIndex = 0;
+            this.torrentsView.UseCompatibleStateImageBehavior = false;
+            this.torrentsView.View = System.Windows.Forms.View.Details;
+            this.torrentsView.DragEnter += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragEnter);
+            this.torrentsView.DragDrop += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragDrop);
+            this.torrentsView.SelectedIndexChanged += new System.EventHandler(this.torrentsView_SelectedIndexChanged);
+            // 
+            // colName
+            // 
+            this.colName.Text = "Name";
+            this.colName.Width = 226;
+            // 
+            // colSize
+            // 
+            this.colSize.Text = "Size";
+            this.colSize.Width = 77;
+            // 
+            // colProgressBar
+            // 
+            this.colProgressBar.Text = "Progress";
+            this.colProgressBar.Width = 113;
+            // 
+            // colStatus
+            // 
+            this.colStatus.Text = "Status";
+            this.colStatus.Width = 76;
+            // 
+            // colSeeds
+            // 
+            this.colSeeds.Text = "Seeds";
+            // 
+            // colLeeches
+            // 
+            this.colLeeches.Text = "Leechs";
+            // 
+            // colDownSpeed
+            // 
+            this.colDownSpeed.Text = "Download Speed";
+            // 
+            // colUpSpeed
+            // 
+            this.colUpSpeed.Text = "Upload Speed";
+            // 
+            // colDownloaded
+            // 
+            this.colDownloaded.Text = "Downloaded";
+            // 
+            // colUploaded
+            // 
+            this.colUploaded.Text = "Uploaded";
+            // 
+            // colRatio
+            // 
+            this.colRatio.Text = "Ratio";
             // 
             // MaintoolStrip
             // 
@@ -1045,117 +1157,6 @@ namespace MonoTorrent.GUI.View
             this.UpStripButton.Text = "Up";
             this.UpStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
-            // 
-            // torrentsView
-            // 
-            this.torrentsView.AllowColumnReorder = true;
-            this.torrentsView.AllowDrop = true;
-            this.torrentsView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colName,
-            this.colSize,
-            this.colProgressBar,
-            this.colStatus,
-            this.colSeeds,
-            this.colLeeches,
-            this.colDownSpeed,
-            this.colUpSpeed,
-            this.colDownloaded,
-            this.colUploaded,
-            this.colRatio});
-            this.torrentsView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.torrentsView.FullRowSelect = true;
-            this.torrentsView.Location = new System.Drawing.Point(0, 0);
-            this.torrentsView.Margin = new System.Windows.Forms.Padding(5);
-            this.torrentsView.Name = "torrentsView";
-            this.torrentsView.OwnerDraw = true;
-            this.torrentsView.Size = new System.Drawing.Size(692, 190);
-            this.torrentsView.TabIndex = 0;
-            this.torrentsView.UseCompatibleStateImageBehavior = false;
-            this.torrentsView.View = System.Windows.Forms.View.Details;
-            this.torrentsView.DragEnter += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragEnter);
-            this.torrentsView.DragDrop += new System.Windows.Forms.DragEventHandler(this.TorrentsView_DragDrop);
-            this.torrentsView.SelectedIndexChanged += new System.EventHandler(this.torrentsView_SelectedIndexChanged);
-            // 
-            // colName
-            // 
-            this.colName.Text = "Name";
-            this.colName.Width = 226;
-            // 
-            // colSize
-            // 
-            this.colSize.Text = "Size";
-            this.colSize.Width = 77;
-            // 
-            // colProgressBar
-            // 
-            this.colProgressBar.Text = "Progress";
-            this.colProgressBar.Width = 113;
-            // 
-            // colStatus
-            // 
-            this.colStatus.Text = "Status";
-            this.colStatus.Width = 76;
-            // 
-            // colSeeds
-            // 
-            this.colSeeds.Text = "Seeds";
-            // 
-            // colLeeches
-            // 
-            this.colLeeches.Text = "Leechs";
-            // 
-            // colDownSpeed
-            // 
-            this.colDownSpeed.Text = "Download Speed";
-            // 
-            // colUpSpeed
-            // 
-            this.colUpSpeed.Text = "Upload Speed";
-            // 
-            // colDownloaded
-            // 
-            this.colDownloaded.Text = "Downloaded";
-            // 
-            // colUploaded
-            // 
-            this.colUploaded.Text = "Uploaded";
-            // 
-            // colRatio
-            // 
-            this.colRatio.Text = "Ratio";
-            // 
-            // piecesListView
-            // 
-            this.piecesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader8,
-            this.columnHeader9,
-            this.columnHeader10,
-            this.columnHeader11});
-            this.piecesListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.piecesListView.FullRowSelect = true;
-            this.piecesListView.Location = new System.Drawing.Point(0, 0);
-            this.piecesListView.Name = "piecesListView";
-            this.piecesListView.OwnerDraw = true;
-            this.piecesListView.Size = new System.Drawing.Size(684, 164);
-            this.piecesListView.TabIndex = 0;
-            this.piecesListView.UseCompatibleStateImageBehavior = false;
-            this.piecesListView.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader8
-            // 
-            this.columnHeader8.Text = "#";
-            // 
-            // columnHeader9
-            // 
-            this.columnHeader9.Text = "Size";
-            // 
-            // columnHeader10
-            // 
-            this.columnHeader10.Text = "Blocs #";
-            // 
-            // columnHeader11
-            // 
-            this.columnHeader11.Text = "Progress";
             // 
             // MainWindow
             // 
