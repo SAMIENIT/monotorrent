@@ -9,7 +9,7 @@
   * main view			DONE
   * toolbar			DONE
   * tabpeers			DONE
-  * tabpieces			CANCEL ( not possible with current lib)
+  * tabpieces			DONE
   * new torrent window		DONE
 
 = For 0.1 release : =
@@ -23,7 +23,7 @@
   * Mini windows 		0%
   * manage priority		0%
   * statusbar			0%
-  * progress bar		0%
+  * progress bar		50% (done basic for piece and torrent)
   * context menu 		0%
 
 = For 0.3 release: =
@@ -35,7 +35,7 @@ some ideas :
 
   * More details on option
   * statistique
-  * mange of tracker
+  * manage of tracker
   * i18n
   * user friendly
   * design (icone and image)
@@ -46,4 +46,3 @@ some ideas :
   * categorie
   * stop pc when dl finished
   * ...
-
