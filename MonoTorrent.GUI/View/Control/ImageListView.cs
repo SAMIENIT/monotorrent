@@ -40,19 +40,12 @@ namespace MonoTorrent.GUI.View.Control
         {
             this.DoubleBuffered = true;
             this.FullRowSelect = true;
-            this.OwnerDraw = true;
-            this.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(SpecialListView_DrawColumnHeader);
-            this.DrawSubItem += new DrawListViewSubItemEventHandler(SpecialListView_DrawSubItem);
-            this.DrawItem += new DrawListViewItemEventHandler(SpecialListView_DrawItem);
-            this.MouseMove += new MouseEventHandler(SpecialListView_MouseMove);
         }
 
-        void SpecialListView_MouseMove(object sender, MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
             ListViewItem item = this.GetItemAt(e.X, e.Y);
-            if(item!=null)
-            this.Invalidate(item.Bounds);
-            return;
+
             if (item != null && item.Tag == null)
             {
                 item.Tag = "fixed";
@@ -60,32 +53,27 @@ namespace MonoTorrent.GUI.View.Control
             }
         }
 
-        void SpecialListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        protected override void OnDrawColumnHeader(DrawListViewColumnHeaderEventArgs e)
         {
-            e.DrawBackground();
-            e.DrawFocusRectangle();
-            e.DrawText();
+            e.DrawDefault = true;
+            base.OnDrawColumnHeader(e);
         }
 
-        void SpecialListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
-        {
-            e.DrawBackground();
-            e.DrawText();
-        }
 
-        void SpecialListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        protected override void OnDrawSubItem(DrawListViewSubItemEventArgs e)
         {
             ImageListViewSubItem item = e.SubItem as ImageListViewSubItem;
+
             if (item == null)
             {
-                e.DrawBackground();
-                e.DrawFocusRectangle(e.Bounds);
-                e.DrawText();
-                return;
+                e.DrawDefault = true;
+                base.OnDrawSubItem(e);
             }
-
-            using (e.Graphics)
-                item.Drawable.Draw(e.Graphics, e.Bounds);
+            else
+            {
+                using (e.Graphics)
+                    item.Drawable.Draw(e.Graphics, e.Bounds);
+            }
         }
     }
 }
