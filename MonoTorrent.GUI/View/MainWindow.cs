@@ -73,7 +73,7 @@ namespace MonoTorrent.GUI.View
 		/// <summary>
 		/// tab pieces list ( not used actually)
 		/// </summary>
-        public ImageListView PiecesListView
+        public Control.ImageListView PiecesListView
 		{
 			get { return this.piecesListView; }
 		}
@@ -81,7 +81,7 @@ namespace MonoTorrent.GUI.View
 		/// <summary>
 		/// main view
 		/// </summary>
-		public ListView TorrentsView
+        public Control.ImageListView TorrentsView
 		{
 			get { return this.torrentsView; }
 		}
