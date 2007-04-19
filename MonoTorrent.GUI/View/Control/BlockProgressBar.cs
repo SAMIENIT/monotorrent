@@ -18,13 +18,20 @@ namespace MonoTorrent.GUI.View.Control
 
         public void Draw(System.Drawing.Graphics graphics, System.Drawing.Rectangle bounds)
         {
-            using (SolidBrush requestedBrush = new SolidBrush(Color.CornflowerBlue))          // Requested
-            using (SolidBrush receivedBrush = new SolidBrush(Color.Goldenrod))          // In Memory
-            using (SolidBrush writtenBrush = new SolidBrush(Color.LimeGreen))          // Written
-            using (SolidBrush notRequestedBrush = new SolidBrush(Color.Salmon))    // Not requested
+            float width = (float)bounds.Width / args.Piece.BlockCount;
+            RectangleF brushDimensions = new RectangleF(0, 0, width, bounds.Height);
+            using (LinearGradientBrush requestedBrush = new LinearGradientBrush(brushDimensions, Color.LightBlue, Color.Blue, LinearGradientMode.Vertical))
+            using (LinearGradientBrush receivedBrush = new LinearGradientBrush(brushDimensions, Color.LightGoldenrodYellow, Color.Goldenrod, LinearGradientMode.Vertical))
+            using (LinearGradientBrush writtenBrush = new LinearGradientBrush(brushDimensions, Color.LightGreen, Color.LimeGreen, LinearGradientMode.Vertical))
+            using (LinearGradientBrush notRequestedBrush = new LinearGradientBrush(brushDimensions, Color.LightSalmon, Color.Red, LinearGradientMode.Vertical))
             {
+                requestedBrush.SetSigmaBellShape(0.25f);
+                receivedBrush.SetSigmaBellShape(0.25f);
+                writtenBrush.SetSigmaBellShape(0.25f);
+                notRequestedBrush.SetSigmaBellShape(0.25f);
+
                 Rectangle rect = bounds;
-                float width = (float)rect.Width / args.Piece.BlockCount;
+                
                 for (int i = 0; i < this.args.Piece.BlockCount; i++)
                 {
                     RectangleF newArea = new RectangleF(rect.X + (width * i), rect.Y, width, rect.Height);
