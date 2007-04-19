@@ -8,6 +8,8 @@ using MonoTorrent.GUI.Settings;
 using System.IO;
 using MonoTorrent.Common;
 using System.Threading;
+using MonoTorrent.GUI.View.Control;
+
 namespace MonoTorrent.GUI.Controller
 {
     public class MainController
@@ -528,7 +530,7 @@ namespace MonoTorrent.GUI.Controller
 
 			mainForm.TorrentsView.Items.Add(item);
             TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
-            ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new StandardProgressBar(torrent));
+            ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new TorrentProgressBar(torrent));
             sitem.Name = "colProgress";
             item.SubItems.Add(sitem);
             itemToTorrent.Add(item, torrent);

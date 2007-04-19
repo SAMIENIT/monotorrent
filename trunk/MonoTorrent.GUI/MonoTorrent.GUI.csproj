@@ -55,11 +55,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlockProgressBar.cs" />
+    <Compile Include="View\Control\BlockProgressBar.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Helper\MemoryUtility.cs" />
-    <Compile Include="IDrawable.cs" />
-    <Compile Include="ImageListView.cs">
+    <Compile Include="View\Control\IDrawable.cs" />
+    <Compile Include="View\Control\ImageListView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -110,16 +110,13 @@
     <Compile Include="Settings\ISettings.cs" />
     <Compile Include="Settings\ISettingsStorage.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
-    <Compile Include="StandardProgressBar.cs">
+    <Compile Include="View\Control\TorrentProgressBar.cs">
     </Compile>
     <Compile Include="View\AboutWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Control\CustomListView.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="View\CreateWindow.cs">
       <SubType>Form</SubType>

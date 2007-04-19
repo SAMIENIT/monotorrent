@@ -122,7 +122,7 @@ namespace MonoTorrent.GUI.View
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.DownStripButton = new System.Windows.Forms.ToolStripButton();
             this.UpStripButton = new System.Windows.Forms.ToolStripButton();
-            this.torrentsView = new MonoTorrent.GUI.ImageListView();
+            this.torrentsView = new Control.ImageListView();
             this.colName = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
             this.colProgress = new System.Windows.Forms.ColumnHeader();
@@ -134,7 +134,7 @@ namespace MonoTorrent.GUI.View
             this.colDownloaded = new System.Windows.Forms.ColumnHeader();
             this.colUploaded = new System.Windows.Forms.ColumnHeader();
             this.colRatio = new System.Windows.Forms.ColumnHeader();
-            this.piecesListView = new MonoTorrent.GUI.ImageListView();
+            this.piecesListView = new Control.ImageListView();
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
@@ -1196,7 +1196,7 @@ namespace MonoTorrent.GUI.View
 
         private System.Windows.Forms.MenuStrip menuBar;
         private System.Windows.Forms.StatusStrip statusBar;
-        private ImageListView torrentsView;
+        private Control.ImageListView torrentsView;
         private System.Windows.Forms.TabControl detailsView;
         private System.Windows.Forms.TabPage tabGeneral;
         private System.Windows.Forms.TabPage tabDetails;
@@ -1274,7 +1274,7 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ColumnHeader Download;
         private System.Windows.Forms.ColumnHeader Upload;
         private System.Windows.Forms.ColumnHeader DownloadSpeed;
-        private ImageListView piecesListView;
+        private Control.ImageListView piecesListView;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
