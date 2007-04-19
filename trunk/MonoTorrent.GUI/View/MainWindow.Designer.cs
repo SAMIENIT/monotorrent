@@ -122,10 +122,10 @@ namespace MonoTorrent.GUI.View
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.DownStripButton = new System.Windows.Forms.ToolStripButton();
             this.UpStripButton = new System.Windows.Forms.ToolStripButton();
-            this.torrentsView = new Control.ImageListView();
+            this.torrentsView = new MonoTorrent.GUI.View.Control.ImageListView();
             this.colName = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
-            this.colProgress = new System.Windows.Forms.ColumnHeader();
+            this.colProgressBar = new System.Windows.Forms.ColumnHeader();
             this.colStatus = new System.Windows.Forms.ColumnHeader();
             this.colSeeds = new System.Windows.Forms.ColumnHeader();
             this.colLeeches = new System.Windows.Forms.ColumnHeader();
@@ -134,12 +134,11 @@ namespace MonoTorrent.GUI.View
             this.colDownloaded = new System.Windows.Forms.ColumnHeader();
             this.colUploaded = new System.Windows.Forms.ColumnHeader();
             this.colRatio = new System.Windows.Forms.ColumnHeader();
-            this.piecesListView = new Control.ImageListView();
+            this.piecesListView = new MonoTorrent.GUI.View.Control.ImageListView();
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader11 = new System.Windows.Forms.ColumnHeader();
-            this.colProgressBar = new System.Windows.Forms.ColumnHeader();
             this.menuBar.SuspendLayout();
             this.detailsView.SuspendLayout();
             this.tabGeneral.SuspendLayout();
@@ -1054,7 +1053,7 @@ namespace MonoTorrent.GUI.View
             this.torrentsView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colName,
             this.colSize,
-            this.colProgress,
+            this.colProgressBar,
             this.colStatus,
             this.colSeeds,
             this.colLeeches,
@@ -1062,8 +1061,7 @@ namespace MonoTorrent.GUI.View
             this.colUpSpeed,
             this.colDownloaded,
             this.colUploaded,
-            this.colRatio,
-            this.colProgressBar});
+            this.colRatio});
             this.torrentsView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.torrentsView.FullRowSelect = true;
             this.torrentsView.Location = new System.Drawing.Point(0, 0);
@@ -1081,18 +1079,22 @@ namespace MonoTorrent.GUI.View
             // colName
             // 
             this.colName.Text = "Name";
+            this.colName.Width = 226;
             // 
             // colSize
             // 
             this.colSize.Text = "Size";
+            this.colSize.Width = 77;
             // 
-            // colProgress
+            // colProgressBar
             // 
-            this.colProgress.Text = "Progress";
+            this.colProgressBar.Text = "Progress";
+            this.colProgressBar.Width = 113;
             // 
             // colStatus
             // 
             this.colStatus.Text = "Status";
+            this.colStatus.Width = 76;
             // 
             // colSeeds
             // 
@@ -1202,7 +1204,6 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.TabPage tabDetails;
         private System.Windows.Forms.ColumnHeader colName;
         private System.Windows.Forms.ColumnHeader colSize;
-        private System.Windows.Forms.ColumnHeader colProgress;
         private System.Windows.Forms.ColumnHeader colStatus;
         private System.Windows.Forms.ColumnHeader colSeeds;
         private System.Windows.Forms.ColumnHeader colLeeches;

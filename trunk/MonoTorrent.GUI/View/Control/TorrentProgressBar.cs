@@ -22,11 +22,15 @@ namespace MonoTorrent.GUI.View.Control
         public void Draw(System.Drawing.Graphics graphics, System.Drawing.Rectangle bounds)
         {
             float length = (float)this.manager.Progress / 100.0f;
-            using (SolidBrush blue = new SolidBrush(Color.CornflowerBlue))
-            using (SolidBrush green = new SolidBrush(Color.LimeGreen))
+            using (SolidBrush complete = new SolidBrush(Color.Blue))
+            using (SolidBrush incomplete = new SolidBrush(Color.White))
+            using(StringFormat format = new StringFormat())
+            using(SolidBrush text = new SolidBrush(Color.Black))
             {
-                graphics.FillRectangle(green, bounds.X, bounds.Y, bounds.Width * length, bounds.Height);
-                graphics.FillRectangle(blue, bounds.X + (bounds.Width * length), bounds.Y, bounds.Width - bounds.Width * length, bounds.Height);
+                format.Alignment = StringAlignment.Center;
+                graphics.FillRectangle(complete, bounds.X, bounds.Y, bounds.Width * length, bounds.Height);
+                graphics.FillRectangle(incomplete, bounds.X + (bounds.Width * length), bounds.Y, bounds.Width - bounds.Width * length, bounds.Height);
+                graphics.DrawString(string.Format("{0:0.00} %",this.manager.Progress), new Font(FontFamily.GenericSansSerif, 7), text, bounds, format); 
             }
         }
     }

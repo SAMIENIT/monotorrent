@@ -216,17 +216,6 @@ namespace MonoTorrent.GUI.Controller
         private delegate void UpdateHandler(TorrentManager torrent);
 		private delegate void UpdateStatsHandler();
 
-        /// <summary>
-        /// update torrent in gui
-        /// </summary>
-        /// <param name="torrent"></param>
-        public void Update(TorrentManager torrent)
-        {
-            ListViewItem item = GetItemFromTorrent(torrent);
-			item.SubItems["colName"].Text = torrent.Torrent.Name;
-			item.SubItems["colSize"].Text = FormatSizeValue(torrent.Torrent.Size);
-            UpdateState(torrent);
-        }
 
         /// <summary>
         /// update torrent state in view
@@ -235,7 +224,6 @@ namespace MonoTorrent.GUI.Controller
         public void UpdateState(TorrentManager torrent)
         {
             ListViewItem item = GetItemFromTorrent(torrent);
-			item.SubItems["colProgress"].Text = string.Format("{0:0.00} %", torrent.Progress);
 			item.SubItems["colStatus"].Text = torrent.State.ToString();
 			item.SubItems["colSeeds"].Text = torrent.Peers.Seeds().ToString();
 			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString();
@@ -493,10 +481,6 @@ namespace MonoTorrent.GUI.Controller
 			item.SubItems.Add(subitem);
 
 			subitem = new ListViewItem.ListViewSubItem();
-			subitem.Name = "colProgress";
-			item.SubItems.Add(subitem);
-
-			subitem = new ListViewItem.ListViewSubItem();
 			subitem.Name = "colStatus";
 			item.SubItems.Add(subitem);
 
@@ -532,7 +516,7 @@ namespace MonoTorrent.GUI.Controller
             TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
             ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new TorrentProgressBar(torrent));
             sitem.Name = "colProgress";
-            item.SubItems.Add(sitem);
+            item.SubItems.Insert(2,sitem);
             itemToTorrent.Add(item, torrent);
             torrent.PieceHashed += new EventHandler<PieceHashedEventArgs>(torrent_PieceHashed);
             torrent.PeersFound += OnTorrentChange;
@@ -541,6 +525,8 @@ namespace MonoTorrent.GUI.Controller
             torrent.PieceManager.BlockReceived += new EventHandler<BlockEventArgs>(PieceManager_BlockReceived);
             torrent.PieceManager.BlockRequestCancelled += new EventHandler<BlockEventArgs>(PieceManager_BlockRequestCancelled);
             torrent.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
+            item.SubItems["colSize"].Text = FormatSizeValue(torrent.Torrent.Size);
+            item.SubItems["colName"].Text = torrent.Torrent.Name;
         }
 
         public void Del()
