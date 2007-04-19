@@ -60,7 +60,9 @@ namespace MonoTorrent.GUI.Controller
  		public void Exit()
 		{
 			//TODO : Exit => dispose
-			clientEngine.Stop();
+            WaitHandle[] handle = clientEngine.Stop();
+            WaitHandle.WaitAll(handle);
+
 			GuiTorrentSettings torrentSettings;
 			foreach (TorrentManager torrent in clientEngine.Torrents)
 			{
@@ -192,10 +194,16 @@ namespace MonoTorrent.GUI.Controller
 
 		public void UpdateAllStats()
 		{
-
-            UpdateTorrentsView();
-            UpdatePiecesTab();
-			UpdatePeers();
+            try
+            {
+                UpdateTorrentsView();
+                UpdatePiecesTab();
+                UpdatePeers();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), "Bloody hell! It crashed:");
+            }
 		}
 
 		private void UpdateTorrentsView()
@@ -254,19 +262,20 @@ namespace MonoTorrent.GUI.Controller
 
 		public string FormatSizeValue(long value)
 		{
-			if (value < 1000)
-				return String.Format("{0:0.00} o", value);
-			if (value < 1000000)
-				return String.Format("{0:0.00} Ko", value / 1000.0);
-			if (value < 1000000000)
-				return String.Format("{0:0.00} Mo", value/1000000.0);
-			return String.Format("{0:0.00} Go", value/1000000000.0);
+            return FormatSizeValue((double)value);
 		}
 
-		public string FormatSizeValue(double value)
-		{
-			return FormatSizeValue(Convert.ToInt64(value));
-		}
+        public string FormatSizeValue(double value)
+        {
+            if (value < 1024)
+                return String.Format("{0:0.00} o", value);
+            if (value < 1024 * 1024)
+                return String.Format("{0:0.00} Ko", value / 1024);
+            if (value < 1024 * 1024 * 1024)
+                return String.Format("{0:0.00} Mo", value / (1024 * 1024));
+
+            return String.Format("{0:0.00} Go", value / (1024 * 1024 * 1024));
+        }
 
         /// <summary>
         /// get all row selected in list view
@@ -381,7 +390,7 @@ namespace MonoTorrent.GUI.Controller
                 currentRequests.Add(e);
 
                 ListViewItem item = new ListViewItem(e.Piece.Index.ToString());
-                item.SubItems.Add((e.Block.RequestLength.ToString()));
+                item.SubItems.Add(FormatSizeValue(e.Block.RequestLength));
                 item.SubItems.Add(e.Piece.BlockCount.ToString());
                 item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(e)));
                 mainForm.Invoke(new SingleItem<ListViewItem>(AddPieceItem), item);
