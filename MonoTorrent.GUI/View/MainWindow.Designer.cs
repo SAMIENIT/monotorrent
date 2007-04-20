@@ -95,7 +95,6 @@ namespace MonoTorrent.GUI.View
             this.PeerListView = new System.Windows.Forms.ListView();
             this.PeerId = new System.Windows.Forms.ColumnHeader();
             this.ClientApp = new System.Windows.Forms.ColumnHeader();
-            this.Address = new System.Windows.Forms.ColumnHeader();
             this.LocationPeer = new System.Windows.Forms.ColumnHeader();
             this.Download = new System.Windows.Forms.ColumnHeader();
             this.Upload = new System.Windows.Forms.ColumnHeader();
@@ -805,7 +804,6 @@ namespace MonoTorrent.GUI.View
             this.PeerListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.PeerId,
             this.ClientApp,
-            this.Address,
             this.LocationPeer,
             this.Download,
             this.Upload,
@@ -834,10 +832,6 @@ namespace MonoTorrent.GUI.View
             // 
             this.ClientApp.Text = "Client Software";
             this.ClientApp.Width = 89;
-            // 
-            // Address
-            // 
-            this.Address.Text = "IP";
             // 
             // LocationPeer
             // 
@@ -1271,7 +1265,6 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ListView PeerListView;
         private System.Windows.Forms.ColumnHeader PeerId;
         private System.Windows.Forms.ColumnHeader ClientApp;
-        private System.Windows.Forms.ColumnHeader Address;
 		private System.Windows.Forms.ColumnHeader LocationPeer;
         private System.Windows.Forms.ColumnHeader Download;
         private System.Windows.Forms.ColumnHeader Upload;
