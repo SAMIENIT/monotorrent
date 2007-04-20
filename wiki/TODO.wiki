@@ -1,3 +1,4 @@
+#labels TODO,roadmap
 # List of detail and Todo
 
 = Module Done or cancel =
@@ -11,12 +12,13 @@
   * tabpeers			DONE
   * tabpieces			DONE
   * new torrent window		DONE
+  * tabdetails			DONE
+  * tabgeneral			DONE
 
 = For 0.1 release : =
 
-  * tabdetails			70%
-  * tabgeneral			70% todo update each tick
-
+ready for alpha release.
+It is time for debug and bugfixing and I will release soon.
 
 = For 0.2 release : =
 
