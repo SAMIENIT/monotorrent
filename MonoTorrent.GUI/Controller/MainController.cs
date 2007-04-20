@@ -731,6 +731,17 @@ namespace MonoTorrent.GUI.Controller
         {
             mainForm.GenTabStatusLabel.Text = torrent.State.ToString();
             mainForm.GenTabUpdateLabel.Text = torrent.TrackerManager.LastUpdated.ToShortTimeString();
+            for (int i = 0; i < torrent.TrackerManager.TrackerTiers.Length; i++ )
+            {
+                for (int j = 0; j < torrent.TrackerManager.TrackerTiers[i].Trackers.Length; j++ )
+                {
+                    if (!String.IsNullOrEmpty(torrent.TrackerManager.TrackerTiers[i].Trackers[j].FailureMessage))
+                        mainForm.TrackerMessage.Text = "FAILURE :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].FailureMessage;
+                    if (!String.IsNullOrEmpty(torrent.TrackerManager.TrackerTiers[i].Trackers[j].WarningMessage))
+                        mainForm.TrackerMessage.Text = "WARNING :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].WarningMessage;
+                }
+            }
+                
         }
 
         private void ClearGeneralTab()
@@ -744,6 +755,7 @@ namespace MonoTorrent.GUI.Controller
             mainForm.GenTabURLLabel.Text = "...";
             mainForm.GenTabStatusLabel.Text = "...";
             mainForm.GenTabUpdateLabel.Text = "...";
+            mainForm.TrackerMessage.Text = "...";
         }
 
         #endregion
