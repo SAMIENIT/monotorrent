@@ -94,7 +94,6 @@ namespace MonoTorrent.GUI.Controller
                 subitem = new ListViewItem.ListViewSubItem();
                 subitem.Name = "ClientApp";
                 item.SubItems.Add(subitem);
-                subitem.Text = id.Peer.Connection.ClientApp.Client.ToString();
 
 
                 subitem = new ListViewItem.ListViewSubItem();
@@ -204,13 +203,13 @@ namespace MonoTorrent.GUI.Controller
 
                             else
                             {
-
+                                entry.Key.SubItems["PeerId"].Text = entry.Value.Peer.PeerId;
                                 entry.Key.SubItems["IsSeeder"].Text = FormatBool(entry.Value.Peer.IsSeeder);
                                 entry.Key.SubItems["IsChoking"].Text = FormatBool(entry.Value.Peer.Connection.IsChoking);
                                 entry.Key.SubItems["IsInterested"].Text = FormatBool(entry.Value.Peer.Connection.IsInterested);
                                 entry.Key.SubItems["IsRequestingPiecesCount"].Text = entry.Value.Peer.Connection.IsRequestingPiecesCount.ToString();
                                 entry.Key.SubItems["PiecesSent"].Text = entry.Value.Peer.Connection.PiecesSent.ToString();
-
+                                entry.Key.SubItems["ClientApp"].Text = entry.Value.Peer.Connection.ClientApp.Client.ToString();
                                 entry.Key.SubItems["Download"].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesDownloaded);
                                 entry.Key.SubItems["Upload"].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesUploaded);
                                 entry.Key.SubItems["DownloadSpeed"].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.DownloadSpeed);
@@ -380,9 +379,9 @@ namespace MonoTorrent.GUI.Controller
         /// <param name="args"></param>
         private void OnTorrentStateChange(object sender, EventArgs args)
         {
-            //TorrentManager torrent = (TorrentManager)sender;
-			//if (!mainForm.IsDisposed)
-			//    mainForm.Invoke(new UpdateHandler(UpdateState), torrent);
+            TorrentManager torrent = (TorrentManager)sender;
+            if (!mainForm.IsDisposed)
+                mainForm.Invoke(new UpdateHandler(UpdateState), torrent);
         }
 		// FIXME: Is this the best way to do this?
 		private int counter = 0;
