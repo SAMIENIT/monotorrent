@@ -14,18 +14,22 @@
   * new torrent window		DONE
   * tabdetails			DONE
   * tabgeneral			DONE
+  * progress bar		DONE
 
 = For 0.1 release : =
 
-ready for alpha release.
-It is time for debug and bugfixing and I will release soon.
+  * Save/Restore the width of listitems in settings
+  * change save path of torrent in option (global) or in torrent general ( each torrent) 
+  * Exception throw because still some pending event fired when closing
+  * Excetion throw nullref on application.invoke
+  * Tracker details and ErrorMessage/WarningMessage
+  * priority (TorrentManager.Torrent.Files)
+  * view of files in the torrent  
 
 = For 0.2 release : =
 
   * Mini windows 		0%
-  * manage priority		0%
   * statusbar			0%
-  * progress bar		50% (done basic for piece and torrent)
   * context menu 		0%
 
 = For 0.3 release: =
