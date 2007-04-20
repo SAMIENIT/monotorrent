@@ -94,6 +94,11 @@ namespace MonoTorrent.GUI.View
 			get { return this.PeerListView; }
 		}
 
+        public TextBox TrackerMessage
+        {
+            get { return TrackerMessageTextBox; }
+        }
+
 		#region Details
 
 		public Label DetailTabElapsedTime

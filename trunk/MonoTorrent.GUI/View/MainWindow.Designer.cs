@@ -66,6 +66,7 @@ namespace MonoTorrent.GUI.View
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.trackerPanel = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.URLLabel = new System.Windows.Forms.Label();
@@ -138,6 +139,7 @@ namespace MonoTorrent.GUI.View
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.DownStripButton = new System.Windows.Forms.ToolStripButton();
             this.UpStripButton = new System.Windows.Forms.ToolStripButton();
+            this.TrackerMessageTextBox = new System.Windows.Forms.TextBox();
             this.menuBar.SuspendLayout();
             this.detailsView.SuspendLayout();
             this.tabGeneral.SuspendLayout();
@@ -504,6 +506,8 @@ namespace MonoTorrent.GUI.View
             // 
             // trackerPanel
             // 
+            this.trackerPanel.Controls.Add(this.TrackerMessageTextBox);
+            this.trackerPanel.Controls.Add(this.label19);
             this.trackerPanel.Controls.Add(this.UpdateLabel);
             this.trackerPanel.Controls.Add(this.StatusLabel);
             this.trackerPanel.Controls.Add(this.URLLabel);
@@ -518,6 +522,16 @@ namespace MonoTorrent.GUI.View
             this.trackerPanel.TabIndex = 0;
             this.trackerPanel.TabStop = false;
             this.trackerPanel.Text = "Tracker";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label19.Location = new System.Drawing.Point(239, 46);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(56, 13);
+            this.label19.TabIndex = 6;
+            this.label19.Text = "Message :";
             // 
             // UpdateLabel
             // 
@@ -1152,6 +1166,15 @@ namespace MonoTorrent.GUI.View
             this.UpStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
             // 
+            // TrackerMessageTextBox
+            // 
+            this.TrackerMessageTextBox.Enabled = false;
+            this.TrackerMessageTextBox.Location = new System.Drawing.Point(302, 38);
+            this.TrackerMessageTextBox.Multiline = true;
+            this.TrackerMessageTextBox.Name = "TrackerMessageTextBox";
+            this.TrackerMessageTextBox.Size = new System.Drawing.Size(334, 49);
+            this.TrackerMessageTextBox.TabIndex = 7;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1301,6 +1324,8 @@ namespace MonoTorrent.GUI.View
 		private System.Windows.Forms.Label elapsedTimeLabel;
 		private System.Windows.Forms.Label piecesLabel;
         private System.Windows.Forms.ColumnHeader colProgressBar;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox TrackerMessageTextBox;
     }
 }
 
