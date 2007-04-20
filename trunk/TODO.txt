@@ -6,19 +6,17 @@
 - main view			DONE
 - toolbar			DONE
 - tabpeers			DONE
-- tabpieces			CANCEL ( not possible with current lib)
+- tabpieces			DONE
 - new torrent window		DONE
-
-For 0.1 release :
-- tabdetails			70%
-- tabgeneral			70% todo update each tick
-
+- tabdetails			DONE
+- tabgeneral			DONE
 
 For 0.2 release :
 - Mini windows 			0%
 - manage priority		0%
 - statusbar			0%
-- progress bar			0%
+- piece progress bar		70%
+- torrent progress bar		70%
 - context menu 			0%
 
 For 0.3 release:
