@@ -72,6 +72,7 @@ namespace MonoTorrent.GUI.Controller
 				torrent.TorrentStateChanged -= OnTorrentStateChange;
 				torrentSettings = new GuiTorrentSettings();
 				torrentSettings.SetTorrentSettings(torrent.Settings);
+                torrentSettings.SavePath = torrent.SavePath;
 				settingsBase.SaveSettings<GuiTorrentSettings>("Torrent Settings for " + torrent.Torrent.TorrentPath, torrentSettings);
 			}
 
