@@ -89,6 +89,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>OptionWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\TorrentSettingWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TorrentSettingWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -141,6 +145,12 @@
     </Compile>
     <Compile Include="View\OptionWindow.Designer.cs">
       <DependentUpon>OptionWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\TorrentSettingWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\TorrentSettingWindow.Designer.cs">
+      <DependentUpon>TorrentSettingWindow.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
