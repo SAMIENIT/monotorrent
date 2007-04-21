@@ -14,7 +14,7 @@ namespace MonoTorrent.GUI.Settings
         private int maxUploadSpeed = TorrentSettings.DefaultSettings().MaxUploadSpeed;
         private int maxConnections = TorrentSettings.DefaultSettings().MaxConnections;
         private int uploadSlots = TorrentSettings.DefaultSettings().UploadSlots;
-
+        private string savePath = EngineSettings.DefaultSettings().SavePath;
 
         #endregion
 
@@ -44,6 +44,12 @@ namespace MonoTorrent.GUI.Settings
             set { this.uploadSlots = value; }
         }
 
+        public string SavePath
+        {
+            get { return this.savePath; }
+            set { this.savePath = value; }
+        }
+
         #endregion
 
         #region ISettings Membres
@@ -55,6 +61,7 @@ namespace MonoTorrent.GUI.Settings
             result.Add(new BEncodedString("MaxUploadSpeed"), new BEncodedNumber(MaxUploadSpeed));
             result.Add(new BEncodedString("MaxConnections"), new BEncodedNumber(MaxConnections));
             result.Add(new BEncodedString("UploadSlots"), new BEncodedNumber(UploadSlots));
+            result.Add(new BEncodedString("SavePath"), new BEncodedString(savePath));
             return result;
         }
 
@@ -78,6 +85,9 @@ namespace MonoTorrent.GUI.Settings
 
                 if (val.TryGetValue(new BEncodedString("UploadSlots"), out result))
                     UploadSlots = Convert.ToInt32(result.ToString());
+
+                if (val.TryGetValue(new BEncodedString("SavePath"), out result))
+                    savePath = result.ToString();
             }
         }
 

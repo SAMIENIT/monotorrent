@@ -22,6 +22,9 @@ namespace MonoTorrent.GUI.Settings
         private bool showToolbar = true;
         private bool showDetail = true;
         private bool showStatusbar = true;
+        private List<int> torrentViewColumnWidth = new List<int>();
+        private List<int> peerViewColumnWidth = new List<int>();
+        private List<int> pieceViewColumnWidth = new List<int>();
         #endregion
 
         #region Properties
@@ -74,6 +77,24 @@ namespace MonoTorrent.GUI.Settings
             set { showStatusbar = value; }
         }
 
+        public List<int> TorrentViewColumnWidth
+        {
+            get { return torrentViewColumnWidth; }
+            set { torrentViewColumnWidth = value; }
+        }
+
+        public List<int> PieceViewColumnWidth
+        {
+            get { return pieceViewColumnWidth; }
+            set { pieceViewColumnWidth = value; }
+        }
+
+        public List<int> PeerViewColumnWidth
+        {
+            get { return peerViewColumnWidth; }
+            set { peerViewColumnWidth = value; }
+        }
+
         #endregion
 
         #region Interface Members
@@ -89,6 +110,12 @@ namespace MonoTorrent.GUI.Settings
             result.Add(new BEncodedString("ShowToolbar"), new BEncodedString(ShowToolbar.ToString()));
             result.Add(new BEncodedString("ShowDetail"), new BEncodedString(ShowDetail.ToString()));
             result.Add(new BEncodedString("ShowStatusbar"), new BEncodedString(ShowStatusbar.ToString()));
+            for(int i =0; i < torrentViewColumnWidth.Count;i++)
+                result.Add(new BEncodedString("TorrentViewColumnWidth" + i.ToString()), new BEncodedNumber(torrentViewColumnWidth[i]));
+            for (int i = 0; i < peerViewColumnWidth.Count; i++)
+                result.Add(new BEncodedString("PeerViewColumnWidth" + i.ToString()), new BEncodedNumber(peerViewColumnWidth[i]));
+            for (int i = 0; i < pieceViewColumnWidth.Count; i++)
+                result.Add(new BEncodedString("PieceViewColumnWidth" + i.ToString()), new BEncodedNumber(pieceViewColumnWidth[i]));
             return result;
         }
 
@@ -125,6 +152,27 @@ namespace MonoTorrent.GUI.Settings
 
                 if (val.TryGetValue(new BEncodedString("ShowStatusbar"), out result))
                     ShowStatusbar = Convert.ToBoolean(result.ToString());
+                
+                int i =0;
+                while (val.TryGetValue(new BEncodedString("TorrentViewColumnWidth" + i.ToString()), out result))
+                {
+                    torrentViewColumnWidth.Add(Convert.ToInt32(result.ToString()));
+                    i++;
+                }
+
+                i = 0;
+                while (val.TryGetValue(new BEncodedString("PeerViewColumnWidth" + i.ToString()), out result))
+                {
+                    peerViewColumnWidth.Add(Convert.ToInt32(result.ToString()));
+                    i++;
+                }
+
+                i = 0;
+                while (val.TryGetValue(new BEncodedString("PieceViewColumnWidth" + i.ToString()), out result))
+                {
+                    pieceViewColumnWidth.Add(Convert.ToInt32(result.ToString()));
+                    i++;
+                }
             }
         }
 

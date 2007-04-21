@@ -44,7 +44,7 @@ namespace MonoTorrent.GUI.Controller
             foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
             {
                 GuiTorrentSettings torrentSettings = settings.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
-                Add(file, torrentSettings.GetTorrentSettings());
+                Add(file, torrentSettings.GetTorrentSettings(), torrentSettings.SavePath);
             }
 
 			//subscribe to event for update
@@ -515,10 +515,15 @@ namespace MonoTorrent.GUI.Controller
 
         public void Add(string fileName)
         {
-            Add(fileName, clientEngine.DefaultTorrentSettings);
+            TorrentSettingWindow window = new TorrentSettingWindow(clientEngine.DefaultTorrentSettings,clientEngine.Settings.SavePath);
+            if (window.ShowDialog() == DialogResult.OK)
+            {
+                Add(fileName, window.Settings, window.SavePath);
+            }
+
         }
 
-        public void Add(string fileName, TorrentSettings settings)
+        public void Add(string fileName, TorrentSettings settings,string savePath)
         {
             GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
             string newPath = Path.Combine(genSettings.TorrentsPath, Path.GetFileName(fileName));
@@ -573,7 +578,7 @@ namespace MonoTorrent.GUI.Controller
             item.SubItems.Add(subitem);
 
 			mainForm.TorrentsView.Items.Add(item);
-            TorrentManager torrent = clientEngine.LoadTorrent(newPath, clientEngine.Settings.SavePath, settings);
+            TorrentManager torrent = clientEngine.LoadTorrent(newPath, savePath, settings);
             ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new TorrentProgressBar(torrent));
             sitem.Name = "colProgress";
             item.SubItems.Insert(2,sitem);
@@ -731,14 +736,15 @@ namespace MonoTorrent.GUI.Controller
         {
             mainForm.GenTabStatusLabel.Text = torrent.State.ToString();
             mainForm.GenTabUpdateLabel.Text = torrent.TrackerManager.LastUpdated.ToShortTimeString();
+            mainForm.TrackerMessage.Text = "";
             for (int i = 0; i < torrent.TrackerManager.TrackerTiers.Length; i++ )
             {
                 for (int j = 0; j < torrent.TrackerManager.TrackerTiers[i].Trackers.Length; j++ )
                 {
                     if (!String.IsNullOrEmpty(torrent.TrackerManager.TrackerTiers[i].Trackers[j].FailureMessage))
-                        mainForm.TrackerMessage.Text = "FAILURE :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].FailureMessage;
+                        mainForm.TrackerMessage.Text += "FAILURE :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].FailureMessage + System.Environment.NewLine;
                     if (!String.IsNullOrEmpty(torrent.TrackerManager.TrackerTiers[i].Trackers[j].WarningMessage))
-                        mainForm.TrackerMessage.Text = "WARNING :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].WarningMessage;
+                        mainForm.TrackerMessage.Text += "WARNING :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].WarningMessage + System.Environment.NewLine;
                 }
             }
                 

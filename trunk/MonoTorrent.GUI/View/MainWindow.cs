@@ -163,11 +163,26 @@ namespace MonoTorrent.GUI.View
             ShowStatusBar(guisettings.ShowStatusbar);
             ShowToolBar(guisettings.ShowToolbar);
             ShowDetail(guisettings.ShowDetail);
-            
+
+            for (int i = 0; i < guisettings.TorrentViewColumnWidth.Count; i++)
+            {
+                torrentsView.Columns[i].Width = guisettings.TorrentViewColumnWidth[i];
+            }
+
+            for (int i = 0; i < guisettings.PeerViewColumnWidth.Count; i++)
+            {
+                PeerListView.Columns[i].Width = guisettings.PeerViewColumnWidth[i];
+            }
+
+            for (int i = 0; i < guisettings.PieceViewColumnWidth.Count; i++)
+            {
+                piecesListView.Columns[i].Width = guisettings.PieceViewColumnWidth[i];
+            }
+
             //load maincontroller
             mainController = new MainController(this, settings);
         }
-
+        //TODO move to controller all settings things
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
 			//close client
@@ -184,6 +199,18 @@ namespace MonoTorrent.GUI.View
             guisettings.ShowDetail = showDetailToolStripMenuItem.Checked;
             guisettings.ShowStatusbar = showStatusbarToolStripMenuItem.Checked;
             guisettings.ShowToolbar = showToolbarToolStripMenuItem.Checked;
+            foreach (ColumnHeader col in torrentsView.Columns)
+            {
+                guisettings.TorrentViewColumnWidth.Add(col.Width);
+            }
+            foreach (ColumnHeader col in PeerListView.Columns)
+            {
+                guisettings.PeerViewColumnWidth.Add(col.Width);
+            }
+            foreach (ColumnHeader col in piecesListView.Columns)
+            {
+                guisettings.PieceViewColumnWidth.Add(col.Width);
+            }
             settings.SaveSettings<GuiViewSettings>("Graphical Settings", guisettings);
         }
 
