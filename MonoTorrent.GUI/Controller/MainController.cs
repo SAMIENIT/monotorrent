@@ -593,6 +593,7 @@ namespace MonoTorrent.GUI.Controller
             torrent.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
             item.SubItems["colSize"].Text = FormatSizeValue(torrent.Torrent.Size);
             item.SubItems["colName"].Text = torrent.Torrent.Name;
+            torrent.HashCheck(false);
         }
 
         public void Del()
@@ -738,17 +739,9 @@ namespace MonoTorrent.GUI.Controller
             mainForm.GenTabStatusLabel.Text = torrent.State.ToString();
             mainForm.GenTabUpdateLabel.Text = torrent.TrackerManager.LastUpdated.ToShortTimeString();
             mainForm.TrackerMessage.Text = "";
-            for (int i = 0; i < torrent.TrackerManager.TrackerTiers.Length; i++ )
-            {
-                for (int j = 0; j < torrent.TrackerManager.TrackerTiers[i].Trackers.Length; j++ )
-                {
-                    if (!String.IsNullOrEmpty(torrent.TrackerManager.TrackerTiers[i].Trackers[j].FailureMessage))
-                        mainForm.TrackerMessage.Text += "FAILURE :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].FailureMessage + System.Environment.NewLine;
-                    if (!String.IsNullOrEmpty(torrent.TrackerManager.TrackerTiers[i].Trackers[j].WarningMessage))
-                        mainForm.TrackerMessage.Text += "WARNING :" + i + "/" + j + "-" + torrent.TrackerManager.TrackerTiers[i].Trackers[j].WarningMessage + System.Environment.NewLine;
-                }
-            }
-                
+            mainForm.TrackerMessage.Text = torrent.TrackerManager.CurrentTracker.FailureMessage;
+            mainForm.TrackerMessage.AppendText(Environment.NewLine);
+            mainForm.TrackerMessage.AppendText(torrent.TrackerManager.CurrentTracker.WarningMessage);
         }
 
         private void ClearGeneralTab()
@@ -785,12 +778,12 @@ namespace MonoTorrent.GUI.Controller
             mainForm.DetailTabDownload.Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded);
             mainForm.DetailTabDownloadSpeed.Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
 
-            TimeSpan elapsedTime;
+            DateTime elapsedTime;
             if (torrent.State == TorrentState.Stopped || torrent.State == TorrentState.Paused)
-                elapsedTime = TimeSpan.Zero;
+                elapsedTime = new DateTime(0);
             else
-                elapsedTime = DateTime.Now - torrent.StartTime;
-            mainForm.DetailTabElapsedTime.Text = elapsedTime.Hours + ":" + elapsedTime.Minutes + ":" + elapsedTime.Seconds;
+                elapsedTime = DateTime.Now.AddTicks(-torrent.StartTime.Ticks);
+            mainForm.DetailTabElapsedTime.Text = elapsedTime.ToLongTimeString();// elapsedTime.Hours + ":" + elapsedTime.Minutes + ":" + elapsedTime.Seconds;
 
             double estimatedTime = 0;
             if (torrent.Monitor.DownloadSpeed > 0)
