@@ -37,6 +37,7 @@ namespace MonoTorrent.GUI.View.Control
         }
 
         public ImageListView()
+            : base()
         {
             this.DoubleBuffered = true;
             this.FullRowSelect = true;
