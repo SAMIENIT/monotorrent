@@ -44,7 +44,8 @@ namespace MonoTorrent.GUI.Controller
             foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
             {
                 GuiTorrentSettings torrentSettings = settings.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
-                Add(file, torrentSettings.GetTorrentSettings(), torrentSettings.SavePath);
+                Add(file, torrentSettings.GetTorrentSettings(), 
+                    string.IsNullOrEmpty(torrentSettings.SavePath)?clientEngine.Settings.SavePath:torrentSettings.SavePath);
             }
 
 			//subscribe to event for update
