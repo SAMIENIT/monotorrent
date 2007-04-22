@@ -70,6 +70,13 @@ namespace MonoTorrent.GUI.View
 
 		#endregion
 
+        /// <summary>
+        /// treeview of files in torrent
+        /// </summary>
+        public TreeView filesTreeView
+        {
+            get { return FilesTreeView; }
+        }
 		/// <summary>
 		/// tab pieces list ( not used actually)
 		/// </summary>
@@ -446,6 +453,7 @@ namespace MonoTorrent.GUI.View
 			mainController.UpdateGeneralTab();
 			mainController.UpdatePiecesTab();
 			mainController.UpdateDetailTab();
+            mainController.UpdateFilesTab();
 		}
     }
 }
