@@ -66,6 +66,7 @@ namespace MonoTorrent.GUI.View
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.trackerPanel = new System.Windows.Forms.GroupBox();
+            this.TrackerMessageTextBox = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
@@ -139,7 +140,8 @@ namespace MonoTorrent.GUI.View
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.DownStripButton = new System.Windows.Forms.ToolStripButton();
             this.UpStripButton = new System.Windows.Forms.ToolStripButton();
-            this.TrackerMessageTextBox = new System.Windows.Forms.TextBox();
+            this.tabFiles = new System.Windows.Forms.TabPage();
+            this.FilesTreeView = new System.Windows.Forms.TreeView();
             this.menuBar.SuspendLayout();
             this.detailsView.SuspendLayout();
             this.tabGeneral.SuspendLayout();
@@ -152,6 +154,7 @@ namespace MonoTorrent.GUI.View
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.MaintoolStrip.SuspendLayout();
+            this.tabFiles.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuBar
@@ -340,6 +343,7 @@ namespace MonoTorrent.GUI.View
             this.detailsView.Controls.Add(this.tabDetails);
             this.detailsView.Controls.Add(this.tabPeers);
             this.detailsView.Controls.Add(this.tabPieces);
+            this.detailsView.Controls.Add(this.tabFiles);
             this.detailsView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.detailsView.Location = new System.Drawing.Point(0, 0);
             this.detailsView.Margin = new System.Windows.Forms.Padding(0);
@@ -522,6 +526,15 @@ namespace MonoTorrent.GUI.View
             this.trackerPanel.TabIndex = 0;
             this.trackerPanel.TabStop = false;
             this.trackerPanel.Text = "Tracker";
+            // 
+            // TrackerMessageTextBox
+            // 
+            this.TrackerMessageTextBox.Enabled = false;
+            this.TrackerMessageTextBox.Location = new System.Drawing.Point(302, 38);
+            this.TrackerMessageTextBox.Multiline = true;
+            this.TrackerMessageTextBox.Name = "TrackerMessageTextBox";
+            this.TrackerMessageTextBox.Size = new System.Drawing.Size(334, 49);
+            this.TrackerMessageTextBox.TabIndex = 7;
             // 
             // label19
             // 
@@ -1166,14 +1179,24 @@ namespace MonoTorrent.GUI.View
             this.UpStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
             // 
-            // TrackerMessageTextBox
+            // tabFiles
             // 
-            this.TrackerMessageTextBox.Enabled = false;
-            this.TrackerMessageTextBox.Location = new System.Drawing.Point(302, 38);
-            this.TrackerMessageTextBox.Multiline = true;
-            this.TrackerMessageTextBox.Name = "TrackerMessageTextBox";
-            this.TrackerMessageTextBox.Size = new System.Drawing.Size(334, 49);
-            this.TrackerMessageTextBox.TabIndex = 7;
+            this.tabFiles.Controls.Add(this.FilesTreeView);
+            this.tabFiles.Location = new System.Drawing.Point(4, 22);
+            this.tabFiles.Name = "tabFiles";
+            this.tabFiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFiles.Size = new System.Drawing.Size(684, 164);
+            this.tabFiles.TabIndex = 4;
+            this.tabFiles.Text = "Files";
+            this.tabFiles.UseVisualStyleBackColor = true;
+            // 
+            // FilesTreeView
+            // 
+            this.FilesTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FilesTreeView.Location = new System.Drawing.Point(3, 3);
+            this.FilesTreeView.Name = "FilesTreeView";
+            this.FilesTreeView.Size = new System.Drawing.Size(678, 158);
+            this.FilesTreeView.TabIndex = 0;
             // 
             // MainWindow
             // 
@@ -1207,6 +1230,7 @@ namespace MonoTorrent.GUI.View
             this.splitContainer1.ResumeLayout(false);
             this.MaintoolStrip.ResumeLayout(false);
             this.MaintoolStrip.PerformLayout();
+            this.tabFiles.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1326,6 +1350,8 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ColumnHeader colProgressBar;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox TrackerMessageTextBox;
+        private System.Windows.Forms.TabPage tabFiles;
+        private System.Windows.Forms.TreeView FilesTreeView;
     }
 }
 

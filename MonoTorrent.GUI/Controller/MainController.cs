@@ -9,6 +9,7 @@ using System.IO;
 using MonoTorrent.Common;
 using System.Threading;
 using MonoTorrent.GUI.View.Control;
+using System.Drawing;
 
 namespace MonoTorrent.GUI.Controller
 {
@@ -816,6 +817,48 @@ namespace MonoTorrent.GUI.Controller
         {
             mainForm.PiecesListView.Invalidate();
         }
-        
-	}
+
+
+        internal void UpdateFilesTab()
+        {
+            mainForm.filesTreeView.Nodes.Clear();
+
+            IList<TorrentManager> torrents = GetSelectedTorrents();
+            if (torrents.Count == 0)
+                return;
+            TorrentManager torrent = torrents[0];
+
+            //mainForm.filesTreeView.ImageList.Images.Add(foldericon);
+
+            //recurse on all file
+            foreach (TorrentFile file in torrent.Torrent.Files)
+            {
+                string path = Path.GetDirectoryName(file.Path);
+                string filename = Path.GetFileName(file.Path);
+
+                
+                //Icon fileIcon = Icon.ExtractAssociatedIcon(filename);
+                //mainForm.filesTreeView.ImageList.Images.Add(fileIcon);
+                TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
+
+                if (!string.IsNullOrEmpty(path))
+                {
+                    string[] splitedPath = path.Split(System.IO.Path.DirectorySeparatorChar);
+                    
+                    foreach (string str in splitedPath)
+                    {
+                        if (string.IsNullOrEmpty(str))
+                            continue;
+
+                        if (!nodes.ContainsKey(str))
+                        {
+                            nodes.Add(str, str, "");
+                        }
+                        nodes = nodes[str].Nodes;
+                    }
+                }
+                nodes.Add(filename, filename);
+            }
+        }
+    }
 }
