@@ -10,6 +10,7 @@ namespace MonoTorrent.GUI.View.Control
     class BlockProgressBar : IDrawable
     {
         private BlockEventArgs args;
+        private readonly int borderHeight = 1;
 
         public BlockProgressBar(BlockEventArgs piece)
         {
@@ -34,7 +35,7 @@ namespace MonoTorrent.GUI.View.Control
                 
                 for (int i = 0; i < this.args.Piece.BlockCount; i++)
                 {
-                    RectangleF newArea = new RectangleF(rect.X + (width * i), rect.Y, width, rect.Height);
+                    RectangleF newArea = new RectangleF(rect.X + (width * i), rect.Y + borderHeight, width, rect.Height - 2 * borderHeight);
                     if (args.Piece[i].Written)
                         graphics.FillRectangle(writtenBrush, newArea);
 
