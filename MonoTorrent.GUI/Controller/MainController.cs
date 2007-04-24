@@ -10,6 +10,8 @@ using MonoTorrent.Common;
 using System.Threading;
 using MonoTorrent.GUI.View.Control;
 using System.Drawing;
+using System.Resources;
+using System.Reflection;
 
 namespace MonoTorrent.GUI.Controller
 {
@@ -835,10 +837,18 @@ namespace MonoTorrent.GUI.Controller
             {
                 string path = Path.GetDirectoryName(file.Path);
                 string filename = Path.GetFileName(file.Path);
-
-                
-                //Icon fileIcon = Icon.ExtractAssociatedIcon(filename);
-                //mainForm.filesTreeView.ImageList.Images.Add(fileIcon);
+                /*Assembly myAssembly = Assembly.GetExecutingAssembly();
+                ResourceManager rm = new ResourceManager("MonoTorrent.GUI", myAssembly);
+                Image myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.folder.png"));
+                myImage = Image.FromStream(rm.GetStream("MonoTorrent.GUI.folder.png"));
+                myImage = (Image) rm.GetObject("MonoTorrent.GUI.folder.png");
+                rm.GetObject("folder");
+                mainForm.filesTreeView.ImageList.Images.Add(myImage);
+                myImage = Image.FromStream(myAssembly.GetManifestResourceStream("folder_open"));
+                mainForm.filesTreeView.ImageList.Images.Add(myImage);
+                myImage = Image.FromStream(myAssembly.GetManifestResourceStream("file"));
+                mainForm.filesTreeView.ImageList.Images.Add(myImage);
+                */
                 TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
 
                 if (!string.IsNullOrEmpty(path))
@@ -852,12 +862,12 @@ namespace MonoTorrent.GUI.Controller
 
                         if (!nodes.ContainsKey(str))
                         {
-                            nodes.Add(str, str, "");
+                            nodes.Add(str, str, "folder_open.png");
                         }
                         nodes = nodes[str].Nodes;
                     }
                 }
-                nodes.Add(filename, filename);
+                nodes.Add(filename, filename,"file.png");
             }
         }
     }
