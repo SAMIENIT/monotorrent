@@ -188,7 +188,21 @@ namespace MonoTorrent.GUI.View
 
             //load maincontroller
             mainController = new MainController(this, settings);
+			this.FilesTreeView.AfterExpand += new TreeViewEventHandler(FilesTreeViewExpand);
+			this.FilesTreeView.AfterCollapse += new TreeViewEventHandler(FilesTreeViewCollapse);
         }
+
+		void FilesTreeViewCollapse(object sender, TreeViewEventArgs e)
+		{
+			e.Node.ImageKey = "folder";
+			e.Node.SelectedImageKey = "folder";
+		}
+
+		void FilesTreeViewExpand(object sender, TreeViewEventArgs e)
+		{
+			e.Node.ImageKey = "openFolder";
+			e.Node.SelectedImageKey = "openFolder";
+		}
         //TODO move to controller all settings things
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {

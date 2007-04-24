@@ -6,7 +6,7 @@ namespace MonoTorrent.GUI.Helper
 {
 	public static class MemoryUtility
 	{
-		private static volatile bool _enabled = true;
+		private static bool _enabled = true;
 
 		public static void OptimizeMemoryUsage()
 		{
