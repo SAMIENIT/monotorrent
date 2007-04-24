@@ -156,6 +156,10 @@
   <ItemGroup>
     <Content Include="Icon1.ico" />
     <None Include="Resources\document-new.png" />
+    <None Include="Resources\file.png" />
+    <Content Include="Resources\folder-open.png" />
+    <Content Include="Resources\folder.png" />
+    <None Include="Resources\folder_open.png" />
     <Content Include="Resources\go-down.png" />
     <Content Include="Resources\go-up.png" />
     <Content Include="Resources\list-add.png" />
@@ -164,6 +168,7 @@
     <Content Include="Resources\media-playback-start.png" />
     <Content Include="Resources\media-playback-stop.png" />
     <Content Include="Resources\preferences-system.png" />
+    <Content Include="Resources\text-x-generic.png" />
     <None Include="Resources\toplogo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
