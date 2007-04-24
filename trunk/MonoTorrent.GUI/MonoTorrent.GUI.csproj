@@ -155,21 +155,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon1.ico" />
-    <None Include="Resources\document-new.png" />
-    <None Include="Resources\file.png" />
-    <Content Include="Resources\folder-open.png" />
-    <Content Include="Resources\folder.png" />
-    <None Include="Resources\folder_open.png" />
-    <Content Include="Resources\go-down.png" />
-    <Content Include="Resources\go-up.png" />
-    <Content Include="Resources\list-add.png" />
-    <Content Include="Resources\list-remove.png" />
-    <Content Include="Resources\media-playback-pause.png" />
-    <Content Include="Resources\media-playback-start.png" />
-    <Content Include="Resources\media-playback-stop.png" />
-    <Content Include="Resources\preferences-system.png" />
-    <Content Include="Resources\text-x-generic.png" />
-    <None Include="Resources\toplogo.jpg" />
+    <EmbeddedResource Include="Resources\document-new.png" />
+    <EmbeddedResource Include="Resources\file.png" />
+    <EmbeddedResource Include="Resources\folder-open.png" />
+    <EmbeddedResource Include="Resources\folder.png" />
+    <EmbeddedResource Include="Resources\folder_open.png" />
+    <EmbeddedResource Include="Resources\go-down.png" />
+    <EmbeddedResource Include="Resources\go-up.png" />
+    <EmbeddedResource Include="Resources\list-add.png" />
+    <EmbeddedResource Include="Resources\list-remove.png" />
+    <EmbeddedResource Include="Resources\media-playback-pause.png" />
+    <EmbeddedResource Include="Resources\media-playback-start.png" />
+    <EmbeddedResource Include="Resources\media-playback-stop.png" />
+    <EmbeddedResource Include="Resources\preferences-system.png" />
+    <EmbeddedResource Include="Resources\text-x-generic.png" />
+    <EmbeddedResource Include="Resources\toplogo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

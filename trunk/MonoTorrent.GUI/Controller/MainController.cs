@@ -830,25 +830,22 @@ namespace MonoTorrent.GUI.Controller
                 return;
             TorrentManager torrent = torrents[0];
 
-            //mainForm.filesTreeView.ImageList.Images.Add(foldericon);
+			TreeNode newNode = null;
+			Assembly myAssembly = Assembly.GetExecutingAssembly();
+			Image myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.folder.png"));
+			mainForm.filesTreeView.ImageList = new ImageList();
+			mainForm.filesTreeView.ImageList.Images.Add("folder", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.folder_open.png"));
+			mainForm.filesTreeView.ImageList.Images.Add("openFolder", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.file.png"));
+			mainForm.filesTreeView.ImageList.Images.Add("file", myImage);
 
             //recurse on all file
             foreach (TorrentFile file in torrent.Torrent.Files)
             {
-                string path = Path.GetDirectoryName(file.Path);
-                string filename = Path.GetFileName(file.Path);
-                /*Assembly myAssembly = Assembly.GetExecutingAssembly();
-                ResourceManager rm = new ResourceManager("MonoTorrent.GUI", myAssembly);
-                Image myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.folder.png"));
-                myImage = Image.FromStream(rm.GetStream("MonoTorrent.GUI.folder.png"));
-                myImage = (Image) rm.GetObject("MonoTorrent.GUI.folder.png");
-                rm.GetObject("folder");
-                mainForm.filesTreeView.ImageList.Images.Add(myImage);
-                myImage = Image.FromStream(myAssembly.GetManifestResourceStream("folder_open"));
-                mainForm.filesTreeView.ImageList.Images.Add(myImage);
-                myImage = Image.FromStream(myAssembly.GetManifestResourceStream("file"));
-                mainForm.filesTreeView.ImageList.Images.Add(myImage);
-                */
+				string path = Path.GetDirectoryName(file.Path);
+				string filename = Path.GetFileName(file.Path);
+                
                 TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
 
                 if (!string.IsNullOrEmpty(path))
@@ -862,12 +859,20 @@ namespace MonoTorrent.GUI.Controller
 
                         if (!nodes.ContainsKey(str))
                         {
-                            nodes.Add(str, str, "folder_open.png");
+							newNode = new TreeNode(str);
+							newNode.Name = str;
+							newNode.SelectedImageKey = "folder";
+							newNode.ImageKey = "folder";
+							nodes.Add(newNode);
                         }
                         nodes = nodes[str].Nodes;
                     }
                 }
-                nodes.Add(filename, filename,"file.png");
+				newNode = new TreeNode(filename);
+				newNode.Name = filename;
+				newNode.SelectedImageKey = "file";
+				newNode.ImageKey = "file";
+                nodes.Add(newNode);
             }
         }
     }
