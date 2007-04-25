@@ -345,6 +345,13 @@ namespace MonoTorrent.GUI.Controller
             return result;
         }
 
+        public TorrentManager GetSelectedTorrent()
+        {
+            IList<TorrentManager> result = GetSelectedTorrents();
+            if (result.Count > 0)
+                return result[0];
+            return null;
+        }
         /// <summary>
         /// get row in listview from torrent
         /// </summary>
@@ -422,44 +429,46 @@ namespace MonoTorrent.GUI.Controller
         private delegate void BlockDelegate(BlockEventArgs e);
         void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
         {
-            // When the piece has been hashed, we know it's finished
-            mainForm.Invoke(new SingleItem<int>(RemoveFromPieceView), e.PieceIndex);
-        }
+            lock (currentRequests)
+            {
+                for (int i = 0; i < this.currentRequests.Count; i++)
+                {
+                    if (this.currentRequests[i].Piece.Index != e.PieceIndex)
+                        continue;
 
+                    this.currentRequests.RemoveAt(i);
+                }
+            }
+
+            mainForm.Invoke(new Handler(UpdatePiecesTab));
+        }
+        /* //NOT USED
         private void RemoveFromPieceView(int pieceIndex)
         {
-            for (int i = 0; i < this.currentRequests.Count; i++)
+            lock (currentRequests)
             {
-                if (this.currentRequests[i].Piece.Index != pieceIndex)
-                    continue;
+                for (int i = 0; i < this.currentRequests.Count; i++)
+                {
+                    if (this.currentRequests[i].Piece.Index != pieceIndex)
+                        continue;
 
-                this.currentRequests.RemoveAt(i);
-                this.mainForm.PiecesListView.Items.RemoveAt(i);
+                    this.currentRequests.RemoveAt(i);
+                    mainForm.Invoke(new Handler(UpdatePiecesTab));
+                }
             }
         }
-
+        */
         List<BlockEventArgs> currentRequests = new List<BlockEventArgs>();
         void PieceManager_BlockRequested(object sender, BlockEventArgs e)
         {
             lock (currentRequests)
             {
                 currentRequests.Add(e);
-
-                ListViewItem item = new ListViewItem(e.Piece.Index.ToString());
-                item.SubItems.Add(FormatSizeValue(e.Block.RequestLength));
-                item.SubItems.Add(e.Piece.BlockCount.ToString());
-                item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(e)));
-                mainForm.Invoke(new SingleItem<ListViewItem>(AddPieceItem), item);
+                mainForm.Invoke(new Handler(UpdatePiecesTab));
             }
         }
 
-        delegate void SingleItem<T>(T item);
-
-        private void AddPieceItem(ListViewItem item)
-        {
-            this.mainForm.PiecesListView.Items.Add(item);
-        }
-
+        delegate void Handler();
 
         void PieceManager_BlockRequestCancelled(object sender, BlockEventArgs e)
         {
@@ -610,6 +619,7 @@ namespace MonoTorrent.GUI.Controller
                     {
                         GetItemFromTorrent(torrent).Remove();
                         clientEngine.Remove(torrent);
+                        //TODO DELETE TORRENT FILE AND FILE DOWNLOADED IF EXIST
                     }
                 }
 
@@ -817,6 +827,25 @@ namespace MonoTorrent.GUI.Controller
 
         public void UpdatePiecesTab()
         {
+            mainForm.PiecesListView.Items.Clear();
+
+            TorrentManager selectedTorrent = GetSelectedTorrent();
+            if (selectedTorrent == null)
+                return;
+            lock (currentRequests)
+            {
+                for (int i = 0; i < this.currentRequests.Count; i++)
+                {
+                    if (this.currentRequests[i].ID.TorrentManager != selectedTorrent)
+                        continue;
+
+                    ListViewItem item = new ListViewItem(this.currentRequests[i].Piece.Index.ToString());
+                    item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength));
+                    item.SubItems.Add(this.currentRequests[i].Piece.BlockCount.ToString());
+                    item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(this.currentRequests[i])));
+                    mainForm.PiecesListView.Items.Add(item);
+                }
+            }
             mainForm.PiecesListView.Invalidate();
         }
 
