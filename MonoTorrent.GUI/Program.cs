@@ -13,6 +13,7 @@ namespace MonoTorrent.GUI
         [STAThread]
         static void Main()
         {
+			ThreadPool.SetMaxThreads(70,70);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
