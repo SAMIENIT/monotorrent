@@ -12,20 +12,20 @@
 - tabgeneral			DONE
 - save graphical setting	DONE
 - torrent settings window	DONE
+- priority 			DONE
+- tab files 			DONE
+- piece progress bar		DONE
+- torrent progress bar		DONE
 
 For 0.1 release :
 
 - Exception throw because still some pending event fired when closing
 - Excetion throw nullref on application.invoke
-- priority (TorrentManager?.Torrent.Files)
-- view of files in the torrent 
 
 For 0.2 release :
 - Mini windows 			0%
-- manage priority		0%
+- manage torrent priority	0%
 - statusbar			0%
-- piece progress bar		70%
-- torrent progress bar		70%
 - context menu 			0%
 
 For 0.3 release:
@@ -35,7 +35,7 @@ some ideas :
 
 More details on option
 statistique
-mange of tracker
+manage of tracker
 i18n
 user friendly
 design (icone and image)
