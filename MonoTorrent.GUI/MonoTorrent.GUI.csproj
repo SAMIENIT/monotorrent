@@ -155,6 +155,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon1.ico" />
+    <EmbeddedResource Include="Resources\do-not-download.gif" />
+    <EmbeddedResource Include="Resources\high.gif" />
+    <EmbeddedResource Include="Resources\highest.gif" />
+    <EmbeddedResource Include="Resources\immediate.gif" />
+    <EmbeddedResource Include="Resources\low.gif" />
+    <EmbeddedResource Include="Resources\lowest.gif" />
+    <EmbeddedResource Include="Resources\normal.gif" />
     <EmbeddedResource Include="Resources\document-new.png" />
     <EmbeddedResource Include="Resources\file.png" />
     <EmbeddedResource Include="Resources\folder-open.png" />
