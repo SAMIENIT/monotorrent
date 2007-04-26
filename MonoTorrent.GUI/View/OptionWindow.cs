@@ -52,18 +52,27 @@ namespace MonoTorrent.GUI.View
                 MessageBox.Show("Bad torrents Path");
                 return;
             }
-            //TODO check updowns
-            GuiGeneralSettings settings = new GuiGeneralSettings();
-            settings.GlobalMaxConnections = Convert.ToInt32(MaxConnectionsNumericUpDown.Value);
-            settings.GlobalMaxDownloadSpeed = Convert.ToInt32(MaxDownloadSpeedNumericUpDown.Value);
-            settings.GlobalMaxHalfOpenConnections = Convert.ToInt32(HalfOpenConnectionsNumericUpDown.Value);
-            settings.GlobalMaxUploadSpeed = Convert.ToInt32(MaxUploadSpeedNumericUpDown.Value);
-            settings.ListenPort = Convert.ToInt32(ListenPortNumericUpDown.Value);
-            settings.SavePath = SavePathTextBox.Text;
-            settings.TorrentsPath = TorrentPathTextBox.Text;
-            settings.UsePnP = UseUPnPCheckBox.Checked;
-            controller.UpdateSettings(settings);
-            this.DialogResult = DialogResult.OK;
+
+			GuiGeneralSettings settings = new GuiGeneralSettings();
+
+			try
+			{
+				settings.GlobalMaxConnections = Convert.ToInt32(MaxConnectionsNumericUpDown.Value);
+				settings.GlobalMaxDownloadSpeed = Convert.ToInt32(MaxDownloadSpeedNumericUpDown.Value);
+				settings.GlobalMaxHalfOpenConnections = Convert.ToInt32(HalfOpenConnectionsNumericUpDown.Value);
+				settings.GlobalMaxUploadSpeed = Convert.ToInt32(MaxUploadSpeedNumericUpDown.Value);
+				settings.ListenPort = Convert.ToInt32(ListenPortNumericUpDown.Value);
+			}
+			catch (FormatException ex)
+			{
+				MessageBox.Show("You must set a number! \r\n" + ex.ToString());
+				return;
+			}
+			settings.SavePath = SavePathTextBox.Text;
+			settings.TorrentsPath = TorrentPathTextBox.Text;
+			settings.UsePnP = UseUPnPCheckBox.Checked;
+			controller.UpdateGeneralSettings(settings);
+			this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
