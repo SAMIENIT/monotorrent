@@ -41,7 +41,7 @@ namespace MonoTorrent.GUI.Controller
 			settingsBase = new SettingsBase();
 
 			LoadViewSettings();
-			Init();
+            Init();
         }
 
 		public void Init()
@@ -631,14 +631,14 @@ namespace MonoTorrent.GUI.Controller
                 {
                     foreach (TorrentManager torrent in GetSelectedTorrents())
                     {
-						File.Delete(torrent.Torrent.TorrentPath);
-						foreach (TorrentFile file in torrent.Torrent.Files)
-						{
-							File.Delete(Path.Combine(torrent.SavePath,file.Path));
-						}
-
                         GetItemFromTorrent(torrent).Remove();
                         clientEngine.Remove(torrent);
+                        
+                        File.Delete(torrent.Torrent.TorrentPath);
+                        foreach (TorrentFile file in torrent.Torrent.Files)
+                        {
+                            File.Delete(Path.Combine(torrent.SavePath, file.Path));
+                        }
                     }
                 }
 
@@ -935,7 +935,6 @@ namespace MonoTorrent.GUI.Controller
 			{
 				mainForm.PiecesListView.EndUpdate();
 			}
-            mainForm.PiecesListView.Invalidate();
 		}
 
 		#endregion

@@ -18,7 +18,7 @@
 - torrent progress bar		DONE
 
 For 0.1 release :
-
+- thread pool and performance increase
 - Exception throw because still some pending event fired when closing
 - Excetion throw nullref on application.invoke
 
