@@ -8,12 +8,14 @@ using MonoTorrent.Client;
 using MonoTorrent.Common;
 using MonoTorrent.GUI.Settings;
 using MonoTorrent.GUI.Controller;
+using System.Reflection;
 
 namespace MonoTorrent.GUI.View
 {
     public partial class MainWindow : Form
     {
         private MainController mainController;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -106,6 +108,31 @@ namespace MonoTorrent.GUI.View
             get { return TrackerMessageTextBox; }
         }
 
+		public SplitContainer Splitter
+		{
+			get { return splitContainer1; }
+		}
+
+		public TabPage TabGeneral
+		{
+			get { return tabGeneral; }
+		}
+
+		public ToolStripMenuItem ShowStatusbarMenuItem
+		{
+			get { return showStatusbarToolStripMenuItem; }
+		}
+
+		public ToolStripMenuItem ShowToolbarMenuItem
+		{
+			get { return showToolbarToolStripMenuItem; }
+		}
+
+		public ToolStripMenuItem ShowDetailMenuItem
+		{
+			get { return showDetailToolStripMenuItem; }
+		}
+
 		#region Details
 
 		public Label DetailTabElapsedTime
@@ -156,41 +183,54 @@ namespace MonoTorrent.GUI.View
 
 		#endregion
 
+		#region form load/unload
+
 		private void MainWindow_Load(object sender, EventArgs e)
         {
-            //recover all gui settings
-            SettingsBase settings = new SettingsBase();
-            GuiViewSettings guisettings = settings.LoadSettings<GuiViewSettings>("Graphical Settings");
-            this.Width = guisettings.FormWidth;
-            this.Height = guisettings.FormHeight;
-            splitContainer1.SplitterDistance = guisettings.SplitterDistance;
-            tabGeneral.VerticalScroll.Value = guisettings.VScrollValue;
-            tabGeneral.HorizontalScroll.Value = guisettings.HScrollValue;
-            // show/Hide component of GUI
-            ShowStatusBar(guisettings.ShowStatusbar);
-            ShowToolBar(guisettings.ShowToolbar);
-            ShowDetail(guisettings.ShowDetail);
-
-            for (int i = 0; i < guisettings.TorrentViewColumnWidth.Count; i++)
-            {
-                torrentsView.Columns[i].Width = guisettings.TorrentViewColumnWidth[i];
-            }
-
-            for (int i = 0; i < guisettings.PeerViewColumnWidth.Count; i++)
-            {
-                PeerListView.Columns[i].Width = guisettings.PeerViewColumnWidth[i];
-            }
-
-            for (int i = 0; i < guisettings.PieceViewColumnWidth.Count; i++)
-            {
-                piecesListView.Columns[i].Width = guisettings.PieceViewColumnWidth[i];
-            }
-
-            //load maincontroller
-            mainController = new MainController(this, settings);
+            mainController = new MainController(this);
 			this.FilesTreeView.AfterExpand += new TreeViewEventHandler(FilesTreeViewExpand);
 			this.FilesTreeView.AfterCollapse += new TreeViewEventHandler(FilesTreeViewCollapse);
-        }
+			this.FilesTreeView.NodeMouseDoubleClick += new TreeNodeMouseClickEventHandler(FilesTreeViewNodeDoubleClick);
+			
+			//Load image for treeview
+			Assembly myAssembly = Assembly.GetExecutingAssembly();
+			Image myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.folder.png"));
+			FilesTreeView.ImageList = new ImageList();
+			FilesTreeView.ImageList.Images.Add("folder", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.folder_open.png"));
+			FilesTreeView.ImageList.Images.Add("openFolder", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.file.png"));
+			FilesTreeView.ImageList.Images.Add("file", myImage);
+
+			//load state image for treeview
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.immediate.gif"));
+			FilesTreeView.StateImageList = new ImageList();
+			FilesTreeView.StateImageList.Images.Add("immediate", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.highest.gif"));
+			FilesTreeView.StateImageList.Images.Add("highest", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.high.gif"));
+			FilesTreeView.StateImageList.Images.Add("high", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.normal.gif"));
+			FilesTreeView.StateImageList.Images.Add("normal", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.low.gif"));
+			FilesTreeView.StateImageList.Images.Add("low", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.lowest.gif"));
+			FilesTreeView.StateImageList.Images.Add("lowest", myImage);
+			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.do-not-download.gif"));
+			FilesTreeView.StateImageList.Images.Add("doNotDownload", myImage);
+		}
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+			//close client
+			// save gui
+			// unsubscribe to event
+			mainController.Dispose();
+		}
+
+		#endregion
+
+		#region treeview
 
 		void FilesTreeViewCollapse(object sender, TreeViewEventArgs e)
 		{
@@ -203,37 +243,13 @@ namespace MonoTorrent.GUI.View
 			e.Node.ImageKey = "openFolder";
 			e.Node.SelectedImageKey = "openFolder";
 		}
-        //TODO move to controller all settings things
-        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
-			//close client
-			mainController.Exit();
 
-            //Save all gui settings
-            SettingsBase settings = new SettingsBase();
-            GuiViewSettings guisettings = new GuiViewSettings();
-            guisettings.FormWidth = this.Width;
-            guisettings.FormHeight = this.Height;
-            guisettings.SplitterDistance = splitContainer1.SplitterDistance;
-            guisettings.VScrollValue = tabGeneral.VerticalScroll.Value;
-            guisettings.HScrollValue = tabGeneral.HorizontalScroll.Value;
-            guisettings.ShowDetail = showDetailToolStripMenuItem.Checked;
-            guisettings.ShowStatusbar = showStatusbarToolStripMenuItem.Checked;
-            guisettings.ShowToolbar = showToolbarToolStripMenuItem.Checked;
-            foreach (ColumnHeader col in torrentsView.Columns)
-            {
-                guisettings.TorrentViewColumnWidth.Add(col.Width);
-            }
-            foreach (ColumnHeader col in PeerListView.Columns)
-            {
-                guisettings.PeerViewColumnWidth.Add(col.Width);
-            }
-            foreach (ColumnHeader col in piecesListView.Columns)
-            {
-                guisettings.PieceViewColumnWidth.Add(col.Width);
-            }
-            settings.SaveSettings<GuiViewSettings>("Graphical Settings", guisettings);
-        }
+		void FilesTreeViewNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			mainController.ChangeFilePriority(e.Node);
+		}
+
+		#endregion
 
         #region Drag Drop
 
@@ -399,11 +415,13 @@ namespace MonoTorrent.GUI.View
 
         #endregion
 
-        /// <summary>
+		#region Show/Hide
+
+		/// <summary>
         /// Show or hide toolbar
         /// </summary>
         /// <param name="check">if true show else Hide</param>
-        private void ShowToolBar(bool check)
+		internal void ShowToolBar(bool check)
         {
             if (check)
             {
@@ -427,7 +445,7 @@ namespace MonoTorrent.GUI.View
         /// Show Hide Detail
         /// </summary>
         /// <param name="check">if true show else Hide</param>
-        private void ShowDetail(bool check)
+		internal void ShowDetail(bool check)
         {
             if (check)
             {
@@ -447,7 +465,7 @@ namespace MonoTorrent.GUI.View
         /// Show Hide status bar
         /// </summary>
         /// <param name="check">if true show else Hide</param>
-        private void ShowStatusBar(bool check)
+        internal void ShowStatusBar(bool check)
         {
             if (check)
             {
@@ -460,7 +478,9 @@ namespace MonoTorrent.GUI.View
                 this.Controls.Remove(statusBar);
                 showStatusbarToolStripMenuItem.Checked = false;
             }
-        }
+		}
+
+		#endregion
 
 		private void torrentsView_SelectedIndexChanged(object sender, EventArgs e)
 		{
