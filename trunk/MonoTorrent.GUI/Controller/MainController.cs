@@ -15,9 +15,11 @@ using System.Reflection;
 
 namespace MonoTorrent.GUI.Controller
 {
-    public class MainController
-    {
-        private ClientEngine clientEngine;
+    public class MainController : IDisposable
+	{
+		#region private field
+
+		private ClientEngine clientEngine;
         private OptionWindow optionWindow;
         private AboutWindow aboutWindow;
 		private MainWindow mainForm;
@@ -25,45 +27,54 @@ namespace MonoTorrent.GUI.Controller
         private SettingsBase settingsBase;
 		private IDictionary<ListViewItem, PeerConnectionID> itemToPeers;
 		private ReaderWriterLock peerlocker;
-		
-		public MainController(MainWindow mainForm, SettingsBase settings)
+
+		#endregion
+
+		#region constructor and destructor
+
+		public MainController(MainWindow mainForm)
         {
 			this.mainForm = mainForm;
-            this.settingsBase = settings;
-            itemToTorrent = new Dictionary<ListViewItem, TorrentManager>();
+			itemToTorrent = new Dictionary<ListViewItem, TorrentManager>();
 			itemToPeers = new Dictionary<ListViewItem, PeerConnectionID>();
 			peerlocker = new ReaderWriterLock();
-			
-            //get general settings in file
-            GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("General Settings");
-            clientEngine = new ClientEngine( genSettings.GetEngineSettings(), 
-                TorrentSettings.DefaultSettings());
+			settingsBase = new SettingsBase();
 
-            // Create Torrents path
-            if (!Directory.Exists(genSettings.TorrentsPath))
-                Directory.CreateDirectory(genSettings.TorrentsPath);
+			LoadViewSettings();
+			Init();
+        }
 
-            //load all torrents in torrents folder
-            foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
-            {
-                GuiTorrentSettings torrentSettings = settings.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
-                Add(file, torrentSettings.GetTorrentSettings(), 
-                    string.IsNullOrEmpty(torrentSettings.SavePath)?clientEngine.Settings.SavePath:torrentSettings.SavePath);
-            }
+		public void Init()
+		{
+			//get general settings in file
+			GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
+			clientEngine = new ClientEngine(genSettings.GetEngineSettings(),
+				TorrentSettings.DefaultSettings());
+
+			// Create Torrents path
+			if (!Directory.Exists(genSettings.TorrentsPath))
+				Directory.CreateDirectory(genSettings.TorrentsPath);
+
+			//load all torrents in torrents folder
+			foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
+			{
+				GuiTorrentSettings torrentSettings = settingsBase.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
+				Add(file, torrentSettings.GetTorrentSettings(),
+					string.IsNullOrEmpty(torrentSettings.SavePath) ? clientEngine.Settings.SavePath : torrentSettings.SavePath);
+			}
 
 			//subscribe to event for update
 			clientEngine.StatsUpdate += OnUpdateStats;
 
 			ClientEngine.ConnectionManager.PeerConnected += OnPeerConnected;
 			ClientEngine.ConnectionManager.PeerDisconnected += OnPeerDisconnected;
-        }
+		}
 
 		/// <summary>
 		/// close all before exit
 		/// </summary>
- 		public void Exit()
+ 		public void Dispose()
 		{
-			//TODO : Exit => dispose
             WaitHandle[] handle = clientEngine.Stop();
             WaitHandle.WaitAll(handle);
 
@@ -80,11 +91,14 @@ namespace MonoTorrent.GUI.Controller
 			}
 
 			clientEngine.StatsUpdate -= OnUpdateStats;
+			UpdateViewSettings();
 		}
+
+		#endregion
 
 		#region Peer
 
-        public void CreatePeer(PeerConnectionID id)
+		public void CreatePeer(PeerConnectionID id)
         {
             lock (id)
             {
@@ -617,9 +631,14 @@ namespace MonoTorrent.GUI.Controller
                 {
                     foreach (TorrentManager torrent in GetSelectedTorrents())
                     {
+						File.Delete(torrent.Torrent.TorrentPath);
+						foreach (TorrentFile file in torrent.Torrent.Files)
+						{
+							File.Delete(Path.Combine(torrent.SavePath,file.Path));
+						}
+
                         GetItemFromTorrent(torrent).Remove();
                         clientEngine.Remove(torrent);
-                        //TODO DELETE TORRENT FILE AND FILE DOWNLOADED IF EXIST
                     }
                 }
 
@@ -715,19 +734,78 @@ namespace MonoTorrent.GUI.Controller
 
         #endregion
 
-        /// <summary>
+		#region settings
+
+		/// <summary>
         /// update general settings
         /// </summary>
         /// <param name="settings"></param>
-        public void UpdateSettings(GuiGeneralSettings settings)
+		public void UpdateGeneralSettings(GuiGeneralSettings settings)
         {
             settingsBase.SaveSettings<GuiGeneralSettings>("General Settings", settings);
             clientEngine.Settings = settings.GetEngineSettings();
-        }
+		}
 
-        #region general tab
+		public void LoadViewSettings()
+		{
+			GuiViewSettings guisettings = settingsBase.LoadSettings<GuiViewSettings>("Graphical Settings");
+			mainForm.Width = guisettings.FormWidth;
+			mainForm.Height = guisettings.FormHeight;
+			mainForm.Splitter.SplitterDistance = guisettings.SplitterDistance;
+			mainForm.TabGeneral.VerticalScroll.Value = guisettings.VScrollValue;
+			mainForm.TabGeneral.HorizontalScroll.Value = guisettings.HScrollValue;
+			// show/Hide component of GUI
+			mainForm.ShowStatusBar(guisettings.ShowStatusbar);
+			mainForm.ShowToolBar(guisettings.ShowToolbar);
+			mainForm.ShowDetail(guisettings.ShowDetail);
 
-        public void UpdateGeneralTab()
+			for (int i = 0; i < guisettings.TorrentViewColumnWidth.Count; i++)
+			{
+				mainForm.TorrentsView.Columns[i].Width = guisettings.TorrentViewColumnWidth[i];
+			}
+
+			for (int i = 0; i < guisettings.PeerViewColumnWidth.Count; i++)
+			{
+				mainForm.PeersView.Columns[i].Width = guisettings.PeerViewColumnWidth[i];
+			}
+
+			for (int i = 0; i < guisettings.PieceViewColumnWidth.Count; i++)
+			{
+				mainForm.PiecesListView.Columns[i].Width = guisettings.PieceViewColumnWidth[i];
+			}
+		}
+
+		public void UpdateViewSettings()
+		{
+			GuiViewSettings guisettings = new GuiViewSettings();
+			guisettings.FormWidth = mainForm.Width;
+			guisettings.FormHeight = mainForm.Height;
+			guisettings.SplitterDistance = mainForm.Splitter.SplitterDistance;
+			guisettings.VScrollValue = mainForm.TabGeneral.VerticalScroll.Value;
+			guisettings.HScrollValue = mainForm.TabGeneral.HorizontalScroll.Value;
+			guisettings.ShowDetail = mainForm.ShowDetailMenuItem.Checked;
+			guisettings.ShowStatusbar = mainForm.ShowStatusbarMenuItem.Checked;
+			guisettings.ShowToolbar = mainForm.ShowToolbarMenuItem.Checked;
+			foreach (ColumnHeader col in mainForm.TorrentsView.Columns)
+			{
+				guisettings.TorrentViewColumnWidth.Add(col.Width);
+			}
+			foreach (ColumnHeader col in mainForm.PeersView.Columns)
+			{
+				guisettings.PeerViewColumnWidth.Add(col.Width);
+			}
+			foreach (ColumnHeader col in mainForm.PiecesListView.Columns)
+			{
+				guisettings.PieceViewColumnWidth.Add(col.Width);
+			}
+			settingsBase.SaveSettings<GuiViewSettings>("Graphical Settings", guisettings);		
+		}
+
+		#endregion
+
+		#region general tab
+
+		public void UpdateGeneralTab()
 		{
 			IList<TorrentManager> torrents =  GetSelectedTorrents();
 			if (torrents.Count == 0)
@@ -825,84 +903,187 @@ namespace MonoTorrent.GUI.Controller
 
         #endregion
 
-        public void UpdatePiecesTab()
+		#region piece tab
+
+		public void UpdatePiecesTab()
         {
             mainForm.PiecesListView.Items.Clear();
 
             TorrentManager selectedTorrent = GetSelectedTorrent();
             if (selectedTorrent == null)
                 return;
-            lock (currentRequests)
-            {
-                for (int i = 0; i < this.currentRequests.Count; i++)
-                {
-                    if (this.currentRequests[i].ID.TorrentManager != selectedTorrent)
-                        continue;
+			try
+			{
+				mainForm.PiecesListView.BeginUpdate();
 
-                    ListViewItem item = new ListViewItem(this.currentRequests[i].Piece.Index.ToString());
-                    item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength));
-                    item.SubItems.Add(this.currentRequests[i].Piece.BlockCount.ToString());
-                    item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(this.currentRequests[i])));
-                    mainForm.PiecesListView.Items.Add(item);
-                }
-            }
+				lock (currentRequests)
+				{
+					for (int i = 0; i < this.currentRequests.Count; i++)
+					{
+						if (this.currentRequests[i].ID.TorrentManager != selectedTorrent)
+							continue;
+
+						ListViewItem item = new ListViewItem(this.currentRequests[i].Piece.Index.ToString());
+						item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength));
+						item.SubItems.Add(this.currentRequests[i].Piece.BlockCount.ToString());
+						item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(this.currentRequests[i])));
+						mainForm.PiecesListView.Items.Add(item);
+					}
+				}
+			}
+			finally
+			{
+				mainForm.PiecesListView.EndUpdate();
+			}
             mainForm.PiecesListView.Invalidate();
-        }
+		}
 
+		#endregion
 
-        internal void UpdateFilesTab()
+		#region files tab
+
+		internal void UpdateFilesTab()
         {
-            mainForm.filesTreeView.Nodes.Clear();
-
-            IList<TorrentManager> torrents = GetSelectedTorrents();
-            if (torrents.Count == 0)
-                return;
+			mainForm.filesTreeView.Nodes.Clear();
+			IList<TorrentManager> torrents = GetSelectedTorrents();
+			if (torrents.Count == 0)
+			{
+				mainForm.filesTreeView.TopNode = new TreeNode("");
+				return;
+			}
             TorrentManager torrent = torrents[0];
 
-			TreeNode newNode = null;
-			Assembly myAssembly = Assembly.GetExecutingAssembly();
-			Image myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.folder.png"));
-			mainForm.filesTreeView.ImageList = new ImageList();
-			mainForm.filesTreeView.ImageList.Images.Add("folder", myImage);
-			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.folder_open.png"));
-			mainForm.filesTreeView.ImageList.Images.Add("openFolder", myImage);
-			myImage = Image.FromStream(myAssembly.GetManifestResourceStream("MonoTorrent.GUI.Resources.file.png"));
-			mainForm.filesTreeView.ImageList.Images.Add("file", myImage);
+			try
+			{
+				mainForm.filesTreeView.BeginUpdate();
 
-            //recurse on all file
-            foreach (TorrentFile file in torrent.Torrent.Files)
-            {
-				string path = Path.GetDirectoryName(file.Path);
-				string filename = Path.GetFileName(file.Path);
-                
-                TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
+				TreeNode newNode = null;
 
-                if (!string.IsNullOrEmpty(path))
-                {
-                    string[] splitedPath = path.Split(System.IO.Path.DirectorySeparatorChar);
-                    
-                    foreach (string str in splitedPath)
-                    {
-                        if (string.IsNullOrEmpty(str))
-                            continue;
+				mainForm.filesTreeView.TopNode = new TreeNode(torrent.Torrent.Name);
 
-                        if (!nodes.ContainsKey(str))
-                        {
-							newNode = new TreeNode(str);
-							newNode.Name = str;
-							newNode.SelectedImageKey = "folder";
-							newNode.ImageKey = "folder";
-							nodes.Add(newNode);
-                        }
-                        nodes = nodes[str].Nodes;
-                    }
-                }
-				newNode = new TreeNode(filename);
-				newNode.Name = filename;
-				newNode.SelectedImageKey = "file";
-				newNode.ImageKey = "file";
-                nodes.Add(newNode);
-            }
-        }
-    }
+				//recurse on all file
+				foreach (TorrentFile file in torrent.Torrent.Files)
+				{
+					string path = Path.GetDirectoryName(file.Path);
+					string filename = Path.GetFileName(file.Path);
+
+					TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
+
+					if (!string.IsNullOrEmpty(path))
+					{
+						string[] splitedPath = path.Split(System.IO.Path.DirectorySeparatorChar);
+
+						foreach (string str in splitedPath)
+						{
+							if (string.IsNullOrEmpty(str))
+								continue;
+
+							if (!nodes.ContainsKey(str))
+							{
+								newNode = new TreeNode(str);
+								newNode.Name = str;
+								newNode.SelectedImageKey = "folder";
+								newNode.ImageKey = "folder";
+								nodes.Add(newNode);
+							}
+							nodes = nodes[str].Nodes;
+						}
+					}
+					newNode = new TreeNode(filename);
+					newNode.Name = filename;
+					newNode.SelectedImageKey = "file";
+					newNode.ImageKey = "file";
+					switch (file.Priority)
+					{
+						case Priority.DoNotDownload:
+							newNode.StateImageKey = "doNotDownload";
+							newNode.ToolTipText = "Do not download!";
+							break;
+						case Priority.High:
+							newNode.StateImageKey = "high";
+							newNode.ToolTipText = "High";
+							break;
+						case Priority.Highest:
+							newNode.StateImageKey = "highest";
+							newNode.ToolTipText = "Highest";
+							break;
+						case Priority.Immediate:
+							newNode.StateImageKey = "immediate";
+							newNode.ToolTipText = "Immediate!";
+							break;
+						case Priority.Low:
+							newNode.StateImageKey = "low";
+							newNode.ToolTipText = "Low";
+							break;
+						case Priority.Lowest:
+							newNode.StateImageKey = "lowest";
+							newNode.ToolTipText = "Lowest";
+							break;
+						case Priority.Normal:
+							newNode.StateImageKey = "normal";
+							newNode.ToolTipText = "Normal";
+							break;
+						default:
+							break;
+					}
+					newNode.Tag = file;
+					nodes.Add(newNode);
+				}
+			}
+			finally
+			{
+				mainForm.filesTreeView.EndUpdate();
+			}
+		}
+
+		internal void ChangeFilePriority(TreeNode treeNode)
+		{
+			TorrentFile file = treeNode.Tag as TorrentFile;
+			if (file == null) return;
+
+			switch (file.Priority)
+			{
+				case Priority.DoNotDownload:
+					treeNode.StateImageKey = "lowest";
+					file.Priority = Priority.Lowest;
+					treeNode.ToolTipText = "Lowest";
+					break;
+				case Priority.High:
+					treeNode.StateImageKey = "highest";
+					file.Priority = Priority.Highest;
+					treeNode.ToolTipText = "Highest";
+					break;
+				case Priority.Highest:
+					treeNode.StateImageKey = "immediate";
+					file.Priority = Priority.Immediate;
+					treeNode.ToolTipText = "Immediate!";
+					break;
+				case Priority.Immediate:
+					treeNode.StateImageKey = "doNotDownload";
+					file.Priority = Priority.DoNotDownload;
+					treeNode.ToolTipText = "Do not download!";
+					break;
+				case Priority.Low:
+					treeNode.StateImageKey = "normal";
+					file.Priority = Priority.Normal;
+					treeNode.ToolTipText = "Normal";
+					break;
+				case Priority.Lowest:
+					treeNode.StateImageKey = "low";
+					file.Priority = Priority.Low;
+					treeNode.ToolTipText = "Low";
+					break;
+				case Priority.Normal:
+					treeNode.StateImageKey = "high";
+					file.Priority = Priority.High;
+					treeNode.ToolTipText = "High";
+					break;
+				default:
+					break;
+			}
+		}
+
+		#endregion
+
+	}
 }
