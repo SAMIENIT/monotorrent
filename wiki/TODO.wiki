@@ -15,17 +15,19 @@
   * tabdetails			DONE
   * tabgeneral			DONE
   * progress bar		DONE
+  * save graphical setting	DONE
+  * torrent settings window	DONE
+  * priority 			DONE
+  * tab files 			DONE
+  * piece progress bar		DONE
+  * torrent progress bar	DONE
 
 = For 0.1 release : =
 
-  * Save/Restore the width of listitems in settings
-  * change save path of torrent in option (global) or in torrent general ( each torrent) 
   * Exception throw because still some pending event fired when closing
   * Excetion throw nullref on application.invoke
-  * Tracker details and ErrorMessage/WarningMessage
-  * priority (TorrentManager.Torrent.Files)
-  * view of files in the torrent  
-
+  * Performance
+  
 = For 0.2 release : =
 
   * Mini windows 		0%
