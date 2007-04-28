@@ -32,17 +32,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\Mono.Security.dll</HintPath>
     </Reference>
-    <Reference Include="MonoTorrent.BEncoding, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoTorrent, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\MonoTorrent.BEncoding.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoTorrent.Client, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\MonoTorrent.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoTorrent.Common, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\MonoTorrent.Common.dll</HintPath>
+      <HintPath>Libs\MonoTorrent.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
