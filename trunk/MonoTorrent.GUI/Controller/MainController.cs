@@ -215,7 +215,7 @@ namespace MonoTorrent.GUI.Controller
                         {
                             if (entry.Value.Peer.Connection == null)
                             {
-                                entry.Key.SubItems[0].Text = "PEER DISPOSED";
+                                entry.Key.SubItems[1].Text = "PEER DISPOSED";
                                 for (int i = 1; i < entry.Key.SubItems.Count; i++)
                                     entry.Key.SubItems[i].Text = "";
                             }
