@@ -478,8 +478,8 @@ namespace MonoTorrent.GUI.Controller
             lock (currentRequests)
             {
                 currentRequests.Add(e);
-                mainForm.Invoke(new Handler(UpdatePiecesTab));
             }
+            mainForm.Invoke(new Handler(UpdatePiecesTab));
         }
 
         delegate void Handler();
