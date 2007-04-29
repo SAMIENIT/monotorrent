@@ -75,8 +75,11 @@ namespace MonoTorrent.GUI.Controller
 		/// </summary>
  		public void Dispose()
 		{
-            WaitHandle[] handle = clientEngine.Stop();
-            WaitHandle.WaitAll(handle);
+            WaitHandle[] handles = clientEngine.Stop();
+            foreach (WaitHandle handle in handles)
+            {
+                handle.WaitOne();
+            }
 
 			GuiTorrentSettings torrentSettings;
 			foreach (TorrentManager torrent in clientEngine.Torrents)
