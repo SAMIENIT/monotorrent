@@ -76,11 +76,9 @@ namespace MonoTorrent.GUI.Controller
  		public void Dispose()
 		{
             WaitHandle[] handles = clientEngine.Stop();
-            foreach (WaitHandle handle in handles)
-            {
-                handle.WaitOne();
-            }
-
+            //timeout 10 sec
+            WaitHandle.WaitAll(handles,10000,true);
+               
 			GuiTorrentSettings torrentSettings;
 			foreach (TorrentManager torrent in clientEngine.Torrents)
 			{
@@ -392,13 +390,13 @@ namespace MonoTorrent.GUI.Controller
 		
 		public void OnPeerConnected(object sender, PeerConnectionEventArgs args)
 		{
-			if (!mainForm.IsDisposed)
+			if (!mainForm.IsDisposing)
 				mainForm.Invoke(new PeerHandler(CreatePeer), args.PeerID);
 		}
 
 		public void OnPeerDisconnected(object sender, PeerConnectionEventArgs args)
 		{
-			if (!mainForm.IsDisposed)
+            if (!mainForm.IsDisposing)
 				mainForm.Invoke(new PeerHandler(DeletePeer), args.PeerID);
 		}
 
@@ -410,7 +408,7 @@ namespace MonoTorrent.GUI.Controller
         private void OnTorrentChange(object sender, EventArgs args)
         {
             //TorrentManager torrent = (TorrentManager)sender;
-            //if (!mainForm.IsDisposed)
+            //if (!mainForm.IsDisposing)
             //    mainForm.Invoke(new UpdateHandler(Update), torrent);
         }
 
@@ -422,7 +420,7 @@ namespace MonoTorrent.GUI.Controller
         private void OnTorrentStateChange(object sender, EventArgs args)
         {
             TorrentManager torrent = (TorrentManager)sender;
-            if (!mainForm.IsDisposed)
+            if (!mainForm.IsDisposing)
                 mainForm.Invoke(new UpdateHandler(UpdateState), torrent);
         }
 		// FIXME: Is this the best way to do this?
@@ -435,7 +433,7 @@ namespace MonoTorrent.GUI.Controller
 		private void OnUpdateStats(object sender, EventArgs args)
 		{
 			// Only update the screen every 8 ticks
-			if (!mainForm.IsDisposed && ((counter++ % 8) == 0))
+            if (!mainForm.IsDisposing && ((counter++ % 8) == 0))
 				mainForm.Invoke(new UpdateStatsHandler(UpdateAllStats));
 
             if (counter % 80 == 0)
@@ -456,8 +454,8 @@ namespace MonoTorrent.GUI.Controller
                     this.currentRequests.RemoveAt(i);
                 }
             }
-
-            mainForm.Invoke(new Handler(UpdatePiecesTab));
+            if (!mainForm.IsDisposing)
+                mainForm.Invoke(new Handler(UpdatePiecesTab));
         }
         /* //NOT USED
         private void RemoveFromPieceView(int pieceIndex)
@@ -470,7 +468,8 @@ namespace MonoTorrent.GUI.Controller
                         continue;
 
                     this.currentRequests.RemoveAt(i);
-                    mainForm.Invoke(new Handler(UpdatePiecesTab));
+                    if (!mainForm.IsDisposing)
+                            mainForm.Invoke(new Handler(UpdatePiecesTab));
                 }
             }
         }
@@ -482,7 +481,8 @@ namespace MonoTorrent.GUI.Controller
             {
                 currentRequests.Add(e);
             }
-            mainForm.Invoke(new Handler(UpdatePiecesTab));
+            if (!mainForm.IsDisposing)
+                mainForm.Invoke(new Handler(UpdatePiecesTab));
         }
 
         delegate void Handler();
