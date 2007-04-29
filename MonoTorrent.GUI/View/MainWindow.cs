@@ -181,6 +181,12 @@ namespace MonoTorrent.GUI.View
 		}
 		#endregion
 
+        public bool IsDisposing
+        {
+            get { return isDisposing || IsDisposed; }
+        }
+        private bool isDisposing = false;
+
 		#endregion
 
 		#region form load/unload
@@ -225,6 +231,7 @@ namespace MonoTorrent.GUI.View
 			//close client
 			// save gui
 			// unsubscribe to event
+            isDisposing = true;
 			mainController.Dispose();
 		}
 
