@@ -28,6 +28,7 @@ For 0.2 release :
 - change savepath of torrent	0%
 - manage of tracker		0%
 - i18n				0%
+- log view & log file		0%
 
 For 0.3 release:
 dot not know for moment what will be in it ;)
