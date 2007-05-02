@@ -17,16 +17,17 @@
 - piece progress bar		DONE
 - torrent progress bar		DONE
 
-For 0.1 release :
-- thread pool and performance increase
-- Exception throw because still some pending event fired when closing
-- Excetion throw nullref on application.invoke
+0.1 RELEASED in MonoTorrent beta4
 
 For 0.2 release :
 - Mini windows 			0%
-- manage torrent priority	0%
-- statusbar			0%
+- manage torrent priority	0% ( depend on lib)
+- statusbar			0% 
 - context menu 			0%
+- statistique			0%
+- change savepath of torrent	0%
+- manage of tracker		0%
+- i18n				0%
 
 For 0.3 release:
 dot not know for moment what will be in it ;)
@@ -34,11 +35,8 @@ will depend on lib evolution
 some ideas :
 
 More details on option
-statistique
-manage of tracker
-i18n
-user friendly
-design (icone and image)
+
+
 manual
 RSS
 scheduler
