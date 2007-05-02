@@ -963,74 +963,94 @@ namespace MonoTorrent.GUI.Controller
 
 				mainForm.filesTreeView.TopNode = new TreeNode(torrent.Torrent.Name);
 
-				//recurse on all file
-				foreach (TorrentFile file in torrent.Torrent.Files)
-				{
-					string path = Path.GetDirectoryName(file.Path);
-					string filename = Path.GetFileName(file.Path);
+                //recurse on all file to create folder
+                foreach (TorrentFile file in torrent.Torrent.Files)
+                {
+                    string path = Path.GetDirectoryName(file.Path);
 
-					TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
+                    TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
 
-					if (!string.IsNullOrEmpty(path))
-					{
-						string[] splitedPath = path.Split(System.IO.Path.DirectorySeparatorChar);
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        string[] splitedPath = path.Split(System.IO.Path.DirectorySeparatorChar);
 
-						foreach (string str in splitedPath)
-						{
-							if (string.IsNullOrEmpty(str))
-								continue;
+                        foreach (string str in splitedPath)
+                        {
+                            if (string.IsNullOrEmpty(str))
+                                continue;
 
-							if (!nodes.ContainsKey(str))
-							{
-								newNode = new TreeNode(str);
-								newNode.Name = str;
-								newNode.SelectedImageKey = "folder";
-								newNode.ImageKey = "folder";
-								nodes.Add(newNode);
-							}
-							nodes = nodes[str].Nodes;
-						}
-					}
-					newNode = new TreeNode(filename);
-					newNode.Name = filename;
-					newNode.SelectedImageKey = "file";
-					newNode.ImageKey = "file";
-					switch (file.Priority)
-					{
-						case Priority.DoNotDownload:
-							newNode.StateImageKey = "doNotDownload";
-							newNode.ToolTipText = "Do not download!";
-							break;
-						case Priority.High:
-							newNode.StateImageKey = "high";
-							newNode.ToolTipText = "High";
-							break;
-						case Priority.Highest:
-							newNode.StateImageKey = "highest";
-							newNode.ToolTipText = "Highest";
-							break;
-						case Priority.Immediate:
-							newNode.StateImageKey = "immediate";
-							newNode.ToolTipText = "Immediate!";
-							break;
-						case Priority.Low:
-							newNode.StateImageKey = "low";
-							newNode.ToolTipText = "Low";
-							break;
-						case Priority.Lowest:
-							newNode.StateImageKey = "lowest";
-							newNode.ToolTipText = "Lowest";
-							break;
-						case Priority.Normal:
-							newNode.StateImageKey = "normal";
-							newNode.ToolTipText = "Normal";
-							break;
-						default:
-							break;
-					}
-					newNode.Tag = file;
-					nodes.Add(newNode);
-				}
+                            if (!nodes.ContainsKey(str))
+                            {
+                                newNode = new TreeNode(str);
+                                newNode.Name = str;
+                                newNode.SelectedImageKey = "folder";
+                                newNode.ImageKey = "folder";
+                                nodes.Add(newNode);
+                            }
+                            nodes = nodes[str].Nodes;
+                        }
+                    }
+                }
+
+				//recurse on all file to add file
+                foreach (TorrentFile file in torrent.Torrent.Files)
+                {
+                    string path = Path.GetDirectoryName(file.Path);
+                    string filename = Path.GetFileName(file.Path);
+
+                    TreeNodeCollection nodes = mainForm.filesTreeView.Nodes;
+
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        string[] splitedPath = path.Split(System.IO.Path.DirectorySeparatorChar);
+
+                        foreach (string str in splitedPath)
+                        {
+                            if (string.IsNullOrEmpty(str))
+                                continue;
+                            nodes = nodes[str].Nodes;
+                        }
+                    }
+                    newNode = new TreeNode(filename);
+                    newNode.Name = filename;
+                    newNode.SelectedImageKey = "file";
+                    newNode.ImageKey = "file";
+                    switch (file.Priority)
+                    {
+                        case Priority.DoNotDownload:
+                            newNode.StateImageKey = "doNotDownload";
+                            newNode.ToolTipText = "Do not download!";
+                            break;
+                        case Priority.High:
+                            newNode.StateImageKey = "high";
+                            newNode.ToolTipText = "High";
+                            break;
+                        case Priority.Highest:
+                            newNode.StateImageKey = "highest";
+                            newNode.ToolTipText = "Highest";
+                            break;
+                        case Priority.Immediate:
+                            newNode.StateImageKey = "immediate";
+                            newNode.ToolTipText = "Immediate!";
+                            break;
+                        case Priority.Low:
+                            newNode.StateImageKey = "low";
+                            newNode.ToolTipText = "Low";
+                            break;
+                        case Priority.Lowest:
+                            newNode.StateImageKey = "lowest";
+                            newNode.ToolTipText = "Lowest";
+                            break;
+                        case Priority.Normal:
+                            newNode.StateImageKey = "normal";
+                            newNode.ToolTipText = "Normal";
+                            break;
+                        default:
+                            break;
+                    }
+                    newNode.Tag = file;
+                    nodes.Add(newNode);
+                }
 			}
 			finally
 			{
