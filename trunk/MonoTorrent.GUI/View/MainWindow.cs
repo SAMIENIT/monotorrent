@@ -496,5 +496,21 @@ namespace MonoTorrent.GUI.View
 			mainController.UpdateDetailTab();
             mainController.UpdateFilesTab();
 		}
+
+        private void miniWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainController.switchToMiniWindow(true);
+        }
+
+        private void ItemMouseHover(object sender, EventArgs e)
+        {
+            ToolStripButton button = sender as ToolStripButton;
+            statusItem.Text = button.Text;
+        }
+
+        private void ClearStatusBar(object sender, EventArgs e)
+        {
+            statusItem.Text = "";
+        }
     }
 }

@@ -23,6 +23,7 @@ namespace MonoTorrent.GUI.Controller
         private OptionWindow optionWindow;
         private AboutWindow aboutWindow;
 		private MainWindow mainForm;
+        private MiniWindow miniWindow;
         private IDictionary<ListViewItem, TorrentManager> itemToTorrent;
         private SettingsBase settingsBase;
 		private IDictionary<ListViewItem, PeerConnectionID> itemToPeers;
@@ -39,6 +40,7 @@ namespace MonoTorrent.GUI.Controller
 			itemToPeers = new Dictionary<ListViewItem, PeerConnectionID>();
 			peerlocker = new ReaderWriterLock();
 			settingsBase = new SettingsBase();
+            this.miniWindow = new MiniWindow(this);
 
 			LoadViewSettings();
             Init();
@@ -269,7 +271,8 @@ namespace MonoTorrent.GUI.Controller
 
                 SmallUpdateGeneralTab(torrent);
                 SmallUpdateDetailTab(torrent);
-
+                if (miniWindow.Visible)
+                    UpdateMiniWindow();
             }
             catch (Exception e)
             {
@@ -1107,5 +1110,44 @@ namespace MonoTorrent.GUI.Controller
 
 		#endregion
 
-	}
+
+        internal void switchToMiniWindow(bool flag)
+        {
+            if (flag)
+            {
+                mainForm.Hide();
+                LoadMiniWindow();
+                miniWindow.Show();
+            }
+            else 
+            {
+                miniWindow.Hide();
+                mainForm.Show();
+            }
+        }
+
+        internal void LoadMiniWindow()
+        {
+            miniWindow.ListView.Items.Clear();
+
+            foreach (TorrentManager torrent in itemToTorrent.Values)
+            {
+                ListViewItem item = new ListViewItem(torrent.Torrent.Name);
+
+			    ListViewItem.ListViewSubItem subitem = item.SubItems[0];
+			    subitem.Name = "colName";
+
+                ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new TorrentProgressBar(torrent));
+                sitem.Name = "colProgress";
+                item.SubItems.Add(sitem);
+
+                miniWindow.ListView.Items.Add(item);
+            }
+        }
+
+        private void UpdateMiniWindow()
+        {
+            miniWindow.ListView.Invalidate();
+        }
+    }
 }
