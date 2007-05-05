@@ -20,8 +20,8 @@
 0.1 RELEASED in MonoTorrent beta4
 
 For 0.2 release :
-- Mini windows 			0%
-- manage torrent priority	0% ( depend on lib)
+- Mini windows 			50%
+- manage torrent priority	0% 
 - statusbar			0% 
 - context menu 			0%
 - statistique			0%

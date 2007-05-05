@@ -22,7 +22,7 @@ namespace MonoTorrent.GUI.View.Control
         public void Draw(System.Drawing.Graphics graphics, System.Drawing.Rectangle bounds)
         {
             float length = (float)this.manager.Progress / 100.0f;
-			
+
 			using (LinearGradientBrush complete = new LinearGradientBrush(bounds, Color.LightBlue, Color.Blue, LinearGradientMode.Horizontal))
             using (SolidBrush incomplete = new SolidBrush(Color.White))
             using(StringFormat format = new StringFormat())
