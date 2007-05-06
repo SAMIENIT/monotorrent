@@ -50,6 +50,12 @@
     <Compile Include="View\Control\BlockProgressBar.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Helper\MemoryUtility.cs" />
+    <Compile Include="View\Control\GraphicControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Control\GraphicControl.Designer.cs">
+      <DependentUpon>GraphicControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Control\IDrawable.cs" />
     <Compile Include="View\Control\ImageListView.cs">
       <SubType>Component</SubType>
@@ -169,6 +175,10 @@
     <EmbeddedResource Include="Resources\preferences-system.png" />
     <EmbeddedResource Include="Resources\text-x-generic.png" />
     <EmbeddedResource Include="Resources\toplogo.jpg" />
+    <EmbeddedResource Include="View\Control\GraphicControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>GraphicControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

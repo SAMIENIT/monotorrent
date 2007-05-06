@@ -52,6 +52,7 @@ namespace MonoTorrent.GUI.View
             this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.statusItem = new System.Windows.Forms.ToolStripStatusLabel();
             this.detailsView = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.generalPanel = new System.Windows.Forms.GroupBox();
@@ -119,6 +120,8 @@ namespace MonoTorrent.GUI.View
             this.columnHeader11 = new System.Windows.Forms.ColumnHeader();
             this.tabFiles = new System.Windows.Forms.TabPage();
             this.FilesTreeView = new System.Windows.Forms.TreeView();
+            this.tabStatsGraph = new System.Windows.Forms.TabPage();
+            this.statsGraph = new MonoTorrent.GUI.View.Control.GraphicControl();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.torrentsView = new MonoTorrent.GUI.View.Control.ImageListView();
             this.colName = new System.Windows.Forms.ColumnHeader();
@@ -144,7 +147,6 @@ namespace MonoTorrent.GUI.View
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.DownStripButton = new System.Windows.Forms.ToolStripButton();
             this.UpStripButton = new System.Windows.Forms.ToolStripButton();
-            this.statusItem = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuBar.SuspendLayout();
             this.statusBar.SuspendLayout();
             this.detailsView.SuspendLayout();
@@ -155,6 +157,7 @@ namespace MonoTorrent.GUI.View
             this.tabPeers.SuspendLayout();
             this.tabPieces.SuspendLayout();
             this.tabFiles.SuspendLayout();
+            this.tabStatsGraph.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -357,6 +360,11 @@ namespace MonoTorrent.GUI.View
             this.statusBar.TabIndex = 0;
             this.statusBar.Text = "statusStrip";
             // 
+            // statusItem
+            // 
+            this.statusItem.Name = "statusItem";
+            this.statusItem.Size = new System.Drawing.Size(0, 17);
+            // 
             // detailsView
             // 
             this.detailsView.Controls.Add(this.tabGeneral);
@@ -364,6 +372,7 @@ namespace MonoTorrent.GUI.View
             this.detailsView.Controls.Add(this.tabPeers);
             this.detailsView.Controls.Add(this.tabPieces);
             this.detailsView.Controls.Add(this.tabFiles);
+            this.detailsView.Controls.Add(this.tabStatsGraph);
             this.detailsView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.detailsView.Location = new System.Drawing.Point(0, 0);
             this.detailsView.Margin = new System.Windows.Forms.Padding(0);
@@ -996,6 +1005,25 @@ namespace MonoTorrent.GUI.View
             this.FilesTreeView.Size = new System.Drawing.Size(678, 158);
             this.FilesTreeView.TabIndex = 0;
             // 
+            // tabStatsGraph
+            // 
+            this.tabStatsGraph.Controls.Add(this.StatsGraph);
+            this.tabStatsGraph.Location = new System.Drawing.Point(4, 22);
+            this.tabStatsGraph.Name = "tabStatsGraph";
+            this.tabStatsGraph.Padding = new System.Windows.Forms.Padding(3);
+            this.tabStatsGraph.Size = new System.Drawing.Size(684, 164);
+            this.tabStatsGraph.TabIndex = 5;
+            this.tabStatsGraph.Text = "Stats";
+            this.tabStatsGraph.UseVisualStyleBackColor = true;
+            // 
+            // StatsGraph
+            // 
+            this.StatsGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StatsGraph.Location = new System.Drawing.Point(3, 3);
+            this.StatsGraph.Name = "StatsGraph";
+            this.StatsGraph.Size = new System.Drawing.Size(678, 158);
+            this.StatsGraph.TabIndex = 0;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -1237,11 +1265,6 @@ namespace MonoTorrent.GUI.View
             this.UpStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
             this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
             // 
-            // statusItem
-            // 
-            this.statusItem.Name = "statusItem";
-            this.statusItem.Size = new System.Drawing.Size(0, 17);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1272,6 +1295,7 @@ namespace MonoTorrent.GUI.View
             this.tabPeers.ResumeLayout(false);
             this.tabPieces.ResumeLayout(false);
             this.tabFiles.ResumeLayout(false);
+            this.tabStatsGraph.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -1401,6 +1425,8 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem miniWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel statusItem;
+        private System.Windows.Forms.TabPage tabStatsGraph;
+        private MonoTorrent.GUI.View.Control.GraphicControl statsGraph;
     }
 }
 

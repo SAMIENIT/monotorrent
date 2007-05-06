@@ -181,6 +181,10 @@ namespace MonoTorrent.GUI.View
 		}
 		#endregion
 
+        public Control.GraphicControl StatsGraph
+        {
+            get { return statsGraph; }
+        }
         public bool IsDisposing
         {
             get { return isDisposing || IsDisposed; }
