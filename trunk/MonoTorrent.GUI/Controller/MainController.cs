@@ -26,7 +26,7 @@ namespace MonoTorrent.GUI.Controller
         private MiniWindow miniWindow;
         private IDictionary<ListViewItem, TorrentManager> itemToTorrent;
         private SettingsBase settingsBase;
-		private IDictionary<ListViewItem, PeerConnectionID> itemToPeers;
+		private IDictionary<ListViewItem, PeerId> itemToPeers;
 		private ReaderWriterLock peerlocker;
 
 		#endregion
@@ -37,7 +37,7 @@ namespace MonoTorrent.GUI.Controller
         {
 			this.mainForm = mainForm;
 			itemToTorrent = new Dictionary<ListViewItem, TorrentManager>();
-			itemToPeers = new Dictionary<ListViewItem, PeerConnectionID>();
+			itemToPeers = new Dictionary<ListViewItem, PeerId>();
 			peerlocker = new ReaderWriterLock();
 			settingsBase = new SettingsBase();
             this.miniWindow = new MiniWindow(this);
@@ -101,7 +101,7 @@ namespace MonoTorrent.GUI.Controller
 
 		#region Peer
 
-		public void CreatePeer(PeerConnectionID id)
+		public void CreatePeer(PeerId id)
         {
             lock (id)
             {
@@ -190,10 +190,10 @@ namespace MonoTorrent.GUI.Controller
             }
         }
 
-		public void DeletePeer(PeerConnectionID id)
+		public void DeletePeer(PeerId id)
 		{
 			lock (itemToPeers)
-				foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
+				foreach (KeyValuePair<ListViewItem, PeerId> entry in itemToPeers)
 				{
 					if (entry.Value != id)
 						continue;
@@ -204,7 +204,7 @@ namespace MonoTorrent.GUI.Controller
 				}
 		}
 
-		private delegate void PeerHandler(PeerConnectionID peerID);
+		private delegate void PeerHandler(PeerId PeerId);
 
 		public void UpdatePeers()
 		{
@@ -212,7 +212,7 @@ namespace MonoTorrent.GUI.Controller
             {
                 this.mainForm.PeersView.BeginUpdate();
                 lock (itemToPeers)
-                    foreach (KeyValuePair<ListViewItem, PeerConnectionID> entry in itemToPeers)
+                    foreach (KeyValuePair<ListViewItem, PeerId> entry in itemToPeers)
                     {
                         lock (entry.Value)
                         {
@@ -308,7 +308,7 @@ namespace MonoTorrent.GUI.Controller
             ListViewItem item = GetItemFromTorrent(torrent);
 			item.SubItems["colStatus"].Text = torrent.State.ToString();
 			item.SubItems["colSeeds"].Text = torrent.Peers.Seeds().ToString();
-			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString();
+			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString() + " (" + torrent.Peers.Available.ToString() +")";
 			item.SubItems["colDownSpeed"].Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
 			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.Monitor.UploadSpeed);
 			//I put only download of file and not the download of protocole
@@ -834,7 +834,7 @@ namespace MonoTorrent.GUI.Controller
 
         public void SmallUpdateGeneralTab(TorrentManager torrent)
         {
-            mainForm.GenTabStatusLabel.Text = torrent.State.ToString();
+            mainForm.GenTabStatusLabel.Text = torrent.TrackerManager.CurrentTracker.State.ToString();
             mainForm.GenTabUpdateLabel.Text = torrent.TrackerManager.LastUpdated.ToShortTimeString();
             mainForm.TrackerMessage.Text = "";
             mainForm.TrackerMessage.Text = torrent.TrackerManager.CurrentTracker.FailureMessage;
