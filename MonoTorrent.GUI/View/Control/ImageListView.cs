@@ -41,6 +41,7 @@ namespace MonoTorrent.GUI.View.Control
         {
             this.DoubleBuffered = true;
             this.FullRowSelect = true;
+            this.OwnerDraw = true;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
