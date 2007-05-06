@@ -17,14 +17,16 @@
 - piece progress bar		DONE
 - torrent progress bar		DONE
 
-0.1 RELEASED in MonoTorrent beta4
+==> 0.1 RELEASED in MonoTorrent beta4
+
+- statistique			DONE
+- Mini windows 			DONE
+- statusbar			DONE
 
 For 0.2 release :
-- Mini windows 			50%
 - manage torrent priority	0% 
-- statusbar			0% 
 - context menu 			0%
-- statistique			0%
+
 - change savepath of torrent	0%
 - manage of tracker		0%
 - i18n				0%

@@ -273,6 +273,7 @@ namespace MonoTorrent.GUI.Controller
                 SmallUpdateDetailTab(torrent);
                 if (miniWindow.Visible)
                     UpdateMiniWindow();
+                UpdateStatsGraph();
             }
             catch (Exception e)
             {
@@ -1148,6 +1149,13 @@ namespace MonoTorrent.GUI.Controller
         private void UpdateMiniWindow()
         {
             miniWindow.ListView.Invalidate();
+        }
+
+        private void UpdateStatsGraph()
+        {
+            mainForm.StatsGraph.AddDownloadValue(clientEngine.TotalDownloadSpeed());
+            mainForm.StatsGraph.AddUploadValue(clientEngine.TotalUploadSpeed());
+            mainForm.StatsGraph.Invalidate();
         }
     }
 }
