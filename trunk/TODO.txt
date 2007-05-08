@@ -26,6 +26,7 @@
 For 0.2 release :
 - manage torrent priority	0% 
 - context menu 			0%
+- Mono.Addin			0%
 
 - change savepath of torrent	0%
 - manage of tracker		0%
