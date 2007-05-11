@@ -24,7 +24,8 @@ namespace MonoTorrent.GUI.View.Control
         private int marge = 15;
         private Font font = new Font("Arial", 8.0f, FontStyle.Bold, GraphicsUnit.Point, 0x00);
         private float Ypercent = 0.80f;
-
+        private int MaxPointCount = 30;
+		
         #endregion
 
         protected override void OnPaint(PaintEventArgs e)
@@ -40,7 +41,6 @@ namespace MonoTorrent.GUI.View.Control
             base.OnPaint(e);
         }
 
-        private int MaxPointCount = 30;
 
         #region manage points
 
@@ -145,10 +145,10 @@ namespace MonoTorrent.GUI.View.Control
             g.DrawLine(pen, marge, marge, this.Width - marge, marge);
 
             g.DrawLine(pen, marge, marge + (this.Height - 2 * marge) / 3, this.Width - marge, marge + (this.Height - 2 * marge) / 3);
-            g.DrawString(FormatSpeedValue((maxValue * 2) / 3), font, pen.Brush, this.Width - marge - 40, marge + (this.Height - 2 * marge) / 3 -10);
+            g.DrawString(FormatSpeedValue((maxValue * 2) / 3), font, pen.Brush, this.Width - marge - 40, marge + (this.Height - 2 * marge) / 3 -15);
 
             g.DrawLine(pen, marge, marge + ((this.Height - 2 * marge) * 2)/ 3, this.Width - marge, marge + ((this.Height - 2 * marge) * 2) / 3);
-            g.DrawString(FormatSpeedValue(maxValue / 3), font, pen.Brush, this.Width - marge - 40, marge + ((this.Height - 2 * marge) * 2) / 3 -10);
+            g.DrawString(FormatSpeedValue(maxValue / 3), font, pen.Brush, this.Width - marge - 40, marge + ((this.Height - 2 * marge) * 2) / 3 -15);
             
         }
 
