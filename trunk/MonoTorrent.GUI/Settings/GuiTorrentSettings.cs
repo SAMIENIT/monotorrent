@@ -54,7 +54,7 @@ namespace MonoTorrent.GUI.Settings
 
         #region ISettings Membres
 
-        public IBEncodedValue Encode()
+        public BEncodedValue Encode()
         {
             BEncodedDictionary result = new BEncodedDictionary();
             result.Add(new BEncodedString("MaxDownloadSpeed"), new BEncodedNumber(MaxDownloadSpeed));
@@ -65,13 +65,13 @@ namespace MonoTorrent.GUI.Settings
             return result;
         }
 
-        public void Decode(IBEncodedValue value)
+        public void Decode(BEncodedValue value)
         {
             BEncodedDictionary val = value as BEncodedDictionary;
             if (val != null)
             {
                 //if do not find key do not throw exception just continue with default value ;)
-                IBEncodedValue result;
+                BEncodedValue result;
                 //For number maybe best is to do ((int)((BEncodedNumber)result).Number) but keep using convert and ToString()
 
                 if (val.TryGetValue(new BEncodedString("MaxDownloadSpeed"), out result))

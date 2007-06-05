@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C# Express 2005
+# Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoTorrent.GUI", "MonoTorrent.GUI.csproj", "{4DC08FDB-2987-44CE-948A-A71D78D0AB69}"
 EndProject
 Global

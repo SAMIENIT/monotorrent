@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using MonoTorrent.GUI.Controller;
+using Utilities;
 
 namespace MonoTorrent.GUI.View
 {
@@ -15,8 +16,9 @@ namespace MonoTorrent.GUI.View
 
 		public MiniWindow(MainController mainController)
 		{
-            this.controller = mainController;
             InitializeComponent();
+            this.controller = mainController;
+            this.Icon = ResourceHandler.GetIcon("mono", 16, 16);
 		}
 
         public Control.ImageListView ListView

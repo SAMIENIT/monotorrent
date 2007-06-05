@@ -12,12 +12,13 @@ using MonoTorrent.GUI.View.Control;
 using System.Drawing;
 using System.Resources;
 using System.Reflection;
+using Utilities;
 
 namespace MonoTorrent.GUI.Controller
 {
     public class MainController : IDisposable
 	{
-		#region private field
+		#region Private field
 
 		private ClientEngine clientEngine;
         private OptionWindow optionWindow;
@@ -26,12 +27,14 @@ namespace MonoTorrent.GUI.Controller
         private MiniWindow miniWindow;
         private IDictionary<ListViewItem, TorrentManager> itemToTorrent;
         private SettingsBase settingsBase;
-		private IDictionary<ListViewItem, PeerId> itemToPeers;
+        private IDictionary<ListViewItem, PeerId> itemToPeers;
 		private ReaderWriterLock peerlocker;
+        private Icon mono;
+        private int maxDownload;
 
 		#endregion
 
-		#region constructor and destructor
+		#region Constructor and destructor
 
 		public MainController(MainWindow mainForm)
         {
@@ -40,6 +43,8 @@ namespace MonoTorrent.GUI.Controller
 			itemToPeers = new Dictionary<ListViewItem, PeerId>();
 			peerlocker = new ReaderWriterLock();
 			settingsBase = new SettingsBase();
+            mono = ResourceHandler.GetIcon("mono", 16, 16);
+
             this.miniWindow = new MiniWindow(this);
 
 			LoadViewSettings();
@@ -50,26 +55,37 @@ namespace MonoTorrent.GUI.Controller
 		{
 			//get general settings in file
 			GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
-			clientEngine = new ClientEngine(genSettings.GetEngineSettings(),
-				TorrentSettings.DefaultSettings());
+			clientEngine = new ClientEngine(genSettings.GetEngineSettings());
 
 			// Create Torrents path
 			if (!Directory.Exists(genSettings.TorrentsPath))
 				Directory.CreateDirectory(genSettings.TorrentsPath);
 
+            // Add torrents from startup paramters to torrents folder
+            foreach (string file in Global.TorrentFiles)
+            {
+                if (File.Exists(file) && file.EndsWith(".torrent"))
+                {
+					// FIXME: This isn't cross platform. Use the "Path" class to do this
+                    string newFile = genSettings.TorrentsPath + file.Substring(file.LastIndexOf("\\"));
+                    if (!File.Exists(newFile))
+                        File.Copy(file, newFile);
+                }
+            }
+
 			//load all torrents in torrents folder
 			foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
 			{
 				GuiTorrentSettings torrentSettings = settingsBase.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
-				Add(file, torrentSettings.GetTorrentSettings(),
-					string.IsNullOrEmpty(torrentSettings.SavePath) ? clientEngine.Settings.SavePath : torrentSettings.SavePath);
+				Add(file, torrentSettings.GetTorrentSettings(),	
+                    string.IsNullOrEmpty(torrentSettings.SavePath) ? clientEngine.Settings.SavePath : torrentSettings.SavePath);
 			}
 
 			//subscribe to event for update
 			clientEngine.StatsUpdate += OnUpdateStats;
 
-			ClientEngine.ConnectionManager.PeerConnected += OnPeerConnected;
-			ClientEngine.ConnectionManager.PeerDisconnected += OnPeerDisconnected;
+			clientEngine.ConnectionManager.PeerConnected += OnPeerConnected;
+            clientEngine.ConnectionManager.PeerDisconnected += OnPeerDisconnected;
 		}
 
 		/// <summary>
@@ -77,21 +93,30 @@ namespace MonoTorrent.GUI.Controller
 		/// </summary>
  		public void Dispose()
 		{
-            WaitHandle[] handles = clientEngine.Stop();
             //timeout 10 sec
-            WaitHandle.WaitAll(handles,10000,true);
+            // This throws error: WaitAll for multiple handles on a STA thread is not supported
+            // Use WaitOne
+            //WaitHandle.WaitAll(handles,10000,true);
+
+            WaitHandle[] handles = clientEngine.StopAll();
+            foreach (WaitHandle wh in handles)
+                if (wh != null)
+                    wh.WaitOne();
+
+            clientEngine.Dispose();
                
 			GuiTorrentSettings torrentSettings;
-			foreach (TorrentManager torrent in clientEngine.Torrents)
-			{
-				torrent.PieceHashed -= OnTorrentChange;
-				torrent.PeersFound -= OnTorrentChange;
-				torrent.TorrentStateChanged -= OnTorrentStateChange;
-				torrentSettings = new GuiTorrentSettings();
-				torrentSettings.SetTorrentSettings(torrent.Settings);
+            foreach (KeyValuePair<ListViewItem, TorrentManager> keypair in this.itemToTorrent)
+            {
+                TorrentManager torrent = keypair.Value;
+                torrent.PieceHashed -= OnTorrentChange;
+                torrent.PeersFound -= OnTorrentChange;
+                torrent.TorrentStateChanged -= OnTorrentStateChange;
+                torrentSettings = new GuiTorrentSettings();
+                torrentSettings.SetTorrentSettings(torrent.Settings);
                 torrentSettings.SavePath = torrent.SavePath;
-				settingsBase.SaveSettings<GuiTorrentSettings>("Torrent Settings for " + torrent.Torrent.TorrentPath, torrentSettings);
-			}
+                settingsBase.SaveSettings<GuiTorrentSettings>("Torrent Settings for " + torrent.Torrent.TorrentPath, torrentSettings);
+            }
 
 			clientEngine.StatsUpdate -= OnUpdateStats;
 			UpdateViewSettings();
@@ -101,7 +126,7 @@ namespace MonoTorrent.GUI.Controller
 
 		#region Peer
 
-		public void CreatePeer(PeerId id)
+        public void CreatePeer(PeerId id)
         {
             lock (id)
             {
@@ -190,10 +215,10 @@ namespace MonoTorrent.GUI.Controller
             }
         }
 
-		public void DeletePeer(PeerId id)
+        public void DeletePeer(PeerId id)
 		{
 			lock (itemToPeers)
-				foreach (KeyValuePair<ListViewItem, PeerId> entry in itemToPeers)
+                foreach (KeyValuePair<ListViewItem, PeerId> entry in itemToPeers)
 				{
 					if (entry.Value != id)
 						continue;
@@ -204,7 +229,7 @@ namespace MonoTorrent.GUI.Controller
 				}
 		}
 
-		private delegate void PeerHandler(PeerId PeerId);
+        private delegate void PeerHandler(PeerId PeerId);
 
 		public void UpdatePeers()
 		{
@@ -220,7 +245,7 @@ namespace MonoTorrent.GUI.Controller
                             {
                                 entry.Key.SubItems[1].Text = "PEER DISPOSED";
                                 for (int i = 1; i < entry.Key.SubItems.Count; i++)
-                                    entry.Key.SubItems[i].Text = "";
+                                    entry.Key.SubItems[i].Text = string.Empty;
                             }
 
                             else
@@ -250,7 +275,7 @@ namespace MonoTorrent.GUI.Controller
 
 		#endregion
 
-		#region torrent
+		#region Torrent
 
 		public void UpdateAllStats()
 		{
@@ -273,7 +298,9 @@ namespace MonoTorrent.GUI.Controller
                 SmallUpdateDetailTab(torrent);
                 if (miniWindow.Visible)
                     UpdateMiniWindow();
+
                 UpdateStatsGraph();
+                UpdateNotifyIcon();
             }
             catch (Exception e)
             {
@@ -281,13 +308,73 @@ namespace MonoTorrent.GUI.Controller
             }
 		}
 
-		private void UpdateTorrentsView()
+        /// <summary>
+        /// NEW:
+        /// Update the notify icon:
+        ///     Icon with progress indicator
+        ///     and information text
+        /// </summary>
+        public void UpdateNotifyIcon()
+        {
+            if (this.mainForm.WindowState == FormWindowState.Minimized)
+            {
+                int iconInt = 16;
+                double dl = clientEngine.TotalDownloadSpeed;
+                double ul = clientEngine.TotalUploadSpeed;
+                if (dl == 0 && ul == 0)
+                {
+                    // No acivity: show grey mono icon
+                    this.mainForm.NotifyIconSystray.Icon = ResourceHandler.GetIcon("mono_grey", iconInt, iconInt);
+                }
+                else
+                {
+                    // Build a system tray icon with downloadspeed indication
+                    if (maxDownload == 0)
+                    {
+                        maxDownload = clientEngine.Settings.GlobalMaxDownloadSpeed;
+                        // With a minimimum of 16 Kb (1 Kb per pixel)
+                        maxDownload = 1024 * 16;
+                    }
+                    if (maxDownload < dl)
+                        // If no MaxDownloadSpeed is given, create your own temporarily
+                        maxDownload = (int)(dl * 1.25);
+
+                    // Calculate the dimensions and position of the progress indicator
+                    int h = (int)(dl / (maxDownload / iconInt));
+                    int w = 3;
+                    int x = iconInt - w;
+                    int y = iconInt - h;
+
+                    // Create a new icon from the mono icon and the progress indicator
+                    Bitmap bmp = new Bitmap(iconInt, iconInt);
+                    Graphics grs = Graphics.FromImage(bmp);
+                    grs.DrawIcon(mono, 0, 0);
+                    grs.FillRectangle(Brushes.Green, x, y, w, h);
+                    Icon sysIcon = Icon.FromHandle(bmp.GetHicon());
+
+                    // Show the new icon in the system tray
+                    this.mainForm.NotifyIconSystray.Icon = sysIcon;
+                }
+
+                // Show info text when hovering over system tray icon
+                string niTxt = Application.ProductName + " " + Application.ProductVersion
+                               + "\nDown: " + FormatSpeedValue(dl).ToString() 
+                             + " | Up: " + FormatSpeedValue(ul).ToString();
+
+                this.mainForm.NotifyIconSystray.Text = niTxt; 
+            }
+        }
+        
+        /// <summary>
+        /// Update the TorrentsView grid
+        /// </summary>
+        private void UpdateTorrentsView()
 		{
 			try
 			{
 				this.mainForm.TorrentsView.BeginUpdate();
-				foreach (TorrentManager torrent in clientEngine.Torrents)
-					UpdateState(torrent);
+				foreach (KeyValuePair<ListViewItem, TorrentManager> keypair in this.itemToTorrent)
+					UpdateState(keypair.Value);
 			}
 			finally
 			{
@@ -295,21 +382,17 @@ namespace MonoTorrent.GUI.Controller
 			}
 		}
 
-
-        private delegate void UpdateHandler(TorrentManager torrent);
-		private delegate void UpdateStatsHandler();
-
-
         /// <summary>
-        /// update torrent state in view
+        /// Update torrent state in view
         /// </summary>
-        /// <param name="torrent"></param>
+        /// <param name="torrent">Torrent</param>
         public void UpdateState(TorrentManager torrent)
         {
             ListViewItem item = GetItemFromTorrent(torrent);
 			item.SubItems["colStatus"].Text = torrent.State.ToString();
-			item.SubItems["colSeeds"].Text = torrent.Peers.Seeds().ToString();
-			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString() + " (" + torrent.Peers.Available.ToString() +")";
+            
+            item.SubItems["colSeeds"].Text = torrent.Peers.Seeds().ToString();
+			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString() + " (" + torrent.Peers.Available.ToString() + ")";
 			item.SubItems["colDownSpeed"].Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
 			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.Monitor.UploadSpeed);
 			//I put only download of file and not the download of protocole
@@ -319,6 +402,16 @@ namespace MonoTorrent.GUI.Controller
 			//ratio is for all upload vs all download
 			if (torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded != 0)
 				item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)(torrent.Monitor.DataBytesUploaded + torrent.Monitor.ProtocolBytesUploaded) / (torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded));
+
+            //NEW: Calculate time remaining
+            if (torrent.Monitor.DownloadSpeed > 0)
+            {
+                double secs = (torrent.Torrent.Size - (torrent.Torrent.Size * (torrent.Progress / 100))) / torrent.Monitor.DownloadSpeed;
+                DateTime dt = new DateTime().AddSeconds(secs);
+                item.SubItems["colRemaining"].Text = dt.ToString("hh:mm:ss");
+            }
+            else
+                item.SubItems["colRemaining"].Text = string.Empty;
         }
 
 		#endregion
@@ -340,22 +433,27 @@ namespace MonoTorrent.GUI.Controller
             return FormatSizeValue((double)value);
 		}
 
+        /// <summary>
+        /// Creates a readable string for passed bytes
+        /// </summary>
+        /// <param name="value">Bytes</param>
+        /// <returns>String</returns>
         public string FormatSizeValue(double value)
         {
             if (value < 1024)
-                return String.Format("{0:0.00} o", value);
+                return String.Format("{0:0.00} b", value);
             if (value < 1024 * 1024)
-                return String.Format("{0:0.00} Ko", value / 1024);
+                return String.Format("{0:0.00} Kb", value / 1024);
             if (value < 1024 * 1024 * 1024)
-                return String.Format("{0:0.00} Mo", value / (1024 * 1024));
+                return String.Format("{0:0.00} Mb", value / (1024 * 1024));
 
-            return String.Format("{0:0.00} Go", value / (1024 * 1024 * 1024));
+            return String.Format("{0:0.00} Gb", value / (1024 * 1024 * 1024));
         }
 
         /// <summary>
-        /// get all row selected in list view
+        /// Get all row selected in list view
         /// </summary>
-        /// <returns></returns>
+        /// <returns>TorrentManager IList</returns>
         public IList<TorrentManager> GetSelectedTorrents()
         {
             IList<TorrentManager> result = new List<TorrentManager>();
@@ -364,6 +462,11 @@ namespace MonoTorrent.GUI.Controller
             return result;
         }
 
+        /// <summary>
+        /// Gets the selected torrent in grid
+        /// If more than 1: return first
+        /// </summary>
+        /// <returns>TorrentManager</returns>
         public TorrentManager GetSelectedTorrent()
         {
             IList<TorrentManager> result = GetSelectedTorrents();
@@ -371,6 +474,7 @@ namespace MonoTorrent.GUI.Controller
                 return result[0];
             return null;
         }
+        
         /// <summary>
         /// get row in listview from torrent
         /// </summary>
@@ -390,7 +494,7 @@ namespace MonoTorrent.GUI.Controller
 
         #endregion
 
-        #region Event Methode
+        #region Event methods
 		
 		public void OnPeerConnected(object sender, PeerConnectionEventArgs args)
 		{
@@ -421,12 +525,14 @@ namespace MonoTorrent.GUI.Controller
         /// </summary>
         /// <param name="sender">TorrentManager</param>
         /// <param name="args"></param>
+        private delegate void UpdateHandler(TorrentManager torrent);
         private void OnTorrentStateChange(object sender, EventArgs args)
         {
             TorrentManager torrent = (TorrentManager)sender;
             if (!mainForm.IsDisposing)
                 mainForm.Invoke(new UpdateHandler(UpdateState), torrent);
         }
+
 		// FIXME: Is this the best way to do this?
 		private int counter = 0;
 		/// <summary>
@@ -434,6 +540,7 @@ namespace MonoTorrent.GUI.Controller
 		/// </summary>
 		/// <param name="sender">clientengine</param>
 		/// <param name="args"></param>
+        private delegate void UpdateStatsHandler();
 		private void OnUpdateStats(object sender, EventArgs args)
 		{
 			// Only update the screen every 8 ticks
@@ -444,8 +551,7 @@ namespace MonoTorrent.GUI.Controller
                 MonoTorrent.GUI.Helper.MemoryUtility.OptimizeMemoryUsage();
 		}
 
-
-        private delegate void BlockDelegate(BlockEventArgs e);
+        //private delegate void BlockDelegate(BlockEventArgs e);
         void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
         {
             lock (currentRequests)
@@ -461,6 +567,7 @@ namespace MonoTorrent.GUI.Controller
             if (!mainForm.IsDisposing)
                 mainForm.Invoke(new Handler(UpdatePiecesTab));
         }
+
         /* //NOT USED
         private void RemoveFromPieceView(int pieceIndex)
         {
@@ -478,6 +585,7 @@ namespace MonoTorrent.GUI.Controller
             }
         }
         */
+
         List<BlockEventArgs> currentRequests = new List<BlockEventArgs>();
         void PieceManager_BlockRequested(object sender, BlockEventArgs e)
         {
@@ -508,8 +616,11 @@ namespace MonoTorrent.GUI.Controller
 
         #endregion
 
-        #region Controller Action
+        #region Controller action
 
+        /// <summary>
+        /// Create a new torrent
+        /// </summary>
         public void Create()
         {
             CreateWindow window = new CreateWindow(this);
@@ -521,7 +632,7 @@ namespace MonoTorrent.GUI.Controller
                 creator.Path = window.FromPath;
                 if (!String.IsNullOrEmpty(window.TrackerURL))
                 {
-                    creator.Announces.Add(new List<string>());
+                    creator.Announces.Add(new stringCollection());
                     creator.Announces[0].Add(window.TrackerURL);
                 }
                 string newPath = Path.Combine(window.SaveTo, Path.GetFileName(window.FromPath));
@@ -529,12 +640,15 @@ namespace MonoTorrent.GUI.Controller
             }
         }
 
+        /// <summary>
+        /// Select a torrent file to add
+        /// </summary>
         public void Add()
         {
             try
             {
                 System.Windows.Forms.OpenFileDialog dialogue = new OpenFileDialog();
-                dialogue.Filter = "Torrent File (*.torrent)|*.torrent|Tous les fichiers (*.*)|*.*";
+                dialogue.Filter = "Torrent File (*.torrent)|*.torrent|All files (*.*)|*.*";
                 dialogue.Title = "Open";
                 dialogue.DefaultExt = ".torrent";
                 if (dialogue.ShowDialog() == DialogResult.OK)
@@ -548,9 +662,13 @@ namespace MonoTorrent.GUI.Controller
             }
         }
 
+        /// <summary>
+        /// Add torrent file
+        /// </summary>
+        /// <param name="fileName">Torrent file path</param>
         public void Add(string fileName)
         {
-            TorrentSettingWindow window = new TorrentSettingWindow(clientEngine.DefaultTorrentSettings,clientEngine.Settings.SavePath);
+            TorrentSettingWindow window = new TorrentSettingWindow(TorrentSettings.DefaultSettings(), clientEngine.Settings.SavePath);
             if (window.ShowDialog() == DialogResult.OK)
             {
                 Add(fileName, window.Settings, window.SavePath);
@@ -558,7 +676,13 @@ namespace MonoTorrent.GUI.Controller
 
         }
 
-        public void Add(string fileName, TorrentSettings settings,string savePath)
+        /// <summary>
+        /// Add torrent file
+        /// </summary>
+        /// <param name="fileName">Torrent file path</param>
+        /// <param name="settings">Torrent settings</param>
+        /// <param name="savePath">Save path</param>
+        public void Add(string fileName, TorrentSettings settings, string savePath)
         {
             GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
             string newPath = Path.Combine(genSettings.TorrentsPath, Path.GetFileName(fileName));
@@ -612,24 +736,33 @@ namespace MonoTorrent.GUI.Controller
             subitem.Name = "colRatio";
             item.SubItems.Add(subitem);
 
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "colRemaining";
+            item.SubItems.Add(subitem);
+
 			mainForm.TorrentsView.Items.Add(item);
-            TorrentManager torrent = clientEngine.LoadTorrent(newPath, savePath, settings);
-            ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new TorrentProgressBar(torrent));
+            Torrent torrent = Torrent.Load(newPath);
+            TorrentManager manager = new TorrentManager(torrent, savePath, settings);
+            clientEngine.Register(manager);
+            ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new TorrentProgressBar(manager));
             sitem.Name = "colProgress";
             item.SubItems.Insert(2,sitem);
-            itemToTorrent.Add(item, torrent);
-            torrent.PieceHashed += new EventHandler<PieceHashedEventArgs>(torrent_PieceHashed);
-            torrent.PeersFound += OnTorrentChange;
-            torrent.TorrentStateChanged += OnTorrentStateChange;
-            torrent.FileManager.BlockWritten += new EventHandler<BlockEventArgs>(FileManager_BlockWritten);
-            torrent.PieceManager.BlockReceived += new EventHandler<BlockEventArgs>(PieceManager_BlockReceived);
-            torrent.PieceManager.BlockRequestCancelled += new EventHandler<BlockEventArgs>(PieceManager_BlockRequestCancelled);
-            torrent.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
-            item.SubItems["colSize"].Text = FormatSizeValue(torrent.Torrent.Size);
-            item.SubItems["colName"].Text = torrent.Torrent.Name;
-            torrent.HashCheck(false);
+            itemToTorrent.Add(item, manager);
+            manager.PieceHashed += new EventHandler<PieceHashedEventArgs>(torrent_PieceHashed);
+            manager.PeersFound += OnTorrentChange;
+            manager.TorrentStateChanged += OnTorrentStateChange;
+            manager.FileManager.BlockWritten += new EventHandler<BlockEventArgs>(FileManager_BlockWritten);
+            manager.PieceManager.BlockReceived += new EventHandler<BlockEventArgs>(PieceManager_BlockReceived);
+            manager.PieceManager.BlockRequestCancelled += new EventHandler<BlockEventArgs>(PieceManager_BlockRequestCancelled);
+            manager.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
+            item.SubItems["colSize"].Text = FormatSizeValue(manager.Torrent.Size);
+            item.SubItems["colName"].Text = manager.Torrent.Name;
+            manager.HashCheck(false);
         }
 
+        /// <summary>
+        /// Remove torrent
+        /// </summary>
         public void Del()
         {
             try
@@ -639,7 +772,7 @@ namespace MonoTorrent.GUI.Controller
                     foreach (TorrentManager torrent in GetSelectedTorrents())
                     {
                         GetItemFromTorrent(torrent).Remove();
-                        clientEngine.Remove(torrent);
+                        clientEngine.Unregister(torrent);
                         
                         File.Delete(torrent.Torrent.TorrentPath);
                         foreach (TorrentFile file in torrent.Torrent.Files)
@@ -656,23 +789,47 @@ namespace MonoTorrent.GUI.Controller
             }
         }
 
+        /// <summary>
+        /// Start selected torrents
+        /// If none are selected: start all
+        /// </summary>
         public void Start()
         {
             try
             {
-                foreach (TorrentManager torrent in GetSelectedTorrents())
+                // NEW: add all torrents when none are selected
+                IList<TorrentManager> tmList = GetSelectedTorrents();
+                if (tmList.Count == 0)
                 {
-                    if ( torrent.State == TorrentState.Paused 
-                        || torrent.State == TorrentState.Stopped)
-                        clientEngine.Start(torrent);
+                    foreach (TorrentManager tm in itemToTorrent.Values)
+                        tmList.Add(tm);
+                    if (tmList.Count > 0)
+                        mainForm.TorrentsView.Items[0].Selected = true;
+                }
+
+                foreach (TorrentManager torrent in tmList)
+                {
+                    // 
+                    // Isn't there a better way?
+                    //while (torrent.State == TorrentState.Hashing)
+                    //    Thread.Sleep(1000);
+
+                    //if (torrent.State == TorrentState.Paused || torrent.State == TorrentState.Stopped)
+                    //    clientEngine.Start(torrent);
+                    if ( torrent.State == TorrentState.Paused
+                         || torrent.State == TorrentState.Stopped)
+                        torrent.Start();
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show("Exception Start :"+ e.ToString());
+                MessageBox.Show("Exception Start :"+ e.ToString(), "Exception Torrent Start");
             }
         }
 
+        /// <summary>
+        /// Stop selected torrents
+        /// </summary>
         public void Stop()
         {
             try
@@ -680,7 +837,7 @@ namespace MonoTorrent.GUI.Controller
                 foreach (TorrentManager torrent in GetSelectedTorrents())
                 {
                     if (torrent.State != TorrentState.Stopped)
-                        clientEngine.Stop(torrent);
+                        torrent.Stop();
                 }
             }
             catch (Exception e)
@@ -689,6 +846,9 @@ namespace MonoTorrent.GUI.Controller
             }
         }
 
+        /// <summary>
+        /// Pause selected torrent
+        /// </summary>
         public void Pause()
         {
             try
@@ -697,7 +857,7 @@ namespace MonoTorrent.GUI.Controller
                 {
                     if (torrent.State != TorrentState.Paused
                         && torrent.State != TorrentState.Stopped)
-                    clientEngine.Pause(torrent);
+                        torrent.Pause();
                 }
             }
             catch (Exception e)
@@ -706,6 +866,9 @@ namespace MonoTorrent.GUI.Controller
             }
         }
 
+        /// <summary>
+        /// Show options window
+        /// </summary>
         public void Option()
         {
             if (optionWindow == null || optionWindow.IsDisposed)
@@ -729,6 +892,9 @@ namespace MonoTorrent.GUI.Controller
             MessageBox.Show("Not Implemented!");
         }
 
+        /// <summary>
+        /// Show about window
+        /// </summary>
         public void About()
         {
             if (aboutWindow == null || aboutWindow.IsDisposed)
@@ -741,7 +907,7 @@ namespace MonoTorrent.GUI.Controller
 
         #endregion
 
-		#region settings
+		#region Settings
 
 		/// <summary>
         /// update general settings
@@ -753,6 +919,9 @@ namespace MonoTorrent.GUI.Controller
             clientEngine.Settings = settings.GetEngineSettings();
 		}
 
+        /// <summary>
+        /// Load saved view settings
+        /// </summary>
 		public void LoadViewSettings()
 		{
 			GuiViewSettings guisettings = settingsBase.LoadSettings<GuiViewSettings>("Graphical Settings");
@@ -782,12 +951,21 @@ namespace MonoTorrent.GUI.Controller
 			}
 		}
 
+        /// <summary>
+        /// Save view settings
+        /// </summary>
 		public void UpdateViewSettings()
 		{
 			GuiViewSettings guisettings = new GuiViewSettings();
-			guisettings.FormWidth = mainForm.Width;
-			guisettings.FormHeight = mainForm.Height;
-			guisettings.SplitterDistance = mainForm.Splitter.SplitterDistance;
+
+            // NEW: when closing from system tray you don't want to save this
+            if (this.mainForm.WindowState != FormWindowState.Minimized)
+            {
+                guisettings.FormWidth = mainForm.Width;
+                guisettings.FormHeight = mainForm.Height;
+                guisettings.SplitterDistance = mainForm.Splitter.SplitterDistance;
+            }
+
 			guisettings.VScrollValue = mainForm.TabGeneral.VerticalScroll.Value;
 			guisettings.HScrollValue = mainForm.TabGeneral.HorizontalScroll.Value;
 			guisettings.ShowDetail = mainForm.ShowDetailMenuItem.Checked;
@@ -810,7 +988,7 @@ namespace MonoTorrent.GUI.Controller
 
 		#endregion
 
-		#region general tab
+		#region General tab
 
 		public void UpdateGeneralTab()
 		{
@@ -820,8 +998,8 @@ namespace MonoTorrent.GUI.Controller
 			TorrentManager torrent = torrents[0];
 			
 			mainForm.GenTabDateLabel.Text = torrent.Torrent.CreationDate.ToShortDateString();
-			mainForm.GenTabFolderLabel.Text = torrent.SavePath;
-			string hash = "";
+			mainForm.GenTabFolderLabel.Text = Path.Combine(torrent.SavePath, torrent.Torrent.Name);
+			string hash = string.Empty;
 			for (int i = 0; i < torrent.Torrent.InfoHash.Length; i++)
 				hash += torrent.Torrent.InfoHash[i].ToString("X");
 
@@ -829,7 +1007,8 @@ namespace MonoTorrent.GUI.Controller
 			mainForm.GenTabInfosLabel.Text = torrent.Torrent.Comment;
 			mainForm.GenTabPiecesxSizeLabel.Text = torrent.Torrent.Pieces.Count.ToString() + " X " + FormatSizeValue(torrent.Torrent.PieceLength);
 			mainForm.GenTabSizeLabel.Text = FormatSizeValue(torrent.Torrent.Size);
-            mainForm.GenTabURLLabel.Text = torrent.Torrent.Source;
+            //mainForm.GenTabURLLabel.Text = torrent.Torrent.Source;
+            mainForm.GenTabURLLabel.Text = torrent.TrackerManager.CurrentTracker.ToString();
             SmallUpdateGeneralTab(torrent);
 		}
 
@@ -837,7 +1016,7 @@ namespace MonoTorrent.GUI.Controller
         {
             mainForm.GenTabStatusLabel.Text = torrent.TrackerManager.CurrentTracker.State.ToString();
             mainForm.GenTabUpdateLabel.Text = torrent.TrackerManager.LastUpdated.ToShortTimeString();
-            mainForm.TrackerMessage.Text = "";
+            mainForm.TrackerMessage.Text = string.Empty;
             mainForm.TrackerMessage.Text = torrent.TrackerManager.CurrentTracker.FailureMessage;
             mainForm.TrackerMessage.AppendText(Environment.NewLine);
             mainForm.TrackerMessage.AppendText(torrent.TrackerManager.CurrentTracker.WarningMessage);
@@ -859,7 +1038,7 @@ namespace MonoTorrent.GUI.Controller
 
         #endregion
 
-        #region detail tab
+        #region Detail tab
         
         public void UpdateDetailTab()
         {
@@ -873,7 +1052,7 @@ namespace MonoTorrent.GUI.Controller
 
         public void SmallUpdateDetailTab(TorrentManager torrent)
         {
-            mainForm.DetailTabClients.Text = "";
+            mainForm.DetailTabClients.Text = string.Empty;
             mainForm.DetailTabDownload.Text = FormatSizeValue(torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded);
             mainForm.DetailTabDownloadSpeed.Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
 
@@ -884,11 +1063,20 @@ namespace MonoTorrent.GUI.Controller
                 elapsedTime = DateTime.Now.AddTicks(-torrent.StartTime.Ticks);
             mainForm.DetailTabElapsedTime.Text = elapsedTime.ToLongTimeString();// elapsedTime.Hours + ":" + elapsedTime.Minutes + ":" + elapsedTime.Seconds;
 
-            double estimatedTime = 0;
             if (torrent.Monitor.DownloadSpeed > 0)
-                estimatedTime = 3600.0 / ((torrent.Torrent.Size - torrent.Monitor.DataBytesDownloaded) / torrent.Monitor.DownloadSpeed);
+            {
+                double secs = (torrent.Torrent.Size - (torrent.Torrent.Size * (torrent.Progress / 100))) / torrent.Monitor.DownloadSpeed;
+                DateTime dt = new DateTime().AddSeconds(secs);
+                mainForm.DetailTabEstimatedTime.Text = dt.ToString("hh:mm:ss");
+            }
+            else
+                mainForm.DetailTabEstimatedTime.Text = string.Empty;
 
-            mainForm.DetailTabEstimatedTime.Text = new TimeSpan(0, 0, (int)estimatedTime).ToString();
+            //double estimatedTime = 0;
+            //if (torrent.Monitor.DownloadSpeed > 0)
+            //    estimatedTime = 3600.0 / ((torrent.Torrent.Size - torrent.Monitor.DataBytesDownloaded) / torrent.Monitor.DownloadSpeed);
+            //mainForm.DetailTabEstimatedTime.Text = new TimeSpan(0, 0, (int)estimatedTime).ToString();
+
             mainForm.DetailTabPeers.Text = torrent.OpenConnections.ToString();
             mainForm.DetailTabPieces.Text = torrent.Torrent.Pieces.Count.ToString();
             mainForm.DetailTabUpload.Text = FormatSizeValue(torrent.Monitor.DataBytesUploaded + torrent.Monitor.ProtocolBytesUploaded);
@@ -910,7 +1098,7 @@ namespace MonoTorrent.GUI.Controller
 
         #endregion
 
-		#region piece tab
+		#region Piece tab
 
 		public void UpdatePiecesTab()
         {
@@ -927,12 +1115,12 @@ namespace MonoTorrent.GUI.Controller
 				{
 					for (int i = 0; i < this.currentRequests.Count; i++)
 					{
-						if (this.currentRequests[i].ID.TorrentManager != selectedTorrent)
+                        if (this.currentRequests[i].ID.TorrentManager != selectedTorrent)
 							continue;
 
 						ListViewItem item = new ListViewItem(this.currentRequests[i].Piece.Index.ToString());
 						item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength));
-						item.SubItems.Add(this.currentRequests[i].Piece.BlockCount.ToString());
+                        item.SubItems.Add(this.currentRequests[i].Piece.BlockCount.ToString());
 						item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(this.currentRequests[i])));
 						mainForm.PiecesListView.Items.Add(item);
 					}
@@ -946,7 +1134,7 @@ namespace MonoTorrent.GUI.Controller
 
 		#endregion
 
-		#region files tab
+		#region Files tab
 
 		internal void UpdateFilesTab()
         {
@@ -1111,6 +1299,18 @@ namespace MonoTorrent.GUI.Controller
 
 		#endregion
 
+        #region Statistics tab
+
+        private void UpdateStatsGraph()
+        {
+            mainForm.StatsGraph.AddDownloadValue(clientEngine.TotalDownloadSpeed);
+            mainForm.StatsGraph.AddUploadValue(clientEngine.TotalUploadSpeed);
+            mainForm.StatsGraph.Invalidate();
+        }
+
+        #endregion
+
+        #region MiniWindow
 
         internal void switchToMiniWindow(bool flag)
         {
@@ -1151,11 +1351,7 @@ namespace MonoTorrent.GUI.Controller
             miniWindow.ListView.Invalidate();
         }
 
-        private void UpdateStatsGraph()
-        {
-            mainForm.StatsGraph.AddDownloadValue(clientEngine.TotalDownloadSpeed());
-            mainForm.StatsGraph.AddUploadValue(clientEngine.TotalUploadSpeed());
-            mainForm.StatsGraph.Invalidate();
-        }
+        #endregion
+
     }
 }

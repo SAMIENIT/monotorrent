@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
+using Utilities;
 
 namespace MonoTorrent.GUI.View
 {
@@ -15,6 +16,7 @@ namespace MonoTorrent.GUI.View
         {
             InitializeComponent();
 			label4.Text += Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            this.Icon = ResourceHandler.GetIcon("mono", 16, 16);
         }
     }
 }

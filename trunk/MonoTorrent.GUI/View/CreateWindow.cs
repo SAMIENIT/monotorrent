@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using MonoTorrent.GUI.Controller;
 using System.IO;
+using Utilities;
 
 namespace MonoTorrent.GUI.View
 {
@@ -18,6 +19,7 @@ namespace MonoTorrent.GUI.View
         {
             InitializeComponent();
             mainController = controller;
+            this.Icon = ResourceHandler.GetIcon("mono", 16, 16);
         }
 
         #region Properties

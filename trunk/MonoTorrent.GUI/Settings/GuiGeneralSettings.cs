@@ -21,7 +21,6 @@ namespace MonoTorrent.GUI.Settings
 			globalMaxUploadSpeed = EngineSettings.DefaultSettings().GlobalMaxUploadSpeed;
 			savePath = Path.Combine(StartDirectory, "Downloads");
 			torrentsPath = Path.Combine(StartDirectory, "Torrents");
-			useuPnP =  EngineSettings.DefaultSettings().UsePnP;
 		}
 		//get at start because after when we go in openfile dialog it change the folder
 		public static string StartDirectory;
@@ -109,7 +108,7 @@ namespace MonoTorrent.GUI.Settings
 
         #region ISettings Membres
 
-        public IBEncodedValue Encode()
+        public BEncodedValue Encode()
         {
             BEncodedDictionary result = new BEncodedDictionary();
             result.Add(new BEncodedString("SavePath"), new BEncodedString(SavePath));
@@ -123,13 +122,13 @@ namespace MonoTorrent.GUI.Settings
             return result;
         }
 
-        public void Decode(IBEncodedValue value)
+        public void Decode(BEncodedValue value)
         {
             BEncodedDictionary val = value as BEncodedDictionary;
             if (val != null)
             {
                 //if do not find key do not throw exception just continue with default value ;)
-                IBEncodedValue result;
+                BEncodedValue result;
                 //For number maybe best is to do ((int)((BEncodedNumber)result).Number) but keep using convert and ToString()
                 if (val.TryGetValue(new BEncodedString("SavePath"), out result))
                     SavePath = result.ToString();
@@ -161,8 +160,8 @@ namespace MonoTorrent.GUI.Settings
 
         public EngineSettings GetEngineSettings()
         {
-            return new EngineSettings(SavePath, ListenPort, UsePnP, GlobalMaxConnections, GlobalMaxHalfOpenConnections,
-                                   GlobalMaxDownloadSpeed, GlobalMaxUploadSpeed,EncryptionType.None,true);
+            return new EngineSettings(SavePath, ListenPort, GlobalMaxConnections, GlobalMaxHalfOpenConnections,
+                                   GlobalMaxDownloadSpeed, GlobalMaxUploadSpeed,EncryptionType.None, true);
         }
     }
 }

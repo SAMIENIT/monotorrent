@@ -191,7 +191,7 @@
             this.Controls.Add(this.MaxConnectionsNumericUpDown);
             this.Controls.Add(this.FastResumeCheckBox);
             this.Name = "TorrentSettingWindow";
-            this.Text = "TorrentSettingWindow";
+            this.Text = "Torrent Setting";
             ((System.ComponentModel.ISupportInitialize)(this.MaxConnectionsNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxDownloadSpeedNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxUploadSpeedNumericUpDown)).EndInit();

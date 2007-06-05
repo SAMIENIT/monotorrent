@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using MonoTorrent.GUI.Settings;
 using MonoTorrent.GUI.Controller;
+using Utilities;
 
 namespace MonoTorrent.GUI.View
 {
@@ -18,12 +19,14 @@ namespace MonoTorrent.GUI.View
         public OptionWindow()
         {
             InitializeComponent();
+            this.Icon = ResourceHandler.GetIcon("mono", 16, 16);
         }
 
         public OptionWindow(MainController mainController, SettingsBase settings)
         {
             InitializeComponent();
             this.controller = mainController;
+            this.Icon = MonoTorrent.GUI.Properties.Resources.mono;
             GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("General Settings");
             MaxConnectionsNumericUpDown.Value = genSettings.GlobalMaxConnections;
             MaxDownloadSpeedNumericUpDown.Value = genSettings.GlobalMaxDownloadSpeed;
@@ -38,6 +41,38 @@ namespace MonoTorrent.GUI.View
         private void QuitButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void AssociateButton_Click(object sender, EventArgs e)
+        {
+            // Should you do a platform check to make sure you're on windows?
+            try
+            {
+                string rootKey = "MonoTorrent.torrent";
+                Microsoft.Win32.RegistryKey RegKey = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(".torrent");
+                RegKey.SetValue("", rootKey);
+                RegKey.Close();
+
+                RegKey = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(rootKey);
+                RegKey.SetValue("", "Torrent Metadata");
+                RegKey.Close();
+
+                // Add icon
+                RegKey = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(rootKey + "\\DefaultIcon");
+                RegKey.SetValue("", "\"" + Application.ExecutablePath + "\",0");
+                RegKey.Close();
+
+                // Add command
+                RegKey = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(rootKey + "\\Shell\\open\\Command");
+                RegKey.SetValue("", "\"" + Application.ExecutablePath + "\" %1");
+                RegKey.Close();
+
+            }
+            catch (System.Security.SecurityException se)
+            {
+                MessageBox.Show("Can't write to the registry! \r\n" + se.ToString());
+                return;
+            }
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -115,5 +150,7 @@ namespace MonoTorrent.GUI.View
         }
 
         #endregion
+
+
     }
 }
