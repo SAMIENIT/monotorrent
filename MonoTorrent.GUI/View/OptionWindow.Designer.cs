@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.SettingGroupBox = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.AssociateButton = new System.Windows.Forms.Button();
             this.MaxDownloadSpeedNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.MaxUploadSpeedNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.HalfOpenConnectionsNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -62,6 +64,8 @@
             // 
             // SettingGroupBox
             // 
+            this.SettingGroupBox.Controls.Add(this.label1);
+            this.SettingGroupBox.Controls.Add(this.AssociateButton);
             this.SettingGroupBox.Controls.Add(this.MaxDownloadSpeedNumericUpDown);
             this.SettingGroupBox.Controls.Add(this.MaxUploadSpeedNumericUpDown);
             this.SettingGroupBox.Controls.Add(this.HalfOpenConnectionsNumericUpDown);
@@ -69,53 +73,73 @@
             this.SettingGroupBox.Controls.Add(this.label6);
             this.SettingGroupBox.Controls.Add(this.label5);
             this.SettingGroupBox.Controls.Add(this.label4);
-            this.SettingGroupBox.Location = new System.Drawing.Point(12, 130);
+            this.SettingGroupBox.Location = new System.Drawing.Point(6, 121);
             this.SettingGroupBox.Name = "SettingGroupBox";
-            this.SettingGroupBox.Size = new System.Drawing.Size(253, 141);
+            this.SettingGroupBox.Size = new System.Drawing.Size(234, 126);
             this.SettingGroupBox.TabIndex = 0;
             this.SettingGroupBox.TabStop = false;
             this.SettingGroupBox.Text = "Settings";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 122);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Associate torrent files :";
+            this.label1.Visible = false;
+            // 
+            // AssociateButton
+            // 
+            this.AssociateButton.Location = new System.Drawing.Point(148, 117);
+            this.AssociateButton.Name = "AssociateButton";
+            this.AssociateButton.Size = new System.Drawing.Size(75, 23);
+            this.AssociateButton.TabIndex = 17;
+            this.AssociateButton.Text = "Associate";
+            this.AssociateButton.UseVisualStyleBackColor = true;
+            this.AssociateButton.Visible = false;
+            // 
             // MaxDownloadSpeedNumericUpDown
             // 
-            this.MaxDownloadSpeedNumericUpDown.Location = new System.Drawing.Point(157, 102);
+            this.MaxDownloadSpeedNumericUpDown.Location = new System.Drawing.Point(148, 91);
             this.MaxDownloadSpeedNumericUpDown.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
             this.MaxDownloadSpeedNumericUpDown.Name = "MaxDownloadSpeedNumericUpDown";
-            this.MaxDownloadSpeedNumericUpDown.Size = new System.Drawing.Size(90, 20);
+            this.MaxDownloadSpeedNumericUpDown.Size = new System.Drawing.Size(75, 20);
             this.MaxDownloadSpeedNumericUpDown.TabIndex = 16;
             // 
             // MaxUploadSpeedNumericUpDown
             // 
-            this.MaxUploadSpeedNumericUpDown.Location = new System.Drawing.Point(157, 75);
+            this.MaxUploadSpeedNumericUpDown.Location = new System.Drawing.Point(148, 64);
             this.MaxUploadSpeedNumericUpDown.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
             this.MaxUploadSpeedNumericUpDown.Name = "MaxUploadSpeedNumericUpDown";
-            this.MaxUploadSpeedNumericUpDown.Size = new System.Drawing.Size(90, 20);
+            this.MaxUploadSpeedNumericUpDown.Size = new System.Drawing.Size(75, 20);
             this.MaxUploadSpeedNumericUpDown.TabIndex = 15;
             // 
             // HalfOpenConnectionsNumericUpDown
             // 
-            this.HalfOpenConnectionsNumericUpDown.Location = new System.Drawing.Point(157, 49);
+            this.HalfOpenConnectionsNumericUpDown.Location = new System.Drawing.Point(148, 38);
             this.HalfOpenConnectionsNumericUpDown.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
             this.HalfOpenConnectionsNumericUpDown.Name = "HalfOpenConnectionsNumericUpDown";
-            this.HalfOpenConnectionsNumericUpDown.Size = new System.Drawing.Size(90, 20);
+            this.HalfOpenConnectionsNumericUpDown.Size = new System.Drawing.Size(75, 20);
             this.HalfOpenConnectionsNumericUpDown.TabIndex = 14;
             // 
             // UseUPnPCheckBox
             // 
             this.UseUPnPCheckBox.AutoSize = true;
-            this.UseUPnPCheckBox.Location = new System.Drawing.Point(18, 19);
+            this.UseUPnPCheckBox.Location = new System.Drawing.Point(7, 19);
             this.UseUPnPCheckBox.Name = "UseUPnPCheckBox";
             this.UseUPnPCheckBox.Size = new System.Drawing.Size(74, 17);
             this.UseUPnPCheckBox.TabIndex = 13;
@@ -125,7 +149,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 77);
+            this.label6.Location = new System.Drawing.Point(6, 66);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 13);
             this.label6.TabIndex = 12;
@@ -134,7 +158,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 104);
+            this.label5.Location = new System.Drawing.Point(6, 93);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(114, 13);
             this.label5.TabIndex = 10;
@@ -143,7 +167,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 51);
+            this.label4.Location = new System.Drawing.Point(6, 40);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(141, 13);
             this.label4.TabIndex = 8;
@@ -190,16 +214,16 @@
             this.groupBox1.Controls.Add(this.ListenPortNumericUpDown);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(271, 130);
+            this.groupBox1.Location = new System.Drawing.Point(246, 121);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(189, 88);
+            this.groupBox1.Size = new System.Drawing.Size(208, 88);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Security";
             // 
             // MaxConnectionsNumericUpDown
             // 
-            this.MaxConnectionsNumericUpDown.Location = new System.Drawing.Point(108, 49);
+            this.MaxConnectionsNumericUpDown.Location = new System.Drawing.Point(127, 49);
             this.MaxConnectionsNumericUpDown.Maximum = new decimal(new int[] {
             800,
             0,
@@ -211,7 +235,7 @@
             // 
             // ListenPortNumericUpDown
             // 
-            this.ListenPortNumericUpDown.Location = new System.Drawing.Point(108, 23);
+            this.ListenPortNumericUpDown.Location = new System.Drawing.Point(127, 23);
             this.ListenPortNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -235,7 +259,7 @@
             // 
             this.groupBox2.Controls.Add(this.SavePathButton);
             this.groupBox2.Controls.Add(this.SavePathTextBox);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Location = new System.Drawing.Point(6, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(448, 55);
             this.groupBox2.TabIndex = 2;
@@ -246,7 +270,7 @@
             // 
             this.groupBox3.Controls.Add(this.TorrentsPathButton);
             this.groupBox3.Controls.Add(this.TorrentPathTextBox);
-            this.groupBox3.Location = new System.Drawing.Point(12, 73);
+            this.groupBox3.Location = new System.Drawing.Point(6, 64);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(448, 51);
             this.groupBox3.TabIndex = 3;
@@ -272,7 +296,7 @@
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(286, 248);
+            this.SaveButton.Location = new System.Drawing.Point(298, 224);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 23);
             this.SaveButton.TabIndex = 4;
@@ -283,7 +307,7 @@
             // QuitButton
             // 
             this.QuitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.QuitButton.Location = new System.Drawing.Point(367, 248);
+            this.QuitButton.Location = new System.Drawing.Point(379, 224);
             this.QuitButton.Name = "QuitButton";
             this.QuitButton.Size = new System.Drawing.Size(75, 23);
             this.QuitButton.TabIndex = 5;
@@ -296,7 +320,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.QuitButton;
-            this.ClientSize = new System.Drawing.Size(472, 285);
+            this.ClientSize = new System.Drawing.Size(462, 258);
             this.Controls.Add(this.QuitButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.groupBox3);
@@ -305,7 +329,7 @@
             this.Controls.Add(this.groupBox2);
             this.Name = "OptionWindow";
             this.ShowInTaskbar = false;
-            this.Text = "OptionWindow";
+            this.Text = "Options";
             this.SettingGroupBox.ResumeLayout(false);
             this.SettingGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxDownloadSpeedNumericUpDown)).EndInit();
@@ -346,5 +370,7 @@
         private System.Windows.Forms.NumericUpDown HalfOpenConnectionsNumericUpDown;
         private System.Windows.Forms.NumericUpDown MaxConnectionsNumericUpDown;
         private System.Windows.Forms.NumericUpDown ListenPortNumericUpDown;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button AssociateButton;
     }
 }

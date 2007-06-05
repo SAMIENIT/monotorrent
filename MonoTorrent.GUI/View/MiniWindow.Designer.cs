@@ -44,6 +44,7 @@
             this.MiniListView.FullRowSelect = true;
             this.MiniListView.Location = new System.Drawing.Point(0, 0);
             this.MiniListView.Name = "MiniListView";
+            this.MiniListView.OwnerDraw = true;
             this.MiniListView.Scrollable = false;
             this.MiniListView.Size = new System.Drawing.Size(442, 166);
             this.MiniListView.TabIndex = 0;
@@ -72,7 +73,7 @@
             this.Name = "MiniWindow";
             this.Opacity = 0.6;
             this.ShowInTaskbar = false;
-            this.Text = "MiniWindow";
+            this.Text = "Mini MonoTorrent.GUI";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MiniWindow_FormClosing);
             this.ResumeLayout(false);

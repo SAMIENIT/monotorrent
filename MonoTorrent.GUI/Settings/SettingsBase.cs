@@ -22,8 +22,8 @@ namespace MonoTorrent.GUI.Settings
             object val = storage.Retrieve(key);
             if (val != null)
             {
-                if (val is IBEncodedValue)
-                    setting.Decode((IBEncodedValue)val);
+                if (val is BEncodedValue)
+                    setting.Decode((BEncodedValue)val);
                 else
                     throw new ArgumentException("Can not Decode value for key :" + key + " with value :" + val.ToString(), "key");
             }
@@ -34,7 +34,7 @@ namespace MonoTorrent.GUI.Settings
 
         public void SaveSettings<T>(string key, T setting) where T : ISettings
         {
-            IBEncodedValue val = setting.Encode();
+            BEncodedValue val = setting.Encode();
             storage.Store(key,val);
             //here flush but maybe have to done it in another function to save all setting before flush in file
             storage.Flush();

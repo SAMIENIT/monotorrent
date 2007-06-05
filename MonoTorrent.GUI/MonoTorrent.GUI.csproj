@@ -9,6 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MonoTorrent.GUI</RootNamespace>
     <AssemblyName>MonoTorrent.GUI</AssemblyName>
+    <ApplicationIcon>Resources\mono.ico</ApplicationIcon>
+    <Win32Resource>
+    </Win32Resource>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +29,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRules>
+    </CodeAnalysisRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
@@ -47,6 +52,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\ArgumentParser.cs" />
+    <Compile Include="Controller\Global.cs" />
+    <Compile Include="Controller\ResourceHandler.cs" />
     <Compile Include="View\Control\BlockProgressBar.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Helper\MemoryUtility.cs" />
@@ -152,33 +160,35 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icon1.ico" />
-    <EmbeddedResource Include="Resources\do-not-download.gif" />
-    <EmbeddedResource Include="Resources\high.gif" />
-    <EmbeddedResource Include="Resources\highest.gif" />
-    <EmbeddedResource Include="Resources\immediate.gif" />
-    <EmbeddedResource Include="Resources\low.gif" />
-    <EmbeddedResource Include="Resources\lowest.gif" />
-    <EmbeddedResource Include="Resources\normal.gif" />
-    <EmbeddedResource Include="Resources\document-new.png" />
-    <EmbeddedResource Include="Resources\file.png" />
-    <EmbeddedResource Include="Resources\folder-open.png" />
-    <EmbeddedResource Include="Resources\folder.png" />
-    <EmbeddedResource Include="Resources\folder_open.png" />
-    <EmbeddedResource Include="Resources\go-down.png" />
-    <EmbeddedResource Include="Resources\go-up.png" />
-    <EmbeddedResource Include="Resources\list-add.png" />
-    <EmbeddedResource Include="Resources\list-remove.png" />
-    <EmbeddedResource Include="Resources\media-playback-pause.png" />
-    <EmbeddedResource Include="Resources\media-playback-start.png" />
-    <EmbeddedResource Include="Resources\media-playback-stop.png" />
-    <EmbeddedResource Include="Resources\preferences-system.png" />
-    <EmbeddedResource Include="Resources\text-x-generic.png" />
-    <EmbeddedResource Include="Resources\toplogo.jpg" />
     <EmbeddedResource Include="View\Control\GraphicControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>GraphicControl.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\mono.ico" />
+    <Content Include="Resources\do-not-download.gif" />
+    <Content Include="Resources\document-new.png" />
+    <Content Include="Resources\file.png" />
+    <Content Include="Resources\folder-open.png" />
+    <Content Include="Resources\folder.png" />
+    <Content Include="Resources\go-down.png" />
+    <Content Include="Resources\go-up.png" />
+    <Content Include="Resources\high.gif" />
+    <Content Include="Resources\highest.gif" />
+    <Content Include="Resources\immediate.gif" />
+    <Content Include="Resources\list-add.png" />
+    <Content Include="Resources\list-remove.png" />
+    <Content Include="Resources\low.gif" />
+    <Content Include="Resources\lowest.gif" />
+    <Content Include="Resources\media-playback-pause.png" />
+    <Content Include="Resources\media-playback-start.png" />
+    <Content Include="Resources\media-playback-stop.png" />
+    <Content Include="Resources\mono_grey.ico" />
+    <Content Include="Resources\normal.gif" />
+    <Content Include="Resources\preferences-system.png" />
+    <Content Include="Resources\text-x-generic.png" />
+    <Content Include="Resources\toplogo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

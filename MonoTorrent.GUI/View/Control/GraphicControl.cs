@@ -21,6 +21,8 @@ namespace MonoTorrent.GUI.View.Control
 
         private List<double> downloadPoints = new List<double>();
         private List<double> uploadPoints = new List<double>();
+        private Color clrDownTotal = Color.FromArgb(0,0,128);
+        private Color clrUpTotal = Color.FromArgb(0,100,255);
         private int marge = 15;
         private Font font = new Font("Arial", 8.0f, FontStyle.Bold, GraphicsUnit.Point, 0x00);
         private float Ypercent = 0.80f;
@@ -84,13 +86,13 @@ namespace MonoTorrent.GUI.View.Control
         public string FormatSpeedValue(double value)
         {
             if (value < 1024)
-                return String.Format("{0:0.00} o/s", value);
+                return String.Format("{0:0.00} B/s", value);
             if (value < 1024 * 1024)
-                return String.Format("{0:0.00} Ko/s", value / 1024);
+                return String.Format("{0:0.00} KB/s", value / 1024);
             if (value < 1024 * 1024 * 1024)
-                return String.Format("{0:0.00} Mo/s", value / (1024 * 1024));
+                return String.Format("{0:0.00} MB/s", value / (1024 * 1024));
 
-            return String.Format("{0:0.00} Go/s", value / (1024 * 1024 * 1024));
+            return String.Format("{0:0.00} GB/s", value / (1024 * 1024 * 1024));
         }
         #endregion
 
@@ -118,15 +120,17 @@ namespace MonoTorrent.GUI.View.Control
             //Y
             g.DrawLine(penAxe, marge, marge, marge, this.Height - marge);
             //Y name
-            penAxe.Color = Color.DarkBlue;
-            g.DrawString("Download", font, penAxe.Brush, marge + 5,  marge+5);
-            penAxe.Color = Color.DarkRed;
-            g.DrawString("Upload", font, penAxe.Brush, marge + 5, marge + 15);
+            penAxe.Color = Color.Black;
+            g.DrawString("Total: ", font, penAxe.Brush, marge + 5, marge + 5);
+            penAxe.Color = clrDownTotal;
+            g.DrawString("down", font, penAxe.Brush, marge + 60,  marge + 5);
+            penAxe.Color = clrUpTotal;
+            g.DrawString("up", font, penAxe.Brush, marge + 100, marge + 5);
             
             //X
             penAxe.Color = Color.Black;
             g.DrawLine(penAxe, marge, this.Height - marge, this.Width - marge, this.Height - marge);
-            g.DrawString("time", font, penAxe.Brush, this.Width - marge - 20, this.Height - marge +2);
+            g.DrawString("Time", font, penAxe.Brush, this.Width - marge - 20, this.Height - marge + 2);
         }
 
         private void DrawGrid(Graphics g)
@@ -145,10 +149,12 @@ namespace MonoTorrent.GUI.View.Control
             g.DrawLine(pen, marge, marge, this.Width - marge, marge);
 
             g.DrawLine(pen, marge, marge + (this.Height - 2 * marge) / 3, this.Width - marge, marge + (this.Height - 2 * marge) / 3);
-            g.DrawString(FormatSpeedValue((maxValue * 2) / 3), font, pen.Brush, this.Width - marge - 40, marge + (this.Height - 2 * marge) / 3 -15);
+            string sv = FormatSpeedValue((maxValue * 2) / 3);
+            g.DrawString(sv, font, pen.Brush, this.Width - marge - (sv.Length * 6), marge + (this.Height - 2 * marge) / 3 - 15);
 
             g.DrawLine(pen, marge, marge + ((this.Height - 2 * marge) * 2)/ 3, this.Width - marge, marge + ((this.Height - 2 * marge) * 2) / 3);
-            g.DrawString(FormatSpeedValue(maxValue / 3), font, pen.Brush, this.Width - marge - 40, marge + ((this.Height - 2 * marge) * 2) / 3 -15);
+            sv = FormatSpeedValue(maxValue / 3);
+            g.DrawString(sv, font, pen.Brush, this.Width - marge - (sv.Length * 6), marge + ((this.Height - 2 * marge) * 2) / 3 - 15);
             
         }
 
@@ -159,10 +165,11 @@ namespace MonoTorrent.GUI.View.Control
             //|
             //|
             //|y
-            Pen pen = new Pen(Color.DarkBlue, 2);
+            Pen pen = new Pen(clrDownTotal, 2);
             float ratioY = (this.Height - 2.0f * marge) / (float)GetMaxSpeed() * Ypercent;
             float ratioX = (this.Width - 2.0f * marge) / (float)(MaxPointCount - 1);
             
+            // Total download
             for(int i=0; i< downloadPoints.Count-1;i++)
             {
                 g.DrawLine(pen,
@@ -172,9 +179,9 @@ namespace MonoTorrent.GUI.View.Control
                     (float)(this.Height - marge - downloadPoints[i + 1] * ratioY));
             }
 
+            // Total upload
             ratioY = (this.Height - 2.0f * marge) / (float)GetMaxSpeed() * 0.80f;
-
-            pen.Color = Color.DarkRed;
+            pen.Color = clrUpTotal;
             for (int i = 0; i < uploadPoints.Count - 1; i++)
             {
                 g.DrawLine(pen,

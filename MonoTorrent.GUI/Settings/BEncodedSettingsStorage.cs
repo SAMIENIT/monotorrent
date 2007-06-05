@@ -57,7 +57,7 @@ namespace MonoTorrent.GUI.Settings
                 {
                     lock (this.flushLocker)
                         using (BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open)))
-                            this.settings = BEncode.Decode(reader) as BEncodedDictionary;
+                            this.settings = BEncodedValue.Decode(reader) as BEncodedDictionary;
                 }
                 catch (Exception)
                 {
@@ -70,7 +70,7 @@ namespace MonoTorrent.GUI.Settings
         public void Store(string key, object val)
         {
             long result;
-            IBEncodedValue value = val as IBEncodedValue;
+            BEncodedValue value = val as BEncodedValue;
             if (value == null)
             {
                 if (val is string || val is bool)
