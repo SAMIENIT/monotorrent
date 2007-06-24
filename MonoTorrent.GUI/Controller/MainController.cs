@@ -643,17 +643,31 @@ namespace MonoTorrent.GUI.Controller
         /// <summary>
         /// Select a torrent file to add
         /// </summary>
-        public void Add()
+        /// <param name="asUrl">Add a torrent file from url</param>
+        public void Add(bool asUrl)
         {
             try
             {
-                System.Windows.Forms.OpenFileDialog dialogue = new OpenFileDialog();
-                dialogue.Filter = "Torrent File (*.torrent)|*.torrent|All files (*.*)|*.*";
-                dialogue.Title = "Open";
-                dialogue.DefaultExt = ".torrent";
-                if (dialogue.ShowDialog() == DialogResult.OK)
+                if (asUrl)
                 {
-                    Add(dialogue.FileName);                    
+                    // Show the url dialogue
+                    TorrentUrl tu = new TorrentUrl();
+                    if (tu.ShowDialog() == DialogResult.OK)
+                    {
+                        Add(Utilities.Global.TorrentPath);
+                    }
+                }
+                else
+                {
+                    // Show OpenFileDialog for local torrent file
+                    System.Windows.Forms.OpenFileDialog dialogue = new OpenFileDialog();
+                    dialogue.Filter = "Torrent File (*.torrent)|*.torrent|All files (*.*)|*.*";
+                    dialogue.Title = "Open";
+                    dialogue.DefaultExt = ".torrent";
+                    if (dialogue.ShowDialog() == DialogResult.OK)
+                    {
+                        Add(dialogue.FileName);
+                    }
                 }
             }
             catch (Exception e)
@@ -685,16 +699,43 @@ namespace MonoTorrent.GUI.Controller
         public void Add(string fileName, TorrentSettings settings, string savePath)
         {
             GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
-            string newPath = Path.Combine(genSettings.TorrentsPath, Path.GetFileName(fileName));
-            if (newPath != fileName)
+            string newPath = string.Empty;
+            Torrent torrent = null;
+
+            if (File.Exists(fileName))
             {
-                if (File.Exists(newPath))
+                newPath = Path.Combine(genSettings.TorrentsPath, Path.GetFileName(fileName));
+                if (newPath != fileName)
                 {
-                    MessageBox.Show("This torrent already exist in torrent folder.");
+                    if (File.Exists(newPath))
+                    {
+                        MessageBox.Show("This torrent already exist in torrent folder.");
+                        return;
+                    }
+                    File.Copy(fileName, newPath);
+                }
+                torrent = Torrent.Load(newPath);
+            }
+            else
+            {
+                // Try as url
+                if (fileName.IndexOf("//") > 0)
+                {
+                    newPath = Path.Combine(genSettings.TorrentsPath, fileName.Substring(fileName.LastIndexOf("/") + 1));
+                    if (File.Exists(newPath))
+                    {
+                        MessageBox.Show("This torrent already exist in torrent folder.");
+                        return;
+                    }
+                    torrent = Torrent.Load(new Uri(fileName), newPath);
+                }
+                else
+                {
+                    MessageBox.Show("This is not a valid torrent path or url.");
                     return;
                 }
-                File.Copy(fileName, newPath);
             }
+
             ListViewItem item = new ListViewItem(Path.GetFileName(newPath));
 
 			ListViewItem.ListViewSubItem subitem = item.SubItems[0];
@@ -741,7 +782,8 @@ namespace MonoTorrent.GUI.Controller
             item.SubItems.Add(subitem);
 
 			mainForm.TorrentsView.Items.Add(item);
-            Torrent torrent = Torrent.Load(newPath);
+            
+            // Add torrent to manager
             TorrentManager manager = new TorrentManager(torrent, savePath, settings);
             clientEngine.Register(manager);
             ImageListView.ImageListViewSubItem sitem = new ImageListView.ImageListViewSubItem(new TorrentProgressBar(manager));
@@ -892,6 +934,12 @@ namespace MonoTorrent.GUI.Controller
             MessageBox.Show("Not Implemented!");
         }
 
+        public void Rss()
+        {
+            //TODO Create rss downloader
+            MessageBox.Show("Not Implemented!");
+        }
+
         /// <summary>
         /// Show about window
         /// </summary>
@@ -949,7 +997,91 @@ namespace MonoTorrent.GUI.Controller
 			{
 				mainForm.PiecesListView.Columns[i].Width = guisettings.PieceViewColumnWidth[i];
 			}
+
+            // Load the selected buttons
+            LoadButtons();
 		}
+
+        /// <summary>
+        /// NEW: Loads the images for the buttons in the menu bar
+        /// If no path to a button strip image is provided,
+        /// the default images from the resource file are used
+        /// </summary>
+        public void LoadButtons()
+        {
+            string imgPath = GuiViewSettings.CustomButtonPath;
+            Image AddTorrent;
+            Image AddTorrentFromUrl;
+            Image CreateTorrent;
+            Image DeleteTorrent;
+            Image StartTorrent;
+            Image PauseTorrent;
+            Image StopTorrent;
+            Image Up;
+            Image Down;
+            Image Rss;
+            Image Options;
+            
+            // Get the images
+            if (File.Exists(imgPath))
+            {
+                ButtonHandler bh = new ButtonHandler(imgPath);
+                AddTorrent = bh.AddTorrent;
+                AddTorrentFromUrl = bh.AddTorrentFromUrl;
+                CreateTorrent = bh.CreateTorrent;
+                DeleteTorrent = bh.DeleteTorrent;
+                StartTorrent = bh.StartTorrent;
+                PauseTorrent = bh.PauseTorrent;
+                StopTorrent = bh.StopTorrent;
+                Up = bh.Up;
+                Down = bh.Down;
+                Rss = bh.Rss;
+                Options = bh.Options;
+            }
+            else
+            {
+                AddTorrent = ResourceHandler.GetImage("list_add");
+                AddTorrentFromUrl = ResourceHandler.GetImage("list_add_url");
+                CreateTorrent = ResourceHandler.GetImage("document_new");
+                DeleteTorrent = ResourceHandler.GetImage("list_remove");
+                StartTorrent = ResourceHandler.GetImage("media_playback_start");
+                PauseTorrent = ResourceHandler.GetImage("media_playback_pause");
+                StopTorrent = ResourceHandler.GetImage("media_playback_stop");
+                Up = ResourceHandler.GetImage("go_up");
+                Down = ResourceHandler.GetImage("go_down");
+                Rss = ResourceHandler.GetImage("rss");
+                Options = ResourceHandler.GetImage("preferences_system");
+            }
+
+            // Load the images in the toolstrip
+            mainForm.MainToolStrip.Items["AddToolStripButton"].Image = AddTorrent;
+            mainForm.MainToolStrip.Items["AddUrlToolStripButton"].Image = AddTorrentFromUrl;
+            mainForm.MainToolStrip.Items["CreateToolStripButton"].Image = CreateTorrent;
+            mainForm.MainToolStrip.Items["DelToolStripButton"].Image = DeleteTorrent;
+            mainForm.MainToolStrip.Items["StartToolStripButton"].Image = StartTorrent;
+            mainForm.MainToolStrip.Items["PauseToolStripButton"].Image = PauseTorrent;
+            mainForm.MainToolStrip.Items["StopToolStripButton"].Image = StopTorrent;
+            mainForm.MainToolStrip.Items["UpStripButton"].Image = Up;
+            mainForm.MainToolStrip.Items["DownStripButton"].Image = Down;
+            mainForm.MainToolStrip.Items["RssStripButton"].Image = Rss;
+            mainForm.MainToolStrip.Items["OptionToolStripButton"].Image = Options;
+
+            // End the menustrip
+            ToolStripMenuItem tsmi = mainForm.MainMenuStrip.Items["menuFile"] as ToolStripMenuItem;
+            tsmi.DropDownItems["addATorrentToolStripMenuItem"].Image = AddTorrent;
+            tsmi.DropDownItems["deleteATorrentToolStripMenuItem"].Image = DeleteTorrent;
+            tsmi.DropDownItems["createATorrentToolStripMenuItem"].Image = CreateTorrent;
+
+            tsmi = mainForm.MainMenuStrip.Items["menuTorrent"] as ToolStripMenuItem;
+            tsmi.DropDownItems["startTorrentToolStripMenuItem"].Image = StartTorrent;
+            tsmi.DropDownItems["pauseTorrentToolStripMenuItem"].Image = PauseTorrent;
+            tsmi.DropDownItems["stopTorrentToolStripMenuItem"].Image = StopTorrent;
+            tsmi.DropDownItems["upTorrentToolStripMenuItem"].Image = Up;
+            tsmi.DropDownItems["downTorrentToolStripMenuItem"].Image = Down;
+
+            tsmi = mainForm.MainMenuStrip.Items["menuView"] as ToolStripMenuItem;
+            tsmi.DropDownItems["optionToolStripMenuItem"].Image = Options;
+        }
 
         /// <summary>
         /// Save view settings

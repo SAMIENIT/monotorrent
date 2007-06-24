@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Collections.Specialized;
 using System.Windows.Forms;
 using System.IO;
 using MonoTorrent.GUI.Settings;
@@ -15,18 +16,24 @@ namespace MonoTorrent.GUI.View
     public partial class OptionWindow : Form
     {
         private MainController controller;
+        private Bitmap DefaultButtons;
+        private string ButtonsDir = string.Empty;
+        private StringCollection Buttons = new StringCollection();
 
         public OptionWindow()
         {
             InitializeComponent();
             this.Icon = ResourceHandler.GetIcon("mono", 16, 16);
+            GetButtonImages();
         }
 
         public OptionWindow(MainController mainController, SettingsBase settings)
         {
             InitializeComponent();
             this.controller = mainController;
-            this.Icon = MonoTorrent.GUI.Properties.Resources.mono;
+            this.Icon = ResourceHandler.GetIcon("mono", 16, 16);
+            GetButtonImages();
+
             GuiGeneralSettings genSettings = settings.LoadSettings<GuiGeneralSettings>("General Settings");
             MaxConnectionsNumericUpDown.Value = genSettings.GlobalMaxConnections;
             MaxDownloadSpeedNumericUpDown.Value = genSettings.GlobalMaxDownloadSpeed;
@@ -37,6 +44,8 @@ namespace MonoTorrent.GUI.View
             TorrentPathTextBox.Text = genSettings.TorrentsPath;
             UseUPnPCheckBox.Checked = genSettings.UsePnP;
         }
+
+        #region General
 
         private void QuitButton_Click(object sender, EventArgs e)
         {
@@ -131,26 +140,138 @@ namespace MonoTorrent.GUI.View
             }
         }
 
-        #region Helpers
+        #endregion
 
-        private bool IsNumber(string str)
+        #region Appearances
+
+        /// <summary>
+        /// Gets all button images in the Resources\Buttons subdir
+        /// </summary>
+        private void GetButtonImages()
         {
-            int result = 0;
-            try
+            string fileSelected = GuiViewSettings.CustomButtonPath;
+            string fileName = string.Empty;
+            string fileExt = string.Empty;
+            int selectIndex = 0;
+            
+            // Add default item to the listbox
+            lstButtons.Items.Clear();
+            lstButtons.Items.Add("[default]");
+
+            ButtonsDir = Path.Combine(Application.StartupPath, @"Resources\Buttons");
+            if (Directory.Exists(ButtonsDir))
             {
-                result = Convert.ToInt32(str);
+                
+                string[] BtnFiles = Global.GetFiles(ButtonsDir, new string[] { "*.bmp", "*.jpg", "*.gif", "*.png", "*.jpeg" });
+                for (int i = 0; i < BtnFiles.Length; i++)
+                {
+                    try
+                    {
+                        // Create a bitmap object, just to verify this is an image
+                        Bitmap bmp = new Bitmap(BtnFiles[i]);
+                        FileInfo fi = new FileInfo(BtnFiles[i]);
+                        fileExt = fi.Extension;
+                        fileName = fi.Name.Replace(fileExt, "").Replace("_", " ");
+                        // Add to the Buttons StringCollection and listbox
+                        Buttons.Add(BtnFiles[i]);
+                        lstButtons.Items.Add(fileName);
+                        // Select this item in the listbox
+                        if (fileSelected == BtnFiles[i])
+                            selectIndex = i + 1;
+                    }
+                    catch
+                    {
+                        // Skip: this is not an image
+                    }
+                }
             }
-            catch
+            else
             {
-                return false;
+                Directory.CreateDirectory(ButtonsDir);
             }
-            if ( result >= 0 )
-                return true;
-            return false;
+
+            lstButtons.SelectedIndex = selectIndex;
+        }
+
+        private void lstButtons_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Show example in picturebox
+            if (lstButtons.SelectedIndex == 0)
+            {
+                // Show the default buttons
+                picExample.Image = GetDefaultButtons();
+            }
+            else
+            {
+                // Show the selected buttons image
+                string bmpPath = Path.Combine(ButtonsDir, Buttons[lstButtons.SelectedIndex - 1]);
+                if (File.Exists(bmpPath))
+                {
+                    Bitmap bmp = new Bitmap(bmpPath);
+                    if (bmp.Width > picExample.Width)
+                    {
+                        // Trim bitmap to prevent clipping: show only whole buttons
+                        int h = bmp.Height;
+                        int w = picExample.Width - (picExample.Width % h);
+                        bmp = (Bitmap)Global.GetSquareFromImage(bmp, 0, 0, w, h);
+                    }
+                    picExample.Image = (Image)bmp;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a bitmap of all default buttons from the resource file
+        /// </summary>
+        /// <returns>Image</returns>
+        private Image GetDefaultButtons()
+        {
+            // Get height of image
+            if (DefaultButtons == null)
+            {
+                Image img = ResourceHandler.GetImage("list_add");
+                int sz = img.Height;
+
+                // Create new image of buttons
+                DefaultButtons = new Bitmap((11 * sz), sz);
+                Graphics grs = Graphics.FromImage(DefaultButtons);
+                grs.DrawImage(img, 0, 0);
+                grs.DrawImage(ResourceHandler.GetImage("list_add_url"), sz, 0);
+                grs.DrawImage(ResourceHandler.GetImage("document_new"), (2 * sz), 0);
+                grs.DrawImage(ResourceHandler.GetImage("list_remove"), (3 * sz), 0);
+                grs.DrawImage(ResourceHandler.GetImage("media_playback_start"), (4 * sz), 0);
+                grs.DrawImage(ResourceHandler.GetImage("media_playback_pause"), (5 * sz), 0);
+                grs.DrawImage(ResourceHandler.GetImage("media_playback_stop"), (6 * sz), 0);
+                grs.DrawImage(ResourceHandler.GetImage("go_up"), (7 * sz), 0);
+                grs.DrawImage(ResourceHandler.GetImage("go_down"), (8 * sz), 0);
+            }
+
+            return (Image)DefaultButtons;
+        }
+
+        private void QuitButtonApp_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SaveButtonApp_Click(object sender, EventArgs e)
+        {
+            // Save settings
+            GuiViewSettings guisettings = new GuiViewSettings();
+            string btnPath = string.Empty;
+            if (lstButtons.SelectedIndex > 0)
+                btnPath = Buttons[lstButtons.SelectedIndex - 1];
+            GuiViewSettings.CustomButtonPath = btnPath;
+            SettingsBase settingsBase = new SettingsBase();
+            settingsBase.SaveSettings<GuiViewSettings>("Graphical Settings", guisettings);
+
+            controller.LoadButtons();
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         #endregion
-
 
     }
 }

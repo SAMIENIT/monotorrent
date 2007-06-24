@@ -25,6 +25,7 @@ namespace MonoTorrent.GUI.Settings
         private List<int> torrentViewColumnWidth = new List<int>();
         private List<int> peerViewColumnWidth = new List<int>();
         private List<int> pieceViewColumnWidth = new List<int>();
+        static string customButtonPath = string.Empty;
         #endregion
 
         #region Properties
@@ -95,6 +96,12 @@ namespace MonoTorrent.GUI.Settings
             set { peerViewColumnWidth = value; }
         }
 
+        public static string CustomButtonPath
+        {
+            get { return customButtonPath; }
+            set { customButtonPath = value; }
+        }
+
         #endregion
 
         #region Interface Members
@@ -116,6 +123,7 @@ namespace MonoTorrent.GUI.Settings
                 result.Add(new BEncodedString("PeerViewColumnWidth" + i.ToString()), new BEncodedNumber(peerViewColumnWidth[i]));
             for (int i = 0; i < pieceViewColumnWidth.Count; i++)
                 result.Add(new BEncodedString("PieceViewColumnWidth" + i.ToString()), new BEncodedNumber(pieceViewColumnWidth[i]));
+            result.Add(new BEncodedString("CustomButtonPath"), new BEncodedString(CustomButtonPath));
             return result;
         }
 
@@ -173,6 +181,9 @@ namespace MonoTorrent.GUI.Settings
                     pieceViewColumnWidth.Add(Convert.ToInt32(result.ToString()));
                     i++;
                 }
+
+                if (val.TryGetValue(new BEncodedString("CustomButtonPath"), out result))
+                    CustomButtonPath = result.ToString();
             }
         }
 
