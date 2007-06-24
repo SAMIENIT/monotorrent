@@ -32,14 +32,14 @@ namespace MonoTorrent.GUI.View
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.addATorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createATorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteATorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createATorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTorrent = new System.Windows.Forms.ToolStripMenuItem();
             this.startTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.upTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downTorrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,16 +59,20 @@ namespace MonoTorrent.GUI.View
             this.statusItem = new System.Windows.Forms.ToolStripStatusLabel();
             this.MaintoolStrip = new System.Windows.Forms.ToolStrip();
             this.AddToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.DelToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.AddUrlToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.CreateToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.DelToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.StartToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.PauseToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.StopToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.DownStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.UpStripButton = new System.Windows.Forms.ToolStripButton();
+            this.DownStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.RssStripButton = new System.Windows.Forms.ToolStripButton();
+            this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.niContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -222,14 +226,6 @@ namespace MonoTorrent.GUI.View
             this.addATorrentToolStripMenuItem.Text = "&Add a torrent";
             this.addATorrentToolStripMenuItem.Click += new System.EventHandler(this.addATorrentToolStripMenuItem_Click);
             // 
-            // createATorrentToolStripMenuItem
-            // 
-            this.createATorrentToolStripMenuItem.Image = global::MonoTorrent.GUI.Properties.Resources.document_new;
-            this.createATorrentToolStripMenuItem.Name = "createATorrentToolStripMenuItem";
-            this.createATorrentToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.createATorrentToolStripMenuItem.Text = "&Create a torrent";
-            this.createATorrentToolStripMenuItem.Click += new System.EventHandler(this.createATorrentToolStripMenuItem_Click);
-            // 
             // deleteATorrentToolStripMenuItem
             // 
             this.deleteATorrentToolStripMenuItem.Image = global::MonoTorrent.GUI.Properties.Resources.list_remove;
@@ -237,6 +233,14 @@ namespace MonoTorrent.GUI.View
             this.deleteATorrentToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.deleteATorrentToolStripMenuItem.Text = "&Delete a torrent";
             this.deleteATorrentToolStripMenuItem.Click += new System.EventHandler(this.deleteATorrentToolStripMenuItem_Click);
+            // 
+            // createATorrentToolStripMenuItem
+            // 
+            this.createATorrentToolStripMenuItem.Image = global::MonoTorrent.GUI.Properties.Resources.document_new;
+            this.createATorrentToolStripMenuItem.Name = "createATorrentToolStripMenuItem";
+            this.createATorrentToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.createATorrentToolStripMenuItem.Text = "&Create a torrent";
+            this.createATorrentToolStripMenuItem.Click += new System.EventHandler(this.createATorrentToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -254,8 +258,8 @@ namespace MonoTorrent.GUI.View
             // 
             this.menuTorrent.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startTorrentToolStripMenuItem,
-            this.stopTorrentToolStripMenuItem,
             this.pauseTorrentToolStripMenuItem,
+            this.stopTorrentToolStripMenuItem,
             this.toolStripMenuItem3,
             this.upTorrentToolStripMenuItem,
             this.downTorrentToolStripMenuItem,
@@ -273,14 +277,6 @@ namespace MonoTorrent.GUI.View
             this.startTorrentToolStripMenuItem.Text = "&Start";
             this.startTorrentToolStripMenuItem.Click += new System.EventHandler(this.startTorrentToolStripMenuItem_Click);
             // 
-            // stopTorrentToolStripMenuItem
-            // 
-            this.stopTorrentToolStripMenuItem.Image = global::MonoTorrent.GUI.Properties.Resources.media_playback_stop;
-            this.stopTorrentToolStripMenuItem.Name = "stopTorrentToolStripMenuItem";
-            this.stopTorrentToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.stopTorrentToolStripMenuItem.Text = "Stop";
-            this.stopTorrentToolStripMenuItem.Click += new System.EventHandler(this.stopTorrentToolStripMenuItem_Click);
-            // 
             // pauseTorrentToolStripMenuItem
             // 
             this.pauseTorrentToolStripMenuItem.Image = global::MonoTorrent.GUI.Properties.Resources.media_playback_pause;
@@ -288,6 +284,14 @@ namespace MonoTorrent.GUI.View
             this.pauseTorrentToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.pauseTorrentToolStripMenuItem.Text = "&Pause";
             this.pauseTorrentToolStripMenuItem.Click += new System.EventHandler(this.pauseTorrentToolStripMenuItem_Click);
+            // 
+            // stopTorrentToolStripMenuItem
+            // 
+            this.stopTorrentToolStripMenuItem.Image = global::MonoTorrent.GUI.Properties.Resources.media_playback_stop;
+            this.stopTorrentToolStripMenuItem.Name = "stopTorrentToolStripMenuItem";
+            this.stopTorrentToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.stopTorrentToolStripMenuItem.Text = "Stop";
+            this.stopTorrentToolStripMenuItem.Click += new System.EventHandler(this.stopTorrentToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
@@ -347,14 +351,14 @@ namespace MonoTorrent.GUI.View
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(158, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
             // 
             // showToolbarToolStripMenuItem
             // 
             this.showToolbarToolStripMenuItem.Checked = true;
             this.showToolbarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showToolbarToolStripMenuItem.Name = "showToolbarToolStripMenuItem";
-            this.showToolbarToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.showToolbarToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.showToolbarToolStripMenuItem.Text = "Show Toolbar";
             this.showToolbarToolStripMenuItem.Click += new System.EventHandler(this.showToolbarToolStripMenuItem_Click);
             // 
@@ -363,7 +367,7 @@ namespace MonoTorrent.GUI.View
             this.showDetailToolStripMenuItem.Checked = true;
             this.showDetailToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showDetailToolStripMenuItem.Name = "showDetailToolStripMenuItem";
-            this.showDetailToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.showDetailToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.showDetailToolStripMenuItem.Text = "Show Detail";
             this.showDetailToolStripMenuItem.Click += new System.EventHandler(this.showDetailToolStripMenuItem_Click);
             // 
@@ -372,14 +376,14 @@ namespace MonoTorrent.GUI.View
             this.showStatusbarToolStripMenuItem.Checked = true;
             this.showStatusbarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showStatusbarToolStripMenuItem.Name = "showStatusbarToolStripMenuItem";
-            this.showStatusbarToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.showStatusbarToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.showStatusbarToolStripMenuItem.Text = "Show Statusbar";
             this.showStatusbarToolStripMenuItem.Click += new System.EventHandler(this.showStatusbarToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(158, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(181, 6);
             // 
             // miniWindowToolStripMenuItem
             // 
@@ -400,7 +404,7 @@ namespace MonoTorrent.GUI.View
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -423,16 +427,20 @@ namespace MonoTorrent.GUI.View
             // 
             this.MaintoolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddToolStripButton,
-            this.DelToolStripButton,
+            this.AddUrlToolStripButton,
             this.CreateToolStripButton,
             this.toolStripSeparator1,
+            this.DelToolStripButton,
+            this.toolStripSeparator2,
             this.StartToolStripButton,
             this.PauseToolStripButton,
             this.StopToolStripButton,
-            this.toolStripSeparator2,
-            this.OptionToolStripButton,
+            this.toolStripSeparator5,
+            this.UpStripButton,
             this.DownStripButton,
-            this.UpStripButton});
+            this.toolStripSeparator6,
+            this.RssStripButton,
+            this.OptionToolStripButton});
             this.MaintoolStrip.Location = new System.Drawing.Point(0, 24);
             this.MaintoolStrip.Name = "MaintoolStrip";
             this.MaintoolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -446,7 +454,7 @@ namespace MonoTorrent.GUI.View
             this.AddToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.AddToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.list_add;
             this.AddToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.AddToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AddToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.AddToolStripButton.Name = "AddToolStripButton";
             this.AddToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.AddToolStripButton.Text = "Add";
@@ -454,26 +462,23 @@ namespace MonoTorrent.GUI.View
             this.AddToolStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
             this.AddToolStripButton.Click += new System.EventHandler(this.AddToolStripButton_Click);
             // 
-            // DelToolStripButton
+            // AddUrlToolStripButton
             // 
-            this.DelToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.DelToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.list_remove;
-            this.DelToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.DelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.DelToolStripButton.Name = "DelToolStripButton";
-            this.DelToolStripButton.Size = new System.Drawing.Size(36, 36);
-            this.DelToolStripButton.Text = "Delete";
-            this.DelToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.DelToolStripButton.MouseLeave += new System.EventHandler(this.ClearStatusBar);
-            this.DelToolStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
-            this.DelToolStripButton.Click += new System.EventHandler(this.DelToolStripButton_Click);
+            this.AddUrlToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AddUrlToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.list_add_url;
+            this.AddUrlToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.AddUrlToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.AddUrlToolStripButton.Name = "AddUrlToolStripButton";
+            this.AddUrlToolStripButton.Size = new System.Drawing.Size(36, 36);
+            this.AddUrlToolStripButton.Text = "Add from URL";
+            this.AddUrlToolStripButton.Click += new System.EventHandler(this.AddUrlToolStripButton_Click);
             // 
             // CreateToolStripButton
             // 
             this.CreateToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.CreateToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.document_new;
             this.CreateToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.CreateToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CreateToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.CreateToolStripButton.Name = "CreateToolStripButton";
             this.CreateToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.CreateToolStripButton.Text = "Create";
@@ -487,12 +492,31 @@ namespace MonoTorrent.GUI.View
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
             // 
+            // DelToolStripButton
+            // 
+            this.DelToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.DelToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.list_remove;
+            this.DelToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.DelToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.DelToolStripButton.Name = "DelToolStripButton";
+            this.DelToolStripButton.Size = new System.Drawing.Size(36, 36);
+            this.DelToolStripButton.Text = "Delete";
+            this.DelToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.DelToolStripButton.MouseLeave += new System.EventHandler(this.ClearStatusBar);
+            this.DelToolStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
+            this.DelToolStripButton.Click += new System.EventHandler(this.DelToolStripButton_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            // 
             // StartToolStripButton
             // 
             this.StartToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.StartToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.media_playback_start;
             this.StartToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.StartToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.StartToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.StartToolStripButton.Name = "StartToolStripButton";
             this.StartToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.StartToolStripButton.Text = "Start";
@@ -506,7 +530,7 @@ namespace MonoTorrent.GUI.View
             this.PauseToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.PauseToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.media_playback_pause;
             this.PauseToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.PauseToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.PauseToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.PauseToolStripButton.Name = "PauseToolStripButton";
             this.PauseToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.PauseToolStripButton.Text = "Pause";
@@ -520,7 +544,7 @@ namespace MonoTorrent.GUI.View
             this.StopToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.StopToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.media_playback_stop;
             this.StopToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.StopToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.StopToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.StopToolStripButton.Name = "StopToolStripButton";
             this.StopToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.StopToolStripButton.Text = "Stop";
@@ -529,31 +553,31 @@ namespace MonoTorrent.GUI.View
             this.StopToolStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
             this.StopToolStripButton.Click += new System.EventHandler(this.StopToolStripButton_Click);
             // 
-            // toolStripSeparator2
+            // toolStripSeparator5
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 39);
             // 
-            // OptionToolStripButton
+            // UpStripButton
             // 
-            this.OptionToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OptionToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.preferences_system;
-            this.OptionToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.OptionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.OptionToolStripButton.Name = "OptionToolStripButton";
-            this.OptionToolStripButton.Size = new System.Drawing.Size(36, 36);
-            this.OptionToolStripButton.Text = "Options";
-            this.OptionToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.OptionToolStripButton.MouseLeave += new System.EventHandler(this.ClearStatusBar);
-            this.OptionToolStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
-            this.OptionToolStripButton.Click += new System.EventHandler(this.OptionToolStripButton_Click);
+            this.UpStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.UpStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.go_up;
+            this.UpStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.UpStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.UpStripButton.Name = "UpStripButton";
+            this.UpStripButton.Size = new System.Drawing.Size(36, 36);
+            this.UpStripButton.Text = "Up";
+            this.UpStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.UpStripButton.MouseLeave += new System.EventHandler(this.ClearStatusBar);
+            this.UpStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
+            this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
             // 
             // DownStripButton
             // 
             this.DownStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.DownStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.go_down;
             this.DownStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.DownStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.DownStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.DownStripButton.Name = "DownStripButton";
             this.DownStripButton.Size = new System.Drawing.Size(36, 36);
             this.DownStripButton.Text = "Down";
@@ -562,19 +586,36 @@ namespace MonoTorrent.GUI.View
             this.DownStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
             this.DownStripButton.Click += new System.EventHandler(this.DownStripButton_Click);
             // 
-            // UpStripButton
+            // toolStripSeparator6
             // 
-            this.UpStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.UpStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.go_up;
-            this.UpStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.UpStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.UpStripButton.Name = "UpStripButton";
-            this.UpStripButton.Size = new System.Drawing.Size(36, 36);
-            this.UpStripButton.Text = "Up";
-            this.UpStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.UpStripButton.MouseLeave += new System.EventHandler(this.ClearStatusBar);
-            this.UpStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
-            this.UpStripButton.Click += new System.EventHandler(this.UpStripButton_Click);
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 39);
+            // 
+            // RssStripButton
+            // 
+            this.RssStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.RssStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.rss;
+            this.RssStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.RssStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.RssStripButton.Name = "RssStripButton";
+            this.RssStripButton.Size = new System.Drawing.Size(36, 36);
+            this.RssStripButton.Text = "RSS";
+            this.RssStripButton.Click += new System.EventHandler(this.RssStripButton_Click);
+            // 
+            // OptionToolStripButton
+            // 
+            this.OptionToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.OptionToolStripButton.Image = global::MonoTorrent.GUI.Properties.Resources.preferences_system;
+            this.OptionToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.OptionToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.OptionToolStripButton.Name = "OptionToolStripButton";
+            this.OptionToolStripButton.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.OptionToolStripButton.Size = new System.Drawing.Size(36, 36);
+            this.OptionToolStripButton.Text = "Options";
+            this.OptionToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.OptionToolStripButton.MouseLeave += new System.EventHandler(this.ClearStatusBar);
+            this.OptionToolStripButton.MouseHover += new System.EventHandler(this.ItemMouseHover);
+            this.OptionToolStripButton.Click += new System.EventHandler(this.OptionToolStripButton_Click);
             // 
             // notifyIcon
             // 
@@ -1639,6 +1680,10 @@ namespace MonoTorrent.GUI.View
         private System.Windows.Forms.ToolStripMenuItem changeTorrentSavePathToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton AddUrlToolStripButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripButton RssStripButton;
     }
 }
 

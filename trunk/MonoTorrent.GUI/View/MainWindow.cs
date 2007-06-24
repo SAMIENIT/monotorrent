@@ -122,7 +122,17 @@ namespace MonoTorrent.GUI.View
 			get { return tabGeneral; }
 		}
 
-		public ToolStripMenuItem ShowStatusbarMenuItem
+        public MenuStrip MainMenuBar
+        {
+            get { return menuBar; }
+        }
+
+        public ToolStrip MainToolStrip
+        {
+            get { return MaintoolStrip; }
+        }
+
+        public ToolStripMenuItem ShowStatusbarMenuItem
 		{
 			get { return showStatusbarToolStripMenuItem; }
 		}
@@ -307,7 +317,7 @@ namespace MonoTorrent.GUI.View
 
         private void AddToolStripButton_Click(object sender, EventArgs e)
         {
-            mainController.Add();
+            mainController.Add(false);
         }
 
         private void StartToolStripButton_Click(object sender, EventArgs e)
@@ -356,7 +366,7 @@ namespace MonoTorrent.GUI.View
 
         private void addATorrentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainController.Add();
+            mainController.Add(false);
         }
 
         private void createATorrentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -417,6 +427,16 @@ namespace MonoTorrent.GUI.View
         private void downTorrentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mainController.Down();
+        }
+
+        private void RssStripButton_Click(object sender, EventArgs e)
+        {
+            mainController.Rss();
+        }
+
+        private void AddUrlToolStripButton_Click(object sender, EventArgs e)
+        {
+            mainController.Add(true);
         }
 
         private void changeTorrentSavePathToolStripMenuItem_Click(object sender, EventArgs e)
@@ -653,7 +673,7 @@ namespace MonoTorrent.GUI.View
                 InfosLabel.Cursor = Cursors.Default;
         }
 
-        // NEW: used to minimize to the system tray
+        // Used to minimize to the system tray
         private void MainWindow_Resize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
@@ -665,7 +685,7 @@ namespace MonoTorrent.GUI.View
             }
         }
 
-        // NEW: used to restore from the system tray
+        // Used to restore from the system tray
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
             notifyIcon.Visible = false;
@@ -685,7 +705,7 @@ namespace MonoTorrent.GUI.View
 
         private void MainWindow_Shown(object sender, EventArgs e)
         {
-            // NEW: Execute startup arguments
+            // Execute startup arguments
             if (Global.Options)
                 mainController.Option();
             if (Global.Mini)
@@ -696,5 +716,7 @@ namespace MonoTorrent.GUI.View
         }
 
         #endregion
+
+
     }
 }

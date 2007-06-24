@@ -10,12 +10,12 @@ namespace MonoTorrent.GUI.Settings
     public class SettingsBase
     {
         private ISettingsStorage storage;
-        private readonly string CONFIG_FILE = "config.dat";
 
         public SettingsBase()
         {
-            storage = new BEncodedSettingsStorage(Path.Combine(Environment.CurrentDirectory, CONFIG_FILE));
+            storage = new BEncodedSettingsStorage(Path.Combine(Environment.CurrentDirectory, Utilities.Global.ConfigFile));
         }
+
         public T LoadSettings<T>(string key) where T : ISettings, new()
         {
             T setting = new T();//set default value

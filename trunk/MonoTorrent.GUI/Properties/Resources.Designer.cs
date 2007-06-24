@@ -137,6 +137,13 @@ namespace MonoTorrent.GUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap list_add_url {
+            get {
+                object obj = ResourceManager.GetObject("list_add_url", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap list_remove {
             get {
                 object obj = ResourceManager.GetObject("list_remove", resourceCulture);
@@ -203,6 +210,13 @@ namespace MonoTorrent.GUI.Properties {
         internal static System.Drawing.Bitmap preferences_system {
             get {
                 object obj = ResourceManager.GetObject("preferences_system", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap rss {
+            get {
+                object obj = ResourceManager.GetObject("rss", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
