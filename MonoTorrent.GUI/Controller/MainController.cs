@@ -128,91 +128,88 @@ namespace MonoTorrent.GUI.Controller
 
         public void CreatePeer(PeerId id)
         {
-            lock (id)
-            {
-                if (id.Peer.Connection == null)
-                    return;
+            if (!id.IsValid)
+                return;
 
-                ListViewItem item = new ListViewItem(id.Peer.PeerId);
-                ListViewItem.ListViewSubItem subitem = item.SubItems[0];
-                subitem.Name = "PeerId";
-                subitem.Text = id.Peer.PeerId;
+            ListViewItem item = new ListViewItem(id.Name);
+            ListViewItem.ListViewSubItem subitem = item.SubItems[0];
+            subitem.Name = "PeerId";
+            subitem.Text = id.Name;
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "ClientApp";
-                item.SubItems.Add(subitem);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "ClientApp";
+            item.SubItems.Add(subitem);
 
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "LocationPeer";
-                item.SubItems.Add(subitem);
-                subitem.Text = id.Peer.Location;
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "LocationPeer";
+            item.SubItems.Add(subitem);
+            subitem.Text = id.Location;
 
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "Download";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatSizeValue(0);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "Download";
+            item.SubItems.Add(subitem);
+            subitem.Text = FormatSizeValue(0);
 
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "Upload";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatSizeValue(0);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "Upload";
+            item.SubItems.Add(subitem);
+            subitem.Text = FormatSizeValue(0);
 
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "DownloadSpeed";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatSpeedValue(0);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "DownloadSpeed";
+            item.SubItems.Add(subitem);
+            subitem.Text = FormatSpeedValue(0);
 
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "UploadSpeed";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatSpeedValue(0);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "UploadSpeed";
+            item.SubItems.Add(subitem);
+            subitem.Text = FormatSpeedValue(0);
 
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "IsSeeder";
-                item.SubItems.Add(subitem);
-                subitem.Text = id.Peer.IsSeeder ? "Yes" : "No";
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "IsSeeder";
+            item.SubItems.Add(subitem);
+            subitem.Text = id.IsSeeder ? "Yes" : "No";
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "Encryption";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatBool(id.Peer.EncryptionSupported == EncryptionMethods.RC4Encryption);
-                //FIXME: This isn't right!
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "Encryption";
+            item.SubItems.Add(subitem);
+            //subitem.Text = FormatBool(id.Peer.EncryptionSupported == EncryptionMethods.RC4Encryption);
+            //FIXME: This isn't right!
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "IsChoking";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatBool(id.Peer.Connection.IsChoking);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "IsChoking";
+            item.SubItems.Add(subitem);
+            subitem.Text = FormatBool(id.IsChoking);
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "IsInterested";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatBool(id.Peer.Connection.IsInterested);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "IsInterested";
+            item.SubItems.Add(subitem);
+            subitem.Text = FormatBool(id.IsInterested);
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "IsRequestingPiecesCount";
-                item.SubItems.Add(subitem);
-                subitem.Text = id.Peer.Connection.IsRequestingPiecesCount.ToString();
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "IsRequestingPiecesCount";
+            item.SubItems.Add(subitem);
+            subitem.Text = id.IsRequestingPiecesCount.ToString();
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "PiecesSent";
-                item.SubItems.Add(subitem);
-                subitem.Text = id.Peer.Connection.PiecesSent.ToString();
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "PiecesSent";
+            item.SubItems.Add(subitem);
+            subitem.Text = id.PiecesSent.ToString();
 
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Name = "SupportsFastPeer";
-                item.SubItems.Add(subitem);
-                subitem.Text = FormatBool(id.Peer.Connection.SupportsFastPeer);
+            subitem = new ListViewItem.ListViewSubItem();
+            subitem.Name = "SupportsFastPeer";
+            item.SubItems.Add(subitem);
+            subitem.Text = FormatBool(id.SupportsFastPeer);
 
-                mainForm.PeersView.Items.Add(item);
-                lock (itemToPeers)
-                    itemToPeers.Add(item, id);
-            }
+            mainForm.PeersView.Items.Add(item);
+            lock (itemToPeers)
+                itemToPeers.Add(item, id);
         }
 
         public void DeletePeer(PeerId id)
@@ -239,33 +236,30 @@ namespace MonoTorrent.GUI.Controller
                 lock (itemToPeers)
                     foreach (KeyValuePair<ListViewItem, PeerId> entry in itemToPeers)
                     {
-                        lock (entry.Value)
+                        if (!entry.Value.IsValid)
                         {
-                            if (entry.Value.Peer.Connection == null)
-                            {
-                                entry.Key.SubItems[1].Text = "PEER DISPOSED";
-                                for (int i = 1; i < entry.Key.SubItems.Count; i++)
-                                    entry.Key.SubItems[i].Text = string.Empty;
-                            }
-
-                            else
-                            {
-                                entry.Key.SubItems["PeerId"].Text = entry.Value.Peer.PeerId;
-                                entry.Key.SubItems["IsSeeder"].Text = FormatBool(entry.Value.Peer.IsSeeder);
-                                entry.Key.SubItems["IsChoking"].Text = FormatBool(entry.Value.Peer.Connection.IsChoking);
-                                entry.Key.SubItems["IsInterested"].Text = FormatBool(entry.Value.Peer.Connection.IsInterested);
-                                entry.Key.SubItems["IsRequestingPiecesCount"].Text = entry.Value.Peer.Connection.IsRequestingPiecesCount.ToString();
-                                entry.Key.SubItems["PiecesSent"].Text = entry.Value.Peer.Connection.PiecesSent.ToString();
-                                entry.Key.SubItems["ClientApp"].Text = entry.Value.Peer.Connection.ClientApp.Client.ToString();
-                                entry.Key.SubItems["Download"].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesDownloaded);
-                                entry.Key.SubItems["Upload"].Text = FormatSizeValue(entry.Value.Peer.Connection.Monitor.DataBytesUploaded);
-                                entry.Key.SubItems["DownloadSpeed"].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.DownloadSpeed);
-                                entry.Key.SubItems["UploadSpeed"].Text = FormatSpeedValue(entry.Value.Peer.Connection.Monitor.UploadSpeed);
-                                entry.Key.SubItems["IsRequestingPiecesCount"].Text = entry.Value.Peer.Connection.IsRequestingPiecesCount.ToString();
-                                entry.Key.SubItems["PiecesSent"].Text = entry.Value.Peer.Connection.PiecesSent.ToString();
-                            }
+                            entry.Key.SubItems[1].Text = "PEER DISPOSED";
+                            for (int i = 1; i < entry.Key.SubItems.Count; i++)
+                                entry.Key.SubItems[i].Text = string.Empty;
                         }
-                    }
+
+                        else
+                        {
+                            entry.Key.SubItems["PeerId"].Text = entry.Value.Name;
+                            entry.Key.SubItems["IsSeeder"].Text = FormatBool(entry.Value.IsSeeder);
+                            entry.Key.SubItems["IsChoking"].Text = FormatBool(entry.Value.IsChoking);
+                            entry.Key.SubItems["IsInterested"].Text = FormatBool(entry.Value.IsInterested);
+                            entry.Key.SubItems["IsRequestingPiecesCount"].Text = entry.Value.IsRequestingPiecesCount.ToString();
+                            entry.Key.SubItems["PiecesSent"].Text = entry.Value.PiecesSent.ToString();
+                            entry.Key.SubItems["ClientApp"].Text = entry.Value.ClientSoftware.Client.ToString();
+                            entry.Key.SubItems["Download"].Text = FormatSizeValue(entry.Value.Monitor.DataBytesDownloaded);
+                            entry.Key.SubItems["Upload"].Text = FormatSizeValue(entry.Value.Monitor.DataBytesUploaded);
+                            entry.Key.SubItems["DownloadSpeed"].Text = FormatSpeedValue(entry.Value.Monitor.DownloadSpeed);
+                            entry.Key.SubItems["UploadSpeed"].Text = FormatSpeedValue(entry.Value.Monitor.UploadSpeed);
+                            entry.Key.SubItems["IsRequestingPiecesCount"].Text = entry.Value.AmRequestingPiecesCount.ToString();
+                            entry.Key.SubItems["PiecesSent"].Text = entry.Value.PiecesSent.ToString();
+                        }
+                }
             }
             finally
             {
@@ -391,8 +385,8 @@ namespace MonoTorrent.GUI.Controller
             ListViewItem item = GetItemFromTorrent(torrent);
 			item.SubItems["colStatus"].Text = torrent.State.ToString();
             
-            item.SubItems["colSeeds"].Text = torrent.Peers.Seeds().ToString();
-			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs().ToString() + " (" + torrent.Peers.Available.ToString() + ")";
+            item.SubItems["colSeeds"].Text = torrent.Peers.Seeds.ToString();
+			item.SubItems["colLeeches"].Text = torrent.Peers.Leechs.ToString() + " (" + torrent.Peers.Available.ToString() + ")";
 			item.SubItems["colDownSpeed"].Text = FormatSpeedValue(torrent.Monitor.DownloadSpeed);
 			item.SubItems["colUpSpeed"].Text = FormatSpeedValue(torrent.Monitor.UploadSpeed);
 			//I put only download of file and not the download of protocole
@@ -441,13 +435,11 @@ namespace MonoTorrent.GUI.Controller
         public string FormatSizeValue(double value)
         {
             if (value < 1024)
-                return String.Format("{0:0.00} b", value);
+                return String.Format("{0:0.00} Kb", value);
             if (value < 1024 * 1024)
-                return String.Format("{0:0.00} Kb", value / 1024);
-            if (value < 1024 * 1024 * 1024)
-                return String.Format("{0:0.00} Mb", value / (1024 * 1024));
+                return String.Format("{0:0.00} Mb", value / (1024));
 
-            return String.Format("{0:0.00} Gb", value / (1024 * 1024 * 1024));
+            return String.Format("{0:0.00} Gb", value / (1024 * 1024));
         }
 
         /// <summary>
