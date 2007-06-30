@@ -789,7 +789,7 @@ namespace MonoTorrent.GUI.Controller
             manager.PieceManager.BlockReceived += new EventHandler<BlockEventArgs>(PieceManager_BlockReceived);
             manager.PieceManager.BlockRequestCancelled += new EventHandler<BlockEventArgs>(PieceManager_BlockRequestCancelled);
             manager.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
-            item.SubItems["colSize"].Text = FormatSizeValue(manager.Torrent.Size);
+            item.SubItems["colSize"].Text = FormatSizeValue(manager.Torrent.Size / 1024);
             item.SubItems["colName"].Text = manager.Torrent.Name;
             manager.HashCheck(false);
         }
