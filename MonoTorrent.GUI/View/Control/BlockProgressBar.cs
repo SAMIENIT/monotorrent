@@ -25,18 +25,23 @@ namespace MonoTorrent.GUI.View.Control
             using (LinearGradientBrush receivedBrush = new LinearGradientBrush(brushDimensions, Color.LightGoldenrodYellow, Color.Goldenrod, LinearGradientMode.Vertical))
             using (LinearGradientBrush writtenBrush = new LinearGradientBrush(brushDimensions, Color.LightGreen, Color.LimeGreen, LinearGradientMode.Vertical))
             using (LinearGradientBrush notRequestedBrush = new LinearGradientBrush(brushDimensions, Color.LightSalmon, Color.Red, LinearGradientMode.Vertical))
+            using (LinearGradientBrush pendingHashCheck = new LinearGradientBrush(brushDimensions, Color.BurlyWood, Color.Brown, LinearGradientMode.Vertical))
             {
                 requestedBrush.SetSigmaBellShape(0.25f);
                 receivedBrush.SetSigmaBellShape(0.25f);
                 writtenBrush.SetSigmaBellShape(0.25f);
                 notRequestedBrush.SetSigmaBellShape(0.25f);
+                pendingHashCheck.SetSigmaBellShape(0.25f);
 
                 Rectangle rect = bounds;
                 
                 for (int i = 0; i < this.args.Piece.BlockCount; i++)
                 {
                     RectangleF newArea = new RectangleF(rect.X + (width * i), rect.Y + borderHeight, width, rect.Height - 2 * borderHeight);
-                    if (args.Piece[i].Written)
+                    if (this.args.Piece.AllBlocksReceived)
+                        graphics.FillRectangle(pendingHashCheck, newArea);
+
+                    else if (args.Piece[i].Written)
                         graphics.FillRectangle(writtenBrush, newArea);
 
                     else if (args.Piece[i].Received)
