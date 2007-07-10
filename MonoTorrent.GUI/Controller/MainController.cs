@@ -397,7 +397,6 @@ namespace MonoTorrent.GUI.Controller
 			if (torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded != 0)
 				item.SubItems["colRatio"].Text = string.Format("{0:0.00}", (float)(torrent.Monitor.DataBytesUploaded + torrent.Monitor.ProtocolBytesUploaded) / (torrent.Monitor.DataBytesDownloaded + torrent.Monitor.ProtocolBytesDownloaded));
 
-            //NEW: Calculate time remaining
             if (torrent.Monitor.DownloadSpeed > 0)
             {
                 double secs = (torrent.Torrent.Size - (torrent.Torrent.Size * (torrent.Progress / 100))) / torrent.Monitor.DownloadSpeed;
@@ -543,67 +542,54 @@ namespace MonoTorrent.GUI.Controller
                 MonoTorrent.GUI.Helper.MemoryUtility.OptimizeMemoryUsage();
 		}
 
-        //private delegate void BlockDelegate(BlockEventArgs e);
         void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
         {
             lock (currentRequests)
             {
                 for (int i = 0; i < this.currentRequests.Count; i++)
                 {
-                    if (this.currentRequests[i].Piece.Index != e.PieceIndex)
+                    if (this.currentRequests[i].Piece.Index == e.PieceIndex)
                         continue;
 
                     this.currentRequests.RemoveAt(i);
-                }
-            }
-            if (!mainForm.IsDisposing)
-                mainForm.Invoke(new Handler(UpdatePiecesTab));
-        }
-
-        /* //NOT USED
-        private void RemoveFromPieceView(int pieceIndex)
-        {
-            lock (currentRequests)
-            {
-                for (int i = 0; i < this.currentRequests.Count; i++)
-                {
-                    if (this.currentRequests[i].Piece.Index != pieceIndex)
-                        continue;
-
-                    this.currentRequests.RemoveAt(i);
-                    if (!mainForm.IsDisposing)
-                            mainForm.Invoke(new Handler(UpdatePiecesTab));
+                    break;
                 }
             }
         }
-        */
 
         List<BlockEventArgs> currentRequests = new List<BlockEventArgs>();
         void PieceManager_BlockRequested(object sender, BlockEventArgs e)
         {
             lock (currentRequests)
             {
-                currentRequests.Add(e);
+                bool contains = false;
+                for (int i = 0; i < currentRequests.Count; i++)
+                    if (currentRequests[i].Piece.Equals(e.Piece))
+                    {
+                        contains = true;
+                        break;
+                    }
+
+                if (!contains && !e.Piece.AllBlocksWritten)
+                    currentRequests.Add(e);
             }
-            if (!mainForm.IsDisposing)
-                mainForm.Invoke(new Handler(UpdatePiecesTab));
         }
 
         delegate void Handler();
 
         void PieceManager_BlockRequestCancelled(object sender, BlockEventArgs e)
         {
-            // Do nothing (for the moment). I should do a fix for this
+            // Do nothing  - currently everything handled on the GUI update
         }
 
         void PieceManager_BlockReceived(object sender, BlockEventArgs e)
         {
-            // Do nothing
+            // Do nothing - currently everything handled on the GUI update
         }
 
         void FileManager_BlockWritten(object sender, BlockEventArgs e)
         {
-            // Do nothing
+            // Do nothing - currently everything handled on the GUI update
         }
 
         #endregion
@@ -873,6 +859,7 @@ namespace MonoTorrent.GUI.Controller
                     if (torrent.State != TorrentState.Stopped)
                         torrent.Stop();
                 }
+                this.mainForm.PiecesListView.Items.Clear();
             }
             catch (Exception e)
             {
@@ -1237,6 +1224,11 @@ namespace MonoTorrent.GUI.Controller
 
 				lock (currentRequests)
 				{
+                    currentRequests.Sort(new Comparison<BlockEventArgs>(delegate (BlockEventArgs left, BlockEventArgs right) {
+                        return left.Piece.Index.CompareTo(right.Piece.Index);
+                    }));
+
+
 					for (int i = 0; i < this.currentRequests.Count; i++)
 					{
                         if (this.currentRequests[i].ID.TorrentManager != selectedTorrent)
