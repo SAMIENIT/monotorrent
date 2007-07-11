@@ -1213,29 +1213,29 @@ namespace MonoTorrent.GUI.Controller
 
 		public void UpdatePiecesTab()
         {
-            mainForm.PiecesListView.Items.Clear();
-
             TorrentManager selectedTorrent = GetSelectedTorrent();
             if (selectedTorrent == null)
                 return;
 			try
 			{
 				mainForm.PiecesListView.BeginUpdate();
+                mainForm.PiecesListView.Items.Clear();
 
 				lock (currentRequests)
 				{
+                    // First sort them according to the piece index
                     currentRequests.Sort(new Comparison<BlockEventArgs>(delegate (BlockEventArgs left, BlockEventArgs right) {
                         return left.Piece.Index.CompareTo(right.Piece.Index);
                     }));
 
-
+                    // Render them onto the listview
 					for (int i = 0; i < this.currentRequests.Count; i++)
 					{
                         if (this.currentRequests[i].ID.TorrentManager != selectedTorrent)
 							continue;
 
 						ListViewItem item = new ListViewItem(this.currentRequests[i].Piece.Index.ToString());
-						item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength));
+						item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength / 1024.0));
                         item.SubItems.Add(this.currentRequests[i].Piece.BlockCount.ToString());
 						item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(this.currentRequests[i])));
 						mainForm.PiecesListView.Items.Add(item);
