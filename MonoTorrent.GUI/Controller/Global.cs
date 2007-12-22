@@ -117,15 +117,14 @@ namespace Utilities
             Bitmap bmp = new Bitmap(width, height, OriginalImage.PixelFormat);
             bmp.SetResolution(OriginalImage.HorizontalResolution, OriginalImage.VerticalResolution);
 
-            Graphics graph = Graphics.FromImage(bmp);
-            graph.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            graph.DrawImage(OriginalImage,
-                new Rectangle(0, 0, width, height),
-                new Rectangle(x, y, width, height),
-                GraphicsUnit.Pixel);
-
-            graph.Dispose();
+            using (Graphics graph = Graphics.FromImage(bmp))
+            {
+                graph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graph.DrawImage(OriginalImage,
+                    new Rectangle(0, 0, width, height),
+                    new Rectangle(x, y, width, height),
+                    GraphicsUnit.Pixel);
+            }
             return (Image)bmp;
         }
 
@@ -137,17 +136,7 @@ namespace Utilities
         public static bool IsNumber(string str)
         {
             double result = 0;
-            try
-            {
-                result = Convert.ToDouble(str);
-            }
-            catch
-            {
-                return false;
-            }
-            if (result >= 0)
-                return true;
-            return false;
+            return double.TryParse(str, out result) && result >= 0;
         }
 
         #endregion
