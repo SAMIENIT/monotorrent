@@ -610,7 +610,7 @@ namespace MonoTorrent.GUI.Controller
                 creator.Path = window.FromPath;
                 if (!String.IsNullOrEmpty(window.TrackerURL))
                 {
-                    creator.Announces.Add(new stringCollection());
+                    creator.Announces.Add(new MonoTorrentCollection<string>());
                     creator.Announces[0].Add(window.TrackerURL);
                 }
                 string newPath = Path.Combine(window.SaveTo, Path.GetFileName(window.FromPath));
@@ -943,7 +943,8 @@ namespace MonoTorrent.GUI.Controller
 		public void UpdateGeneralSettings(GuiGeneralSettings settings)
         {
             settingsBase.SaveSettings<GuiGeneralSettings>("General Settings", settings);
-            clientEngine.Settings = settings.GetEngineSettings();
+            EngineSettings savedSettings = settings.GetEngineSettings();
+            clientEngine.Settings.CopyFrom(savedSettings);
 		}
 
         /// <summary>
