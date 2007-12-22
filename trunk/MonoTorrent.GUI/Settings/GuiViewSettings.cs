@@ -109,21 +109,21 @@ namespace MonoTorrent.GUI.Settings
         public BEncodedValue Encode()
         {
             BEncodedDictionary result = new BEncodedDictionary();
-            result.Add(new BEncodedString("Width"), new BEncodedNumber(FormWidth));
-            result.Add(new BEncodedString("height"), new BEncodedNumber(FormHeight));
-            result.Add(new BEncodedString("splitterDistance"), new BEncodedNumber(SplitterDistance));
-            result.Add(new BEncodedString("VScrollValue"), new BEncodedNumber(VScrollValue));
-            result.Add(new BEncodedString("HScrollValue"), new BEncodedNumber(HScrollValue));
-            result.Add(new BEncodedString("ShowToolbar"), new BEncodedString(ShowToolbar.ToString()));
-            result.Add(new BEncodedString("ShowDetail"), new BEncodedString(ShowDetail.ToString()));
-            result.Add(new BEncodedString("ShowStatusbar"), new BEncodedString(ShowStatusbar.ToString()));
+            result.Add("Width", new BEncodedNumber(FormWidth));
+            result.Add("height", new BEncodedNumber(FormHeight));
+            result.Add("splitterDistance", new BEncodedNumber(SplitterDistance));
+            result.Add("VScrollValue", new BEncodedNumber(VScrollValue));
+            result.Add("HScrollValue", new BEncodedNumber(HScrollValue));
+            result.Add("ShowToolbar", new BEncodedString(ShowToolbar.ToString()));
+            result.Add("ShowDetail", new BEncodedString(ShowDetail.ToString()));
+            result.Add("ShowStatusbar", new BEncodedString(ShowStatusbar.ToString()));
             for(int i =0; i < torrentViewColumnWidth.Count;i++)
-                result.Add(new BEncodedString("TorrentViewColumnWidth" + i.ToString()), new BEncodedNumber(torrentViewColumnWidth[i]));
+                result.Add("TorrentViewColumnWidth" + i.ToString(), new BEncodedNumber(torrentViewColumnWidth[i]));
             for (int i = 0; i < peerViewColumnWidth.Count; i++)
-                result.Add(new BEncodedString("PeerViewColumnWidth" + i.ToString()), new BEncodedNumber(peerViewColumnWidth[i]));
+                result.Add("PeerViewColumnWidth" + i.ToString(), new BEncodedNumber(peerViewColumnWidth[i]));
             for (int i = 0; i < pieceViewColumnWidth.Count; i++)
-                result.Add(new BEncodedString("PieceViewColumnWidth" + i.ToString()), new BEncodedNumber(pieceViewColumnWidth[i]));
-            result.Add(new BEncodedString("CustomButtonPath"), new BEncodedString(CustomButtonPath));
+                result.Add("PieceViewColumnWidth" + i.ToString(), new BEncodedNumber(pieceViewColumnWidth[i]));
+            result.Add("CustomButtonPath", new BEncodedString(CustomButtonPath));
             return result;
         }
 
@@ -137,52 +137,52 @@ namespace MonoTorrent.GUI.Settings
 
                 //For number maybe best is to do ((int)((BEncodedNumber)result).Number) but keep using convert and ToString()
 
-                if (val.TryGetValue(new BEncodedString("Width"), out result))
+                if (val.TryGetValue("Width", out result))
                     width = Convert.ToInt32(result.ToString());
 
-                if (val.TryGetValue(new BEncodedString("height"), out result))
+                if (val.TryGetValue("height", out result))
                     height = Convert.ToInt32(result.ToString());
 
-                if (val.TryGetValue(new BEncodedString("splitterDistance"), out result))
+                if (val.TryGetValue("splitterDistance", out result))
                     splitterDistance = Convert.ToInt32(result.ToString());
 
-                if (val.TryGetValue(new BEncodedString("VScrollValue"), out result))
+                if (val.TryGetValue("VScrollValue", out result))
                     VScrollValue = Convert.ToInt32(result.ToString());
 
-                if (val.TryGetValue(new BEncodedString("HScrollValue"), out result))
+                if (val.TryGetValue("HScrollValue", out result))
                     HScrollValue = Convert.ToInt32(result.ToString());
 
-                if (val.TryGetValue(new BEncodedString("ShowToolbar"), out result))
+                if (val.TryGetValue("ShowToolbar", out result))
                     ShowToolbar = Convert.ToBoolean(result.ToString());
 
-                if (val.TryGetValue(new BEncodedString("ShowDetail"), out result))
+                if (val.TryGetValue("ShowDetail", out result))
                     ShowDetail = Convert.ToBoolean(result.ToString());
 
-                if (val.TryGetValue(new BEncodedString("ShowStatusbar"), out result))
+                if (val.TryGetValue("ShowStatusbar", out result))
                     ShowStatusbar = Convert.ToBoolean(result.ToString());
                 
                 int i =0;
-                while (val.TryGetValue(new BEncodedString("TorrentViewColumnWidth" + i.ToString()), out result))
+                while (val.TryGetValue("TorrentViewColumnWidth" + i.ToString(), out result))
                 {
                     torrentViewColumnWidth.Add(Convert.ToInt32(result.ToString()));
                     i++;
                 }
 
                 i = 0;
-                while (val.TryGetValue(new BEncodedString("PeerViewColumnWidth" + i.ToString()), out result))
+                while (val.TryGetValue("PeerViewColumnWidth" + i.ToString(), out result))
                 {
                     peerViewColumnWidth.Add(Convert.ToInt32(result.ToString()));
                     i++;
                 }
 
                 i = 0;
-                while (val.TryGetValue(new BEncodedString("PieceViewColumnWidth" + i.ToString()), out result))
+                while (val.TryGetValue("PieceViewColumnWidth" + i.ToString(), out result))
                 {
                     pieceViewColumnWidth.Add(Convert.ToInt32(result.ToString()));
                     i++;
                 }
 
-                if (val.TryGetValue(new BEncodedString("CustomButtonPath"), out result))
+                if (val.TryGetValue("CustomButtonPath", out result))
                     CustomButtonPath = result.ToString();
             }
         }
