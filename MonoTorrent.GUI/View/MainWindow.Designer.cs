@@ -157,7 +157,7 @@ namespace MonoTorrent.GUI.View
             this.IsSeeder = new System.Windows.Forms.ColumnHeader();
             this.Encryption = new System.Windows.Forms.ColumnHeader();
             this.IsChoking = new System.Windows.Forms.ColumnHeader();
-            this.IsInterested = new System.Windows.Forms.ColumnHeader();
+            this.AmInterested = new System.Windows.Forms.ColumnHeader();
             this.IsRequestingPiecesCount = new System.Windows.Forms.ColumnHeader();
             this.PiecesSent = new System.Windows.Forms.ColumnHeader();
             this.SupportsFastPeer = new System.Windows.Forms.ColumnHeader();
@@ -1339,7 +1339,7 @@ namespace MonoTorrent.GUI.View
             this.IsSeeder,
             this.Encryption,
             this.IsChoking,
-            this.IsInterested,
+            this.AmInterested,
             this.IsRequestingPiecesCount,
             this.PiecesSent,
             this.SupportsFastPeer});
@@ -1397,7 +1397,7 @@ namespace MonoTorrent.GUI.View
             // 
             // IsInterested
             // 
-            this.IsInterested.Text = "Interested";
+            this.AmInterested.Text = "Interested";
             // 
             // IsRequestingPiecesCount
             // 
@@ -1609,7 +1609,7 @@ namespace MonoTorrent.GUI.View
 		private System.Windows.Forms.ColumnHeader IsSeeder;
 		private System.Windows.Forms.ColumnHeader Encryption;
 		private System.Windows.Forms.ColumnHeader IsChoking;
-		private System.Windows.Forms.ColumnHeader IsInterested;
+		private System.Windows.Forms.ColumnHeader AmInterested;
 		private System.Windows.Forms.ColumnHeader IsRequestingPiecesCount;
 		private System.Windows.Forms.ColumnHeader PiecesSent;
         private System.Windows.Forms.ColumnHeader SupportsFastPeer;
