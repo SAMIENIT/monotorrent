@@ -47,12 +47,28 @@ namespace MonoTorrent.GUI.Controller
     }
 
     public class MainController : IDisposable
-	{
+    {
         public event EventHandler<PeerIdEventArgs> PeerConnected;
         public event EventHandler UpdatePeers;
         public event EventHandler<PeerIdEventArgs> PeerDisconnected;
         public event EventHandler<TorrentManagerEventArgs> UpdateStats;
         public event EventHandler UpdateAllStats;
+
+
+        private ClientEngine clientEngine;
+        private OptionWindow optionWindow;
+        private AboutWindow aboutWindow;
+        private MiniWindow miniWindow;
+        private SettingsBase settingsBase;
+        private ReaderWriterLock peerlocker;
+        private Icon mono;
+        private int maxDownload;
+
+        public MiniWindow MiniWindow
+        {
+            get { return miniWindow; }
+            set { miniWindow = value; }
+        }
 
         public double TotalDownloadSpeed
         {
@@ -64,25 +80,6 @@ namespace MonoTorrent.GUI.Controller
             get { return this.clientEngine.TotalUploadSpeed; }
         }
 
-		#region Private field
-
-		private ClientEngine clientEngine;
-        private OptionWindow optionWindow;
-        private AboutWindow aboutWindow;
-        private MiniWindow miniWindow;
-        private SettingsBase settingsBase;
-		private ReaderWriterLock peerlocker;
-        private Icon mono;
-        private int maxDownload;
-
-		#endregion
-
-        public MiniWindow MiniWindow
-        {
-            get { return miniWindow; }
-            set { miniWindow = value; }
-        }
-
         public SettingsBase SettingsBase
         {
             get { return settingsBase; }
@@ -92,6 +89,7 @@ namespace MonoTorrent.GUI.Controller
         {
             get { return clientEngine; }
         }
+
         public int MaxDownload
         {
             get { return maxDownload; }
@@ -103,59 +101,59 @@ namespace MonoTorrent.GUI.Controller
             get { return mono; }
         }
 
-		#region Constructor and destructor
 
-		public MainController()
+
+        public MainController()
         {
-			peerlocker = new ReaderWriterLock();
-			settingsBase = new SettingsBase();
+            peerlocker = new ReaderWriterLock();
+            settingsBase = new SettingsBase();
             mono = ResourceHandler.GetIcon("mono", 16, 16);
 
             Init();
         }
 
-		public void Init()
-		{
-			//get general settings in file
-			GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
-			clientEngine = new ClientEngine(genSettings.GetEngineSettings());
+        public void Init()
+        {
+            //get general settings in file
+            GuiGeneralSettings genSettings = settingsBase.LoadSettings<GuiGeneralSettings>("General Settings");
+            clientEngine = new ClientEngine(genSettings.GetEngineSettings());
 
-			// Create Torrents path
-			if (!Directory.Exists(genSettings.TorrentsPath))
-				Directory.CreateDirectory(genSettings.TorrentsPath);
+            // Create Torrents path
+            if (!Directory.Exists(genSettings.TorrentsPath))
+                Directory.CreateDirectory(genSettings.TorrentsPath);
 
             // Add torrents from startup paramters to torrents folder
             foreach (string file in Global.TorrentFiles)
             {
                 if (File.Exists(file) && file.EndsWith(".torrent"))
                 {
-					// FIXME: This isn't cross platform. Use the "Path" class to do this
+                    // FIXME: This isn't cross platform. Use the "Path" class to do this
                     string newFile = genSettings.TorrentsPath + file.Substring(file.LastIndexOf("\\"));
                     if (!File.Exists(newFile))
                         File.Copy(file, newFile);
                 }
             }
 
-			//load all torrents in torrents folder
-			foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
-			{
-				GuiTorrentSettings torrentSettings = settingsBase.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
-				Add(file, torrentSettings.GetTorrentSettings(),	
+            //load all torrents in torrents folder
+            foreach (string file in Directory.GetFiles(genSettings.TorrentsPath, "*.torrent"))
+            {
+                GuiTorrentSettings torrentSettings = settingsBase.LoadSettings<GuiTorrentSettings>("Torrent Settings for " + file);
+                Add(file, torrentSettings.GetTorrentSettings(),
                     string.IsNullOrEmpty(torrentSettings.SavePath) ? clientEngine.Settings.SavePath : torrentSettings.SavePath);
-			}
+            }
 
-			//subscribe to event for update
-			clientEngine.StatsUpdate += OnUpdateStats;
+            //subscribe to event for update
+            clientEngine.StatsUpdate += OnUpdateStats;
 
-			clientEngine.ConnectionManager.PeerConnected += OnPeerConnected;
+            clientEngine.ConnectionManager.PeerConnected += OnPeerConnected;
             clientEngine.ConnectionManager.PeerDisconnected += OnPeerDisconnected;
-		}
+        }
 
-		/// <summary>
-		/// close all before exit
-		/// </summary>
- 		public void Dispose()
-		{
+        /// <summary>
+        /// close all before exit
+        /// </summary>
+        public void Dispose()
+        {
             //timeout 10 sec
             // This throws error: WaitAll for multiple handles on a STA thread is not supported
             // Use WaitOne
@@ -182,41 +180,24 @@ namespace MonoTorrent.GUI.Controller
             //}
 
             //clientEngine.StatsUpdate -= OnUpdateStats;
-		}
-
-		#endregion
-
-		#region Peer
+        }
 
         public void DeletePeerMethod(PeerId id)
-		{
+        {
             EventHandler<PeerIdEventArgs> h = PeerDisconnected;
             if (h != null)
                 h(null, new PeerIdEventArgs(id));
 
-		}
+        }
 
         public delegate void PeerHandler(PeerId PeerId);
 
-
-		#endregion
-
-		#region Torrent
-
-		
-
-		#endregion
-
-
-
-        #region Event methods
-		
-		public void OnPeerConnected(object sender, PeerConnectionEventArgs args)
-		{
+        public void OnPeerConnected(object sender, PeerConnectionEventArgs args)
+        {
             EventHandler<PeerIdEventArgs> h = PeerConnected;
             if (h != null)
                 h(this, new PeerIdEventArgs(args.PeerID));
-		}
+        }
 
         public void OnPeerDisconnected(object sender, PeerConnectionEventArgs args)
         {
@@ -250,22 +231,22 @@ namespace MonoTorrent.GUI.Controller
                 h(null, new TorrentManagerEventArgs((TorrentManager)sender));
         }
 
-		// FIXME: Is this the best way to do this?
-		private int counter = 0;
-		/// <summary>
-		/// event update stats change
-		/// </summary>
-		/// <param name="sender">clientengine</param>
-		/// <param name="args"></param>
+        // FIXME: Is this the best way to do this?
+        private int counter = 0;
+        /// <summary>
+        /// event update stats change
+        /// </summary>
+        /// <param name="sender">clientengine</param>
+        /// <param name="args"></param>
         public delegate void UpdateStatsHandler();
         public delegate void UpdateStateHandler(TorrentManager manager);
 
-		private void OnUpdateStats(object sender, EventArgs args)
-		{
+        private void OnUpdateStats(object sender, EventArgs args)
+        {
             EventHandler h = UpdateAllStats;
             if (h != null)
                 h(null, EventArgs.Empty);
-		}
+        }
 
         void torrent_PieceHashed(object sender, PieceHashedEventArgs e)
         {
@@ -319,10 +300,6 @@ namespace MonoTorrent.GUI.Controller
         {
             // Do nothing - currently everything handled on the GUI update
         }
-
-        #endregion
-
-        #region Controller action
 
         /// <summary>
         /// Create a new torrent
@@ -445,7 +422,7 @@ namespace MonoTorrent.GUI.Controller
                     return null;
                 }
             }
-            
+
             // Add torrent to manager
             TorrentManager manager = new TorrentManager(torrent, savePath, settings);
             clientEngine.Register(manager);
@@ -573,6 +550,7 @@ namespace MonoTorrent.GUI.Controller
             MessageBox.Show("Not Implemented!");
         }
 
+
         /// <summary>
         /// Show about window
         /// </summary>
@@ -585,13 +563,5 @@ namespace MonoTorrent.GUI.Controller
             aboutWindow.ShowDialog();
             aboutWindow.BringToFront();
         }
-
-        #endregion
-
-		
-
-
-
-
     }
 }
