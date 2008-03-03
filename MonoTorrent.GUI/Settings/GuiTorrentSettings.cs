@@ -10,11 +10,8 @@ namespace MonoTorrent.GUI.Settings
     {
         #region Private Fields
 
-        private int maxDownloadSpeed = TorrentSettings.DefaultSettings().MaxDownloadSpeed;
-        private int maxUploadSpeed = TorrentSettings.DefaultSettings().MaxUploadSpeed;
-        private int maxConnections = TorrentSettings.DefaultSettings().MaxConnections;
-        private int uploadSlots = TorrentSettings.DefaultSettings().UploadSlots;
-        private string savePath = EngineSettings.DefaultSettings().SavePath;
+        private TorrentSettings settings;
+        private string savePath = new EngineSettings().SavePath;
 
         #endregion
 
@@ -22,26 +19,26 @@ namespace MonoTorrent.GUI.Settings
 
         public int MaxDownloadSpeed
         {
-            get { return this.maxDownloadSpeed; }
-            set { this.maxDownloadSpeed = value; }
+            get { return settings.MaxDownloadSpeed; }
+            set { settings.MaxDownloadSpeed = value; }
         }
 
         public int MaxUploadSpeed
         {
-            get { return this.maxUploadSpeed; }
-            set { this.maxUploadSpeed = value; }
+            get { return settings.MaxUploadSpeed; }
+            set { settings.MaxUploadSpeed = value; }
         }
                 
         public int MaxConnections
         {
-            get { return this.maxConnections; }
-            set { this.maxConnections = value; }
+            get { return settings.MaxConnections; }
+            set { settings.MaxConnections = value; }
         }
                 
         public int UploadSlots
         {
-            get { return this.uploadSlots; }
-            set { this.uploadSlots = value; }
+            get { return settings.UploadSlots; }
+            set { settings.UploadSlots = value; }
         }
 
         public string SavePath
@@ -93,16 +90,22 @@ namespace MonoTorrent.GUI.Settings
 
         #endregion
 
+        public GuiTorrentSettings()
+            :this(new TorrentSettings())
+        {
+
+        }
+
+        public GuiTorrentSettings(TorrentSettings settings)
+        {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+            this.settings = settings;
+        }
+
         public TorrentSettings GetTorrentSettings()
         { 
             return new TorrentSettings(UploadSlots, MaxConnections, MaxDownloadSpeed, MaxUploadSpeed);
         }
-		public void SetTorrentSettings(TorrentSettings setting)
-		{
-			this.uploadSlots = setting.UploadSlots;
-			this.MaxConnections = setting.MaxConnections;
-			this.MaxDownloadSpeed = setting.MaxDownloadSpeed;
-			this.MaxUploadSpeed = setting.MaxUploadSpeed;
-		}
     }
 }

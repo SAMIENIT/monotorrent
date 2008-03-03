@@ -4,15 +4,12 @@ using System.Windows.Forms;
 using MonoTorrent.GUI.View;
 using System.IO;
 using Utilities;
-using Nat;
 using MonoTorrent.GUI.Controller;
 
 namespace MonoTorrent.GUI
-{
+{   
     static class Program
     {
-        private static MainController mainController;
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -27,9 +24,8 @@ namespace MonoTorrent.GUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            mainController = new MainController();
-            MainWindow window = new MainWindow(mainController);
-            Application.Run(window);
+            MainWindow w = new MainWindow();
+            Application.Run(w);
         }
 
         private static void ParseArguments(string[] args)

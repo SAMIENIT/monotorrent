@@ -16,7 +16,6 @@ namespace MonoTorrent.GUI.View
     public partial class OptionWindow : Form
     {
         private MainController controller;
-        private MainWindow mainWindow;
         private Bitmap DefaultButtons;
         private string ButtonsDir = string.Empty;
         private StringCollection Buttons = new StringCollection();
@@ -28,10 +27,9 @@ namespace MonoTorrent.GUI.View
             GetButtonImages();
         }
 
-        public OptionWindow(MainWindow mainWindow, MainController mainController, SettingsBase settings)
+        public OptionWindow(MainController mainController, SettingsBase settings)
         {
             InitializeComponent();
-            this.mainWindow = mainWindow;
             this.controller = mainController;
             this.Icon = ResourceHandler.GetIcon("mono", 16, 16);
             GetButtonImages();
@@ -117,7 +115,7 @@ namespace MonoTorrent.GUI.View
 			settings.SavePath = SavePathTextBox.Text;
 			settings.TorrentsPath = TorrentPathTextBox.Text;
 			settings.UsePnP = UseUPnPCheckBox.Checked;
-			mainWindow.UpdateGeneralSettings(settings);
+			controller.UpdateGeneralSettings(settings);
 			this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -267,7 +265,7 @@ namespace MonoTorrent.GUI.View
             SettingsBase settingsBase = new SettingsBase();
             settingsBase.SaveSettings<GuiViewSettings>("Graphical Settings", guisettings);
 
-            this.mainWindow.LoadButtons();
+            controller.LoadButtons();
 
             this.DialogResult = DialogResult.OK;
             this.Close();
