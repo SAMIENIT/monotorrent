@@ -86,11 +86,13 @@ namespace MonoTorrent.GUI.View.Control
         public string FormatSpeedValue(double value)
         {
             if (value < 1024)
-                return String.Format("{0:0.00} KB/s", value);
+                return String.Format("{0:0.00} B/s", value);
             if (value < 1024 * 1024)
-                return String.Format("{0:0.00} MB/s", value / (1024));
+                return String.Format("{0:0.00} kB/s", value / 1024);
+            if (value < 1024 * 1024 * 1024)
+                return String.Format("{0:0.00} MB/s", value / (1024 * 1024));
 
-            return String.Format("{0:0.00} GB/s", value / (1024 * 1024));
+            return String.Format("{0:0.00} GB/s", value / (1024 * 1024 * 1024));
         }
         #endregion
 
