@@ -10,15 +10,13 @@ namespace MonoTorrent.GUI.Settings
 {
     public class GuiGeneralSettings : ISettings
     {
+        private EngineSettings settings;
 		public GuiGeneralSettings()
 		{
 			if (string.IsNullOrEmpty(StartDirectory))
 				StartDirectory = Environment.CurrentDirectory;
-			listenPort = EngineSettings.DefaultSettings().ListenPort;
-			globalMaxConnections = EngineSettings.DefaultSettings().GlobalMaxConnections;
-			globalMaxHalfOpenConnections = EngineSettings.DefaultSettings().GlobalMaxHalfOpenConnections;
-			globalMaxDownloadSpeed = EngineSettings.DefaultSettings().GlobalMaxDownloadSpeed;
-			globalMaxUploadSpeed = EngineSettings.DefaultSettings().GlobalMaxUploadSpeed;
+
+            settings = new EngineSettings();
 			savePath = Path.Combine(StartDirectory, "Downloads");
 			torrentsPath = Path.Combine(StartDirectory, "Torrents");
 		}
@@ -27,15 +25,6 @@ namespace MonoTorrent.GUI.Settings
 
         #region Private Fields
         
-        // DEFAULT VALUE
-
-        //private bool allowLegacyConnections = true;
-        //private int minEncryptionLevel = EncryptionType.None;
-        private int listenPort;
-        private int globalMaxConnections;
-        private int globalMaxHalfOpenConnections;
-        private int globalMaxDownloadSpeed;
-        private int globalMaxUploadSpeed;
         private string savePath;
         private string torrentsPath;
         private bool useuPnP;
@@ -43,18 +32,6 @@ namespace MonoTorrent.GUI.Settings
         #endregion Private Fields
         
         #region Properties
-
-        /*public bool AllowLegacyConnections
-        {
-            get { return allowLegacyConnections; }
-            set { allowLegacyConnections = value; }
-        }
-
-        public int MinEncryptionLevel
-        {
-            get { return minEncryptionLevel; }
-            set { minEncryptionLevel = value; }
-        }*/
 
         public string SavePath
         {
@@ -70,32 +47,32 @@ namespace MonoTorrent.GUI.Settings
 
         public int GlobalMaxConnections
         {
-            get { return globalMaxConnections; }
-            set { globalMaxConnections = value; }
+            get { return settings.GlobalMaxConnections; }
+            set { settings.GlobalMaxConnections = value; }
         }
 
         public int GlobalMaxHalfOpenConnections
         {
-            get { return globalMaxHalfOpenConnections; }
-            set { globalMaxHalfOpenConnections = value; }
+            get { return settings.GlobalMaxHalfOpenConnections; }
+            set { settings.GlobalMaxHalfOpenConnections = value; }
         }
 
         public int GlobalMaxDownloadSpeed
         {
-            get { return globalMaxDownloadSpeed; }
-            set { globalMaxDownloadSpeed = value; }
+            get { return settings.GlobalMaxDownloadSpeed; }
+            set { settings.GlobalMaxDownloadSpeed = value; }
         }
 
         public int GlobalMaxUploadSpeed
         {
-            get { return globalMaxUploadSpeed; }
-            set { globalMaxUploadSpeed = value; }
+            get { return settings.GlobalMaxUploadSpeed; }
+            set { settings.GlobalMaxUploadSpeed = value; }
         }
 
         public int ListenPort
         {
-            get { return listenPort; }
-            set { listenPort = value; }
+            get { return settings.ListenPort; }
+            set { settings.ListenPort = value; }
         }
 
         public bool UsePnP

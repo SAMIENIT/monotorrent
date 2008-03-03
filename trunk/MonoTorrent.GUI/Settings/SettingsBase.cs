@@ -4,7 +4,6 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 using MonoTorrent.BEncoding;
-using Utilities;
 
 namespace MonoTorrent.GUI.Settings
 {
@@ -14,7 +13,7 @@ namespace MonoTorrent.GUI.Settings
 
         public SettingsBase()
         {
-            storage = new BEncodedSettingsStorage(Path.Combine(Environment.CurrentDirectory, Global.ConfigFile));
+            storage = new BEncodedSettingsStorage(Path.Combine(Environment.CurrentDirectory, Utilities.Global.ConfigFile));
         }
 
         public T LoadSettings<T>(string key) where T : ISettings, new()
