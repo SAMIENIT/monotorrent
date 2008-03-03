@@ -398,8 +398,8 @@ namespace MonoTorrent.GUI.Controller
             if (torrent.Monitor.DownloadSpeed > 0)
             {
                 double secs = (torrent.Torrent.Size - (torrent.Torrent.Size * (torrent.Progress / 100))) / torrent.Monitor.DownloadSpeed;
-                DateTime dt = new DateTime().AddSeconds(secs);
-                item.SubItems["colRemaining"].Text = dt.ToString("hh:mm:ss");
+                TimeSpan s = TimeSpan.FromSeconds(secs);
+                item.SubItems["colRemaining"].Text = string.Format("{0:00}:{1:00}:{2:00}", s.Days * 24 + s.Hours, s.Minutes, s.Seconds);
             }
             else
                 item.SubItems["colRemaining"].Text = string.Empty;
