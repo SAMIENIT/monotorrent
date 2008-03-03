@@ -777,7 +777,7 @@ namespace MonoTorrent.GUI.Controller
             manager.PieceManager.BlockRequested += new EventHandler<BlockEventArgs>(PieceManager_BlockRequested);
             manager.PeerConnected += OnPeerConnected;
             manager.PeerDisconnected += OnPeerDisconnected;
-            item.SubItems["colSize"].Text = FormatSizeValue(manager.Torrent.Size / 1024);
+            item.SubItems["colSize"].Text = FormatSizeValue(manager.Torrent.Size);
             item.SubItems["colName"].Text = manager.Torrent.Name;
             manager.HashCheck(false);
         }
@@ -1248,7 +1248,7 @@ namespace MonoTorrent.GUI.Controller
 							continue;
 
 						ListViewItem item = new ListViewItem(this.currentRequests[i].Piece.Index.ToString());
-						item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength / 1024.0));
+						item.SubItems.Add(FormatSizeValue(this.currentRequests[i].Block.RequestLength));
                         item.SubItems.Add(this.currentRequests[i].Piece.BlockCount.ToString());
 						item.SubItems.Add(new ImageListView.ImageListViewSubItem(new BlockProgressBar(this.currentRequests[i])));
 						mainForm.PiecesListView.Items.Add(item);
