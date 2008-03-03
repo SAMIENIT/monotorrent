@@ -432,11 +432,13 @@ namespace MonoTorrent.GUI.Controller
         public string FormatSizeValue(double value)
         {
             if (value < 1024)
-                return String.Format("{0:0.00} Kb", value);
+                return String.Format("{0:0.00} B", value);
             if (value < 1024 * 1024)
-                return String.Format("{0:0.00} Mb", value / (1024));
+                return String.Format("{0:0.00} kB", value / (1024));
+            if (value < 1024 * 1024 * 1024)
+                return String.Format("{0:0.00} MB", value / (1024 * 1024));
 
-            return String.Format("{0:0.00} Gb", value / (1024 * 1024));
+            return String.Format("{0:0.00} GB", value / (1024 * 1024 * 1024));
         }
 
         /// <summary>
