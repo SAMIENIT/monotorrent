@@ -21,6 +21,12 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>MonoTorrent.GUI</AssemblyName>
+    <RootNamespace>MonoTorrent.GUI</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <ApplicationIcon>Resources\mono.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,9 +37,16 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRules>
     </CodeAnalysisRules>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>MonoTorrent.GUI</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>MonoTorrent.GUI</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <ApplicationIcon>Resources\mono.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoTorrent, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoTorrent, Version=0.2.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\MonoTorrent.dll</HintPath>
     </Reference>
@@ -157,6 +170,14 @@
     <Compile Include="View\TorrentUrl.Designer.cs">
       <DependentUpon>TorrentUrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\RssFilter.cs" />
+    <Compile Include="Helper\RssReader.cs" />
+    <Compile Include="Helper\TorrentRssWatcher.cs" />
+    <Compile Include="Helper\TorrentRssWatcherEventArgs.cs" />
+    <Compile Include="Controller\RSSManagerController.cs" />
+    <Compile Include="View\RssManagerWindow.cs" />
+    <Compile Include="View\RssManagerWindow.Designer.cs" />
+    <None Include="View\RssManagerWindow.resx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\Control\GraphicControl.resx">
