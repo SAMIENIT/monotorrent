@@ -158,6 +158,12 @@
     <Compile Include="View\OptionWindow.Designer.cs">
       <DependentUpon>OptionWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\RssManagerWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\RssManagerWindow.Designer.cs">
+      <DependentUpon>RssManagerWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\TorrentSettingWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,15 +180,16 @@
     <Compile Include="Helper\RssReader.cs" />
     <Compile Include="Helper\TorrentRssWatcher.cs" />
     <Compile Include="Helper\TorrentRssWatcherEventArgs.cs" />
-    <Compile Include="Controller\RSSManagerController.cs" />
-    <Compile Include="View\RssManagerWindow.cs" />
-    <Compile Include="View\RssManagerWindow.Designer.cs" />
-    <None Include="View\RssManagerWindow.resx" />
+    <Compile Include="Controller\RssManagerController.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\Control\GraphicControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>GraphicControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\RssManagerWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RssManagerWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\TorrentUrl.resx">
       <DependentUpon>TorrentUrl.cs</DependentUpon>

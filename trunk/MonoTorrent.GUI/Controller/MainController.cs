@@ -31,6 +31,8 @@ namespace MonoTorrent.GUI.Controller
 		private ReaderWriterLock peerlocker;
         private Icon mono;
         private int maxDownload;
+		private RssManagerController rssController;
+		private RssManagerWindow rssMgrWindow;
 
 		#endregion
 
@@ -917,8 +919,14 @@ namespace MonoTorrent.GUI.Controller
 
         public void Rss()
         {
-            //TODO Create rss downloader
-            MessageBox.Show("Not Implemented!");
+			if (rssController == null)
+				rssController = new RssManagerController (this);
+
+			if (aboutWindow == null || aboutWindow.IsDisposed) {
+				rssMgrWindow = new RssManagerWindow (rssController);
+			}
+			rssMgrWindow.ShowDialog ();
+			rssMgrWindow.BringToFront ();
         }
 
         /// <summary>
