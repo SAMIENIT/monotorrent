@@ -22,6 +22,7 @@
 - statistique			DONE
 - Mini windows 			DONE
 - statusbar			DONE
+- RSS Manager			DONE
 
 For 0.2 release :
 - manage torrent priority	0% 
@@ -42,7 +43,6 @@ More details on option
 
 
 manual
-RSS
 scheduler
 webui
 categorie

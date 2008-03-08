@@ -94,5 +94,10 @@ namespace MonoTorrent.GUI.Helper
 			get { return savePath; }
 			set { savePath = value; }
 		}
+
+		public override string ToString ()
+		{
+			return name;
+		}
 	}
 }

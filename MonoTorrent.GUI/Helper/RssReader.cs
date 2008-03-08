@@ -157,6 +157,11 @@ namespace MonoTorrent.GUI.Helper
 			get { return feed; }
 			set { feed = value; }
 		}
+
+		public override string ToString ()
+		{
+			return title;
+		}
 		
 		/*
 		public override bool Equals (object o)
