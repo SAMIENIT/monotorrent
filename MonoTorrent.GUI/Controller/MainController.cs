@@ -1197,7 +1197,11 @@ namespace MonoTorrent.GUI.Controller
 
             if (torrent.Monitor.DownloadSpeed > 0)
             {
-                double secs = (torrent.Torrent.Size - (torrent.Torrent.Size * (torrent.Progress / 100))) / torrent.Monitor.DownloadSpeed;
+                double secs = (torrent.Torrent.Size - (torrent.Torrent.Size * (torrent.Progress / 100.0))) / torrent.Monitor.DownloadSpeed;
+                
+                if (!(secs > 0 && secs < 60 * 60 * 24 * 30))
+                    secs = 60 * 60 * 24 * 30;
+
                 DateTime dt = new DateTime().AddSeconds(secs);
                 mainForm.DetailTabEstimatedTime.Text = dt.ToString("hh:mm:ss");
             }
